@@ -11,6 +11,10 @@
     <link rel="stylesheet" type="text/css" href="~/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/responsive.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <div class="super_container">
@@ -36,8 +40,9 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="account_selection">
-                                            <li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-                                            <li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+                                            <li><a href="#" data-bs-target="#signInForm"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+                                            <li><a href="#" data-bs-target="#registerForm"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+                                            <li><a href="#" data-bs-target="#forgotPasswordForm"><i class="fa fa-unlock" aria-hidden="true"></i>Forgot Password</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -78,9 +83,11 @@
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="menu_selection">
-                            <li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-                            <li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+                            <li><a href="#" data-bs-target="#signInForm"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+                            <li><a href="#" data-bs-target="#registerForm"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+                            <li><a href="#" data-bs-target="#forgotPasswordForm"><i class="fa fa-unlock" aria-hidden="true"></i>Forgot Password</a></li>
                         </ul>
+
                     </li>
                     <li class="menu_item"><a href="#">contact</a></li>
                 </ul>
@@ -89,7 +96,7 @@
         <div class="container contact_container">
             @RenderBody()
         </div>
-        
+
         <footer class="footer">
             <div class="container">
                 <div class="row">
@@ -125,6 +132,110 @@
         </footer>
 
     </div>
+    <div id="authModals">
+        <div id="signInForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="signInFormLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signInFormLabel">Sign In</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="signInEmail" class="form-label">Email:</label>
+                                <input type="email" id="signInEmail" class="form-control" placeholder="Enter email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="signInPassword" class="form-label">Password:</label>
+                                <input type="password" id="signInPassword" class="form-control" placeholder="Enter password" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="registerFormLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerFormLabel">Register</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="registerEmail" class="form-label">Email:</label>
+                                <input type="email" id="registerEmail" class="form-control" placeholder="Enter email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerPassword" class="form-label">Password:</label>
+                                <input type="password" id="registerPassword" class="form-control" placeholder="Enter password" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotPasswordForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="forgotPasswordFormLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgotPasswordFormLabel">Forgot Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="forgotEmail" class="form-label">Email:</label>
+                                <input type="email" id="forgotEmail" class="form-control" placeholder="Enter email to reset password" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".account_selection a, .menu_selection a").forEach(item => {
+                item.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const targetId = e.target.closest("a").getAttribute("data-bs-target"); // Sửa thành data-bs-target
+                    if (!targetId) {
+                        console.error("Modal target ID not found!");
+                        return;
+                    }
+
+                    console.log("Opening modal with ID:", targetId);
+
+                    const targetModal = document.querySelector(targetId); // Sử dụng querySelector với ID
+                    if (targetModal) {
+                        const bootstrapModal = new bootstrap.Modal(targetModal);
+                        bootstrapModal.show(); // Hiển thị modal
+                    } else {
+                        console.error(`Modal with ID "${targetId}" not found in the DOM.`);
+                    }
+                });
+            });
+        });
+    </script>
 
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
     <script src="~/Scripts/popper.js"></script>

@@ -433,11 +433,13 @@ section
 {
 	border-bottom: none;
 }
+/*********************************
+auth-modal
+*********************************/
 
 /*********************************
 3.3 Account
 *********************************/
-
 /* Account Section */
 .account {
 	display: inline-block;
