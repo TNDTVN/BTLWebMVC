@@ -23,7 +23,7 @@ namespace BTLWebMVC.App_Start
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<CartItems> CartItems { get; set; }
-
+        public DbSet<Notification> Notifications { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()
