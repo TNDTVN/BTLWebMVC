@@ -21,11 +21,11 @@
                     <div class="row">
                         <div class="col-lg-12 text-right">
                             <div class="logo_container">
-                                <a href="#">HPH<span>shop</span></a>
+                                <a href="@Url.Action("Index", "Home")">HPH<span>shop</span></a>
                             </div>
                             <nav class="navbar">
                                 <ul class="navbar_menu">
-                                    <li><a href="#">Trang chủ</a></li>
+                                    <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
                                     <li><a href="#">Cửa hàng</a></li>
                                     <li><a href="#">Khuyến mãi</a></li>
                                     <li><a href="#">Trang</a></li>
@@ -37,10 +37,22 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="account_selection">
-                                            <li><a href="#" data-bs-target="#signInForm"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
-                                            <li><a href="#" data-bs-target="#registerForm"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng ký</a></li>
-                                            <li><a href="#" data-bs-target="#forgotPasswordForm"><i class="fa fa-unlock" aria-hidden="true"></i>Quên mật khẩu</a></li>
-                                            <li><a href="#" data-bs-target="#changePasswordForm"><i class="fa fa-key" aria-hidden="true"></i>Đổi mật khẩu</a></li>
+                                            @{
+                                                var accountId = Session["AccountId"];
+                                            }
+
+                                            @if (accountId == null)
+                                            {
+                                                <li><a href="@Url.Action("Login", "Home")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
+                                                <li><a href="@Url.Action("Register", "Home")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
+                                                <li><a href="@Url.Action("Forgotpassword", "Home")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="#"><i class="fa-regular fa-user" aria-hidden="true"></i>Tài khoản</a></li>
+                                                <li><a href="#"><i class="fa fa-key" aria-hidden="true"></i>Đổi mật khẩu</a></li>
+                                                <li><a href="@Url.Action("Logout", "Home")"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                                            }
                                         </ul>
                                     </li>
                                 </ul>
@@ -80,10 +92,18 @@
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="menu_selection">
-                            <li><a href="#" data-bs-target="#signInForm"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
-                            <li><a href="#" data-bs-target="#registerForm"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
-                            <li><a href="#" data-bs-target="#forgotPasswordForm"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
-                            <li><a href="#" data-bs-target="#changePasswordForm"><i class="fa fa-key" aria-hidden="true"></i> Đổi mật khẩu</a></li>
+                            @if (accountId == null)
+                            {
+                                <li><a href="@Url.Action("Login", "Home")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
+                                <li><a href="@Url.Action("Register", "Home")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
+                                <li><a href="@Url.Action("Forgotpassword", "Home")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="#"><i class="fa-regular fa-user" aria-hidden="true"></i>Tài khoản</a></li>
+                                <li><a href="#"><i class="fa fa-key" aria-hidden="true"></i>Đổi mật khẩu</a></li>
+                                <li><a href="@Url.Action("Logout", "Home")"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                            }
                         </ul>
                     </li>
                     <li class="menu_item"><a href="#">Liên hệ</a></li>
@@ -141,168 +161,22 @@
             </div>
         </footer>
 
-    </div>
-    <div id="authModals">
-        <div id="signInForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="signInFormLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="signInFormLabel">Đăng Nhập</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        @if (TempData["ErrorMessage"] != null)
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                @TempData["ErrorMessage"]
-                            </div>
-                        }
-                        @using (Html.BeginForm("KiemTra", "Home", FormMethod.Post))
-                        {
-                            <div class="mb-3">
-                                <label for="signInName" class="form-label">Tên Đăng Nhập:</label>
-                                <input type="text" id="signInName" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signInPassword" class="form-label">Mật Khẩu:</label>
-                                <input type="password" id="signInPassword" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                                <button type="submit" class="btn btn-primary">Đăng Nhập</button>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="registerForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="registerFormLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="registerFormLabel">Register</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="registerName" class="form-label">Tên Đăng Nhập:</label>
-                                <input type="text" id="registerName" class="form-control" placeholder="nhập tên đăng nhập" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="registerEmail" class="form-label">Email:</label>
-                                <input type="email" id="registerEmail" class="form-control" placeholder="Nhập email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="registerPhone" class="form-label">Số Điện Thoại:</label>
-                                <input type="text" id="registerPhone" class="form-control" placeholder="Nhập số điện thoại" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="registerPassword" class="form-label">Mật Khẩu:</label>
-                                <input type="password" id="registerPassword" class="form-control" placeholder="Nhập mật khẩu" required>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="changePasswordForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="changePasswordFormLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="changePasswordFormLabel">Đổi Mật khẩu</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="currentPassword" class="form-label">Mật Khẩu Hiện Tại:</label>
-                                <input type="password" id="currentPassword" class="form-control" placeholder="Nhập mật khẩu hiện tại" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="newPassword" class="form-label">Mật Khẩu Mới:</label>
-                                <input type="password" id="newPassword" class="form-control" placeholder="Nhập mật khẩu mới" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="confirmNewPassword" class="form-label">Xác Nhận Mật Khẩu Mới:</label>
-                                <input type="password" id="confirmNewPassword" class="form-control" placeholder="Xác nhận mật khẩu mới" required>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                        <button type="submit" class="btn btn-primary">Cập Nhật Mật Khẩu</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="forgotPasswordForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="forgotPasswordFormLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="forgotPasswordFormLabel">Quên Mật Khẩu</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="forgotPhone" class="form-label">Số Điện Thoại:</label>
-                                <input type="text" id="forgotPhone" class="form-control" placeholder="Nhập số điện thoại" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="forgotEmail" class="form-label">Email:</label>
-                                <input type="email" id="forgotEmail" class="form-control" placeholder="Nhập email" required>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                        <button type="submit" class="btn btn-primary">Gửi Yêu Cầu</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Hiển thị modal nếu có lỗi
-            if ('@TempData["ErrorMessage"]' !== '') {
-                const signInModal = new bootstrap.Modal(document.getElementById('signInForm'));
-                signInModal.show();
-            }
-
-            // Điều khiển mở modal từ các liên kết
-            document.querySelectorAll(".account_selection a, .menu_selection a").forEach(item => {
-                item.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const targetId = e.target.closest("a").getAttribute("data-bs-target");
-                    if (!targetId) {
-                        console.error("Modal target ID not found!");
-                        return;
-                    }
-
-                    const targetModal = document.querySelector(targetId);
-                    if (targetModal) {
-                        const bootstrapModal = new bootstrap.Modal(targetModal);
-                        bootstrapModal.show();
-                    } else {
-                        console.error(`Modal with ID "${targetId}" not found in the DOM.`);
-                    }
+        <script src="~/Scripts/jquery-3.7.0.min.js"></script>
+        <script src="~/Scripts/popper.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/plugins/Isotope/isotope.pkgd.min.js"></script>
+        <script src="~/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+        <script src="~/plugins/easing/easing.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <script>
+                $(document).ready(function () {
+                    alert(@Html.Raw(Json.Encode(TempData["SuccessMessage"])));
+                    console.log("SuccessMessage: " + @Html.Raw(Json.Encode(TempData["SuccessMessage"])));
                 });
-            });
-        });
-    </script>
-
-    <script src="~/Scripts/jquery-3.7.0.min.js"></script>
-    <script src="~/Scripts/popper.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/plugins/Isotope/isotope.pkgd.min.js"></script>
-    <script src="~/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-    <script src="~/plugins/easing/easing.js"></script>
-    <script src="~/Scripts/custom.js"></script>
+            </script>
+            TempData["SuccessMessage"] = null;
+        }
 </body>
 </html>
