@@ -499,16 +499,21 @@ auth-modal
 	width: 100%;
 	background: #FFFFFF;
 	box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
-	position: fixed; /* Đặt navbar cố định */
+	position: fixed; 
 	top: 0;
 	left: 0;
-	z-index: 1000; /* Đảm bảo nó luôn ở trên cùng */
+	z-index: 1000; 
 }
 
 .container.contact_container {
-	padding-top: 120px; /* Thêm khoảng đệm bằng chiều cao của navbar (100px + 20px) */
+	padding-top: 120px;
 }
-
+.navbar, .navbar_menu li a, .account_selection li a, .navbar_user li a {
+	font-family: 'Roboto', 'Arial', sans-serif !important;
+	font-size: 14px !important;
+	color: #333 !important;
+	text-transform: uppercase; 
+}
 .navbar {
 	width: auto;
 	height: 100px;

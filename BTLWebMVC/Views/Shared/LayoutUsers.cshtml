@@ -102,7 +102,7 @@
                             <ul class="footer_nav">
                                 <li><a href="#">Blog</a></li>
                                 <li><a href="#">FAQs</a></li>
-                                <li><a href="contact.html">Contact us</a></li>
+                                <li><a href="#">Contact us</a></li>
                             </ul>
                         </div>
                     </div>
@@ -151,25 +151,31 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @TempData["ErrorMessage"]
+                            </div>
+                        }
+                        @using (Html.BeginForm("KiemTra", "Home", FormMethod.Post))
+                        {
                             <div class="mb-3">
                                 <label for="signInName" class="form-label">Tên Đăng Nhập:</label>
-                                <input type="text" id="signInName" class="form-control" placeholder="Nhập tên đăng nhập" required>
+                                <input type="text" id="signInName" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required>
                             </div>
                             <div class="mb-3">
                                 <label for="signInPassword" class="form-label">Mật Khẩu:</label>
-                                <input type="password" id="signInPassword" class="form-control" placeholder="Nhập mật khẩu" required>
+                                <input type="password" id="signInPassword" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                        <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                                <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-
         <div id="registerForm" class="auth-modal modal fade" tabindex="-1" aria-labelledby="registerFormLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
@@ -263,6 +269,13 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Hiển thị modal nếu có lỗi
+            if ('@TempData["ErrorMessage"]' !== '') {
+                const signInModal = new bootstrap.Modal(document.getElementById('signInForm'));
+                signInModal.show();
+            }
+
+            // Điều khiển mở modal từ các liên kết
             document.querySelectorAll(".account_selection a, .menu_selection a").forEach(item => {
                 item.addEventListener("click", function (e) {
                     e.preventDefault();
@@ -271,8 +284,6 @@
                         console.error("Modal target ID not found!");
                         return;
                     }
-
-                    console.log("Opening modal with ID:", targetId);
 
                     const targetModal = document.querySelector(targetId);
                     if (targetModal) {
