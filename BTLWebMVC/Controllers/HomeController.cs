@@ -15,7 +15,8 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Index(int? id)
         {
-            return View();
+            var product = db.Products.Take(50);
+            return View(product);
         }
         public ActionResult About()
         {
