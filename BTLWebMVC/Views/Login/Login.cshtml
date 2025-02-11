@@ -67,5 +67,15 @@
             </div>
         </div>
     </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+        $(document).ready(function () {
+            alert(@Html.Raw(Json.Encode(TempData["SuccessMessage"])));
+            console.log("SuccessMessage: " + @Html.Raw(Json.Encode(TempData["SuccessMessage"])));
+        });
+        </script>
+        TempData["SuccessMessage"] = null;
+    }
 </body>
 </html>
