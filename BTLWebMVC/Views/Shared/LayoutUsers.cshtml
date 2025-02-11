@@ -11,9 +11,21 @@
     <link rel="stylesheet" type="text/css" href="~/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <div id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function () {
+            const loadingSpinner = document.getElementById('loading-spinner');
+            if (loadingSpinner) {
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
     <div class="super_container">
         <header class="header trans_300">
             <div class="main_nav_container">
@@ -43,15 +55,15 @@
 
                                             @if (accountId == null)
                                             {
-                                                <li><a href="@Url.Action("Login", "Home")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
-                                                <li><a href="@Url.Action("Register", "Home")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
-                                                <li><a href="@Url.Action("Forgotpassword", "Home")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
+                                                <li><a href="@Url.Action("Login", "Login")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
+                                                <li><a href="@Url.Action("Register", "Login")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
+                                                <li><a href="@Url.Action("Forgotpassword", "Login")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
                                             }
                                             else
                                             {
                                                 <li><a href="#"><i class="fa-regular fa-user" aria-hidden="true"></i>Tài khoản</a></li>
                                                 <li><a href="#"><i class="fa fa-key" aria-hidden="true"></i>Đổi mật khẩu</a></li>
-                                                <li><a href="@Url.Action("Logout", "Home")"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                                                <li><a href="@Url.Action("Logout", "Login")"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
                                             }
                                         </ul>
                                     </li>
@@ -175,5 +187,6 @@
             </script>
             TempData["SuccessMessage"] = null;
         }
+    </div>
 </body>
 </html>

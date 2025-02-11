@@ -13,9 +13,21 @@
     <link href="~/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
     <script src="~/Scripts/popper.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
     <script src="~/Scripts/bootstrap.min.js"></script>
 </head>
 <body>
+    <div id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function () {
+            const loadingSpinner = document.getElementById('loading-spinner');
+            if (loadingSpinner) {
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -30,7 +42,7 @@
                                 @TempData["ErrorMessage"]
                             </div>
                         }
-                        <form action="@Url.Action("Check", "Home")" method="post">
+                        <form action="@Url.Action("Check", "Login")" method="post">
                             <div class="form-group">
                                 <label for="username">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required />
@@ -42,8 +54,8 @@
                             <button type="submit" class="btn btn-primary mt-2 btn-block">Login</button>
                         </form>
                         <div class="text-center mt-3">
-                            <a href="@Url.Action("Register", "Home")" class="btn btn-link">Register</a>
-                            <a href="@Url.Action("Forgotpassword", "Home")" class="btn btn-link">Forgot Password?</a>
+                            <a href="@Url.Action("Register", "Login")" class="btn btn-link">Register</a>
+                            <a href="@Url.Action("Forgotpassword", "Login")" class="btn btn-link">Forgot Password?</a>
                         </div>
                     </div>
                     <div class="card-footer text-center">
