@@ -55,6 +55,10 @@ namespace BTLWebMVC.Controllers
         {
             return View();
         }
+        public ActionResult Register_check()
+        {
+            return View();
+        }
         public ActionResult Forgotpassword()
         {
             return View();
