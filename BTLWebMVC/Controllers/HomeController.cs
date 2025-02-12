@@ -7,6 +7,7 @@ using System.Data.Entity;
 using BTLWebMVC.App_Start;
 using System.Web.Helpers;
 using System.Threading.Tasks;
+using BTLWebMVC.Models;
 
 namespace BTLWebMVC.Controllers
 {
@@ -14,11 +15,12 @@ namespace BTLWebMVC.Controllers
     {
         private Context db = new Context();
 
-        public ActionResult Index(int? id)
+        public ActionResult Index()
         {
-            var product = db.Products.Take(50);
-            return View(product);
+            var products = db.Products.Include(p => p.Images).Take(50).ToList();
+            return View(products); 
         }
+
         public ActionResult About()
         {
 
