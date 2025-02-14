@@ -29,18 +29,5 @@ namespace BTLWebMVC.Controllers
             ViewBag.Categories = categories;
             return View(products.ToPagedList(pageNumber, pageSize));
         }
-
-
-        public ActionResult About()
-        {
-
-            return View();
-        }
-        
-        public ActionResult Contact()
-        {
-
-            return View();
-        }
     }
 }
