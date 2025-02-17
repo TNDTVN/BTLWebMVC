@@ -368,6 +368,8 @@
     <Content Include="Content\pages\UI\sliders.html" />
     <Content Include="Content\pages\UI\timeline.html" />
     <Content Include="Content\pages\widgets.html" />
+    <Content Include="Content\styles\categories_responsive.css" />
+    <Content Include="Content\styles\categories_styles.css" />
     <Content Include="Content\styles\main_styles.css" />
     <Content Include="Content\styles\pagination.css" />
     <Content Include="Content\styles\responsive.css" />
@@ -433,8 +435,11 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\categories_custom.js" />
+    <Content Include="Scripts\contact_custom.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\single_custom.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -499,6 +504,7 @@
     <Content Include="Views\Login\Forgotpassword.cshtml" />
     <Content Include="Views\Shared\Layoutmanager.cshtml" />
     <Content Include="Views\HomeManager\Index.cshtml" />
+    <Content Include="Views\Home\categories.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

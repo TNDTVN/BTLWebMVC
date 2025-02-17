@@ -17,17 +17,35 @@ namespace BTLWebMVC.Controllers
 
         private Context db = new Context();
 
-        public ActionResult Index(int? page)
+        public ActionResult Index()
         {
-            if (page == null) page = 1;
+            var products = db.Products.Include(p => p.Images)
+                                      .Include(p => p.Category)
+                                      .OrderByDescending(x => x.ProductID)
+                                      .Take(20) 
+                                      .ToList();
 
-            var products = db.Products.Include(p => p.Images).Include(p => p.Category)
-                                      .OrderByDescending(x => x.ProductID);
-            var categories = db.Categories.ToList(); 
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
+            var categories = db.Categories.ToList();
             ViewBag.Categories = categories;
-            return View(products.ToPagedList(pageNumber, pageSize));
+
+            return View(products); 
+        }
+
+        public ActionResult categories(int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = (page ?? 1); 
+
+            var products = db.Products.OrderBy(p => p.ProductID)
+                .Include(p => p.Images)
+                .Include (p => p.Category)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(products);
+        }
+        public ActionResult Details(int id) 
+        { 
+            return View();
         }
     }
 }
