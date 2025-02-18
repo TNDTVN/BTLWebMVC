@@ -11,7 +11,9 @@
     <link rel="stylesheet" type="text/css" href="~/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/responsive.css">
+    <link rel="stylesheet" href="~/Content/styles/pagination.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -38,7 +40,7 @@
                             <nav class="navbar">
                                 <ul class="navbar_menu">
                                     <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-                                    <li><a href="#">Cửa hàng</a></li>
+                                    <li><a href="@Url.Action("categories", "Home")">Cửa hàng</a></li>
                                     <li><a href="#">Khuyến mãi</a></li>
                                     <li><a href="#">Trang</a></li>
                                     <li><a href="#">Blog</a></li>

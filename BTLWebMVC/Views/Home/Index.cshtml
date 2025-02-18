@@ -1,67 +1,10 @@
-﻿@model PagedList.IPagedList<BTLWebMVC.Models.Product>
+﻿@model List<BTLWebMVC.Models.Product>
 @using PagedList.Mvc;
 @using PagedList;
 @{
     Layout = "~/Views/Shared/LayoutUsers.cshtml";
     ViewBag.Title = "Home Page";
 }
-<link rel="stylesheet" href="~/Content/styles/pagination.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        var selectedCategory = localStorage.getItem("selectedCategory") || "*";
-
-        if (selectedCategory) {
-            $(".grid_sorting_button").removeClass("active is-checked");
-            $(".grid_sorting_button[data-filter='" + selectedCategory + "']").addClass("active is-checked");
-
-            $(".product-grid").isotope({
-                itemSelector: ".product-item",
-                layoutMode: "fitRows",
-                filter: selectedCategory
-            });
-        } else {
-            $(".product-grid").isotope({
-                itemSelector: ".product-item",
-                layoutMode: "fitRows"
-            });
-        }
-        $(".grid_sorting_button").click(function () {
-            $(".grid_sorting_button").removeClass("active is-checked");
-            $(this).addClass("active is-checked");
-
-            var filterValue = $(this).attr("data-filter");
-            localStorage.setItem("selectedCategory", filterValue);
-
-            $(".product-grid").isotope({ filter: filterValue });
-        });
-
-        $(document).on("click", ".ajax-pagination a", function (e) {
-            e.preventDefault();
-            var url = $(this).attr("href");
-            var currentFilter = localStorage.getItem("selectedCategory") || "*";
-
-            $.ajax({
-                url: url,
-                type: "GET",
-                beforeSend: function () {
-                    $(".product-grid").fadeOut(200);
-                },
-                success: function (data) {
-                    var newProducts = $(data).find(".product-grid").html();
-                    $(".product-grid").html(newProducts).fadeIn(300);
-
-                    $(".ajax-pagination").html($(data).find(".ajax-pagination").html());
-                    var newPageInfo = $(data).find("#page-info").html();
-                    $("#page-info").html(newPageInfo);
-
-                    $(".product-grid").isotope("reloadItems").isotope({ filter: currentFilter });
-                }
-            });
-        });
-    });
-
-</script>
 
 <div class="main_slider" style="background-image: url('@Url.Content("~/Content/Images/slider_1.jpg")');">
     <div class="container fill_height">
@@ -108,7 +51,7 @@
         <div class="row">
             <div class="col text-center">
                 <div class="section_title new_arrivals_title">
-                    <h2 id="new-arrivals">New Arrivals</h2>
+                    <h2 id="new-arrivals">Sản Phẩm Mới</h2>
                 </div>
             </div>
         </div>
@@ -125,46 +68,30 @@
                 </div>
             </div>
         </div>
-        <div class="text-center mt-3">
-            <div class="text-center mt-3">
-                <p id="page-info">Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount</p>
-            </div>
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
-            {
-                UlElementClasses = new string[] { "pagination", "justify-content-center", "ajax-pagination" }
-            })
-        </div>
 
         <div class="row">
             <div class="col">
                 <div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
 
-                        @foreach (var product in Model)
-                        {
-                            <div class="product-item category-@product.Category.CategoryID">
-                                <div class="product discount product_filter">
-                                    <div class="product_image">
-                                        <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
-                                    </div>
-                                    @*<div class="favorite favorite_left"></div>*@
-                                    @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
-                                    <div class="product_info">
-                                        <h6 class="product_name"><a href="#">@product.ProductName</a></h6>
-                                        <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
-                                    </div>
+                    @foreach (var product in Model)
+                    {
+                        <div class="product-item category-@product.Category.CategoryID">
+                            <div class="product discount product_filter">
+                                <div class="product_image">
+                                    <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
                                 </div>
-                                <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                                @*<div class="favorite favorite_left"></div>*@
+                                @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
+                                <div class="product_info">
+                                    <h6 class="product_name"><a href="#">@product.ProductName</a></h6>
+                                    <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
+                                </div>
                             </div>
-                        }
+                            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
-        <div class="text-center mt-3">
-            <p>Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount</p>
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
-            {
-                UlElementClasses = new string[] { "pagination", "justify-content-center", "ajax-pagination" }
-            })
         </div>
 
     </div>
