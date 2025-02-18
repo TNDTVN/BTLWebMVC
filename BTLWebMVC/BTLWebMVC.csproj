@@ -134,11 +134,8 @@
     <Compile Include="App_Start\DbInitializer.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HomeManagerController.cs" />
-    <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\OrdersController.cs" />
-    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\Manager\OrdersController.cs" />
+    <Compile Include="Controllers\Manager\ProductsController.cs" />
     <Compile Include="Controllers\User\HomeController.cs" />
     <Compile Include="Controllers\Manager\HomeManagerController.cs" />
     <Compile Include="Controllers\About\LoginController.cs" />
