@@ -137,22 +137,22 @@
 
                             <div class="product-grid row">
                                 @foreach (var product in Model)
-                        {
-                            <div class="product-item category-@product.Category.CategoryID">
-                                <div class="product discount product_filter">
-                                    <div class="product_image">
-                                        <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
-                                    </div>
-                                    @*<div class="favorite favorite_left"></div>*@
-                                    @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
-                                    <div class="product_info">
-                                        <h6 class="product_name"><a href="#">@product.ProductName</a></h6>
-                                        <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
-                                    </div>
-                                </div>
-                                <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
-                            </div>
-                        }
+                                    {
+                                        <div class="product-item category-@product.Category.CategoryID" style="padding-left: 0px !important; padding-right:0px !important;">
+                                            <div class="product discount product_filter">
+                                                <div class="product_image">
+                                                    <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
+                                                </div>
+                                                @*<div class="favorite favorite_left"></div>*@
+                                                @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
+                                                <div class="product_info">
+                                                    <h6 class="product_name"><a href="#">@product.ProductName</a></h6>
+                                                    <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
+                                                </div>
+                                            </div>
+                                            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                                        </div>
+                                    }
                             </div>
                             <div class="product_sorting_container product_sorting_container_bottom clearfix">
                                 <ul class="product_sorting">

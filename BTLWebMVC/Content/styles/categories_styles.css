@@ -447,19 +447,35 @@ section
 	transition: all 0.3s ease;
 	list-style: none;
 	padding: 0;
+	max-height: 200px; /* Đặt chiều cao tối đa */
+	overflow-y: auto; /* Cho phép cuộn khi danh sách dài */
 }
+
+	/* Điều chỉnh thanh cuộn cho đẹp hơn */
+	.page_selection::-webkit-scrollbar {
+		width: 5px; /* Độ rộng thanh cuộn */
+	}
+
+	.page_selection::-webkit-scrollbar-thumb {
+		background-color: #ccc; /* Màu của thanh kéo */
+		border-radius: 5px;
+	}
+
+		.page_selection::-webkit-scrollbar-thumb:hover {
+			background-color: #999; /* Màu khi hover */
+		}
 
 	.page_selection li {
 		display: block;
 		text-align: center;
-		padding: 5px 0; /* Giảm padding để thu nhỏ độ cao */
+		padding: 5px 0;
 	}
 
 		.page_selection li a {
 			display: block;
-			height: 30px; /* Giảm chiều cao */
-			line-height: 30px; /* Căn chỉnh văn bản */
-			font-size: 14px; /* Thu nhỏ chữ nếu cần */
+			height: 30px;
+			line-height: 30px;
+			font-size: 14px;
 			border-bottom: solid 1px #dddddd;
 			color: #51545f;
 			text-decoration: none;
@@ -479,6 +495,7 @@ section
 	opacity: 1;
 	top: calc(100% + 1px);
 }
+
 .page_total
 {
 	display: inline-block;

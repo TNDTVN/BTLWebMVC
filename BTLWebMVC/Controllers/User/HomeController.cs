@@ -33,7 +33,7 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult categories(int? page)
         {
-            int pageSize = 8;
+            int pageSize = 16;
             int pageNumber = (page ?? 1); 
 
             var products = db.Products.OrderBy(p => p.ProductID)
