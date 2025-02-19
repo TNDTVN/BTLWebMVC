@@ -174,7 +174,7 @@
                                         </ul>
                                     </li>
                                 </ul>
-                                <span class="showing_results">Showing @(Model.PageNumber * Model.PageSize - Model.PageSize + 1)–@(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)) of @Model.TotalItemCount results</span>
+                                <span class="showing_results">Hiển thị @(Model.PageNumber * Model.PageSize - Model.PageSize + 1)–@(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)) trong @Model.TotalItemCount kết quả</span>
                                 <div class="pages d-flex flex-row align-items-center">
                                     <div id="prev_page" class="page_next me-4">
                                         @if (Model.HasPreviousPage)
