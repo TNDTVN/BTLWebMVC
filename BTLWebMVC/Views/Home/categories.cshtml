@@ -22,7 +22,7 @@
         padding:0px!important;
     }
     #amount {
-        font-size: 16px !important; 
+        font-size: 15px !important; 
         color: #f6931f; 
         font-weight: bold;
         background-color: transparent; 
@@ -241,31 +241,32 @@
 </div>
 <script>
     var $j = jQuery.noConflict();
-   $j(document).ready(function () {
+    $j(document).ready(function () {
         var urlParams = new URLSearchParams(window.location.search);
         var minPrice = urlParams.get('minPrice') || @ViewBag.PriceMin;
         var maxPrice = urlParams.get('maxPrice') || @ViewBag.PriceMax;
 
-        // Khởi tạo slider
         $j("#slider-range").slider({
             range: true,
             min: @ViewBag.PriceMin,
             max: @ViewBag.PriceMax,
             values: [minPrice, maxPrice],
             slide: function (event, ui) {
-                $j("#amount").val(ui.values[0] + " VND - " + ui.values[1] + " VND");
+                var formattedMinPrice = ui.values[0].toLocaleString();
+                var formattedMaxPrice = ui.values[1].toLocaleString();
+                $j("#amount").val(formattedMinPrice + " VND - " + formattedMaxPrice + " VND");
                 $j(".ui-slider-range").css("background-color", "black");
             }
         });
 
-        // Đảm bảo giá hiển thị ngay từ đầu
-        $j("#amount").val($j("#slider-range").slider("values", 0) + " VND - " + $j("#slider-range").slider("values", 1) + " VND");
+        var initialMinPrice = $j("#slider-range").slider("values", 0).toLocaleString();
+        var initialMaxPrice = $j("#slider-range").slider("values", 1).toLocaleString();
+        $j("#amount").val(initialMinPrice + " VND - " + initialMaxPrice + " VND");
 
-        // Xử lý nút lọc
         $j('.filter_button').on('click', function () {
-            var priceRange = $j("#slider-range").slider("values");
-            var minPrice = priceRange[0];
-            var maxPrice = priceRange[1];
+            var priceRange = $j("#amount").val().split(' - ');
+            var minPrice = parseFloat(priceRange[0].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
+            var maxPrice = parseFloat(priceRange[1].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
             updateUrlParam('minPrice', minPrice);
             updateUrlParam('maxPrice', maxPrice);
         });
@@ -273,10 +274,10 @@
         function updateUrlParam(param, value) {
             var url = new URL(window.location.href);
             url.searchParams.set(param, value);
-            window.location.href = url.toString();
+            var newUrl = url.toString();
+            window.location.href = newUrl;
         }
     });
-
 
     $j(document).ready(function () {
         var urlParams = new URLSearchParams(window.location.search);
@@ -285,11 +286,6 @@
         var maxPrice = urlParams.get('maxPrice');
         var sortOrder = urlParams.get('sortOrder');
         var searchString = urlParams.get('searchString');
-
-        if (minPrice && maxPrice) {
-            $j("#slider-range").slider("values", [parseFloat(minPrice), parseFloat(maxPrice)]);
-            $j("#amount").val(minPrice + " VND - " + maxPrice + " VND");
-        }
 
         if (sortOrder) {
             $j('.type_sorting_text').text(
@@ -309,8 +305,8 @@
 
         $j('.filter_button').on('click', function () {
             var priceRange = $('#amount').val().split(' - ');
-            var minPrice = parseFloat(priceRange[0].replace(' VND', '').trim());
-            var maxPrice = parseFloat(priceRange[1].replace(' VND', '').trim());
+            var minPrice = parseFloat(priceRange[0].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
+            var maxPrice = parseFloat(priceRange[1].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
 
             updateUrlParam('minPrice', minPrice);
             updateUrlParam('maxPrice', maxPrice);
@@ -344,7 +340,7 @@
     });
     $j(document).ready(function () {
         $j('#searchString').on('keypress', function (e) {
-            if (e.which === 13) { 
+            if (e.which === 13) {
                 var searchString = $j('#searchString').val();
                 if (searchString.trim() === '') {
                     updateUrlParam('searchString', '');
