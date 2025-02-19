@@ -46,8 +46,7 @@ namespace BTLWebMVC.Controllers
         }
 
         // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "OrderID,CustomerID,EmployeeID,OrderDate,ShippedDate,ShipAddress,ShipCity,ShipPostalCode,ShipCountry,Notes,Freight")] Order order)
@@ -81,9 +80,6 @@ namespace BTLWebMVC.Controllers
             return View(order);
         }
 
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OrderID,CustomerID,EmployeeID,OrderDate,ShippedDate,ShipAddress,ShipCity,ShipPostalCode,ShipCountry,Notes,Freight")] Order order)

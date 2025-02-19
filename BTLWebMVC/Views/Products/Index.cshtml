@@ -2,84 +2,89 @@
 
 @{
     ViewBag.Title = "Index";
-
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+   
 }
 }
 
-<h2>Index</h2>
 
-<p>
-    <a href="@Url.Action("Create", "Products")" class="btn btn-success">Create New</a>
+<div class="content-wrapper">
+    <h2>Thông tin sản phẩm</h2>
+ 
+    <p>
+        <a href="@Url.Action("Create", "Products")" class="btn btn-success">Create New</a>
 
-</p>
-<table class="table">
-    <tr>
-        <th>
-
-            Loại sản phẩm
-        </th>
-        <th>
-            Nhà cung cấp
-        </th>
-        <th>
-            Tên sản phẩm
-        </th>
-        <th>
-            Số Lượng
-        </th>
-        <th>
-            Giá
-
-        </th>
-        <th>
-            Số lượng tồn kho
-        </th>
-        <th>
-            Số lượng đặt hàng
-        </th>
-        <th>
-            Tình trạng
-        </th>
-
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    </p>
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitsInStock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitsOnOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discontinued)
-            </td>
-     
-            <td>
-                <a href="@Url.Action("Edit", "Products", new { id = item.ProductID })" class="btn btn-primary">Sửa</a>
-                <a href=" @Url.Action("Details", "Products", new { id = item.ProductID }) " class="btn btn-primary">Chi tiết</a>
-                <a href="@Url.Action("Delete", "Products", new { id = item.ProductID })" class="btn btn-primary">Xóa</a>
+            <th>
 
+                Loại sản phẩm
+            </th>
+            <th>
+                Nhà cung cấp
+            </th>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Số Lượng
+            </th>
+            <th>
+                Giá
 
-            </td>
+            </th>
+            <th>
+                Số lượng tồn kho
+            </th>
+            <th>
+                Số lượng đặt hàng
+            </th>
+            <th>
+                Tình trạng
+            </th>
+
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discontinued)
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Edit", "Products", new { id = item.ProductID })" class="btn btn-primary">Sửa</a>
+                    <a href=" @Url.Action("Details", "Products", new { id = item.ProductID }) " class="btn btn-primary">Chi tiết</a>
+                    <a href="@Url.Action("Delete", "Products", new { id = item.ProductID })" class="btn btn-primary">Xóa</a>
+
+
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
