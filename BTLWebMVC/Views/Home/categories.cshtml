@@ -21,16 +21,26 @@
     .sorting_type{
         padding:0px!important;
     }
+    #amount {
+        font-size: 16px !important; 
+        color: #f6931f; 
+        font-weight: bold;
+        background-color: transparent; 
+        border: none; 
+        text-align: center; 
+        width: 100%; 
+        pointer-events: none;
+    }
     #searchString {
-        width: 250px; 
+        width: 250px;
         padding: 10px 15px;
-        border: 2px solid #000; 
-        border-radius: 25px; 
+        border: 2px solid #000;
+        border-radius: 25px;
         outline: none;
         font-size: 16px;
-        color: #333; 
+        color: #333;
         background-color: #fff;
-        transition: all 0.3s ease-in-out; 
+        transition: all 0.3s ease-in-out;
     }
         #searchString:focus {
             border-color: #222; 
@@ -232,40 +242,40 @@
 <script>
     var $j = jQuery.noConflict();
    $j(document).ready(function () {
-    var urlParams = new URLSearchParams(window.location.search);
-    var minPrice = urlParams.get('minPrice') || @ViewBag.PriceMin;
-    var maxPrice = urlParams.get('maxPrice') || @ViewBag.PriceMax;
+        var urlParams = new URLSearchParams(window.location.search);
+        var minPrice = urlParams.get('minPrice') || @ViewBag.PriceMin;
+        var maxPrice = urlParams.get('maxPrice') || @ViewBag.PriceMax;
 
-    // Khởi tạo slider
-    $j("#slider-range").slider({
-        range: true,
-        min: @ViewBag.PriceMin,
-        max: @ViewBag.PriceMax,
-        values: [minPrice, maxPrice],
-        slide: function (event, ui) {
-            $j("#amount").val(ui.values[0] + " VND - " + ui.values[1] + " VND");
-            $j(".ui-slider-range").css("background-color", "black");
+        // Khởi tạo slider
+        $j("#slider-range").slider({
+            range: true,
+            min: @ViewBag.PriceMin,
+            max: @ViewBag.PriceMax,
+            values: [minPrice, maxPrice],
+            slide: function (event, ui) {
+                $j("#amount").val(ui.values[0] + " VND - " + ui.values[1] + " VND");
+                $j(".ui-slider-range").css("background-color", "black");
+            }
+        });
+
+        // Đảm bảo giá hiển thị ngay từ đầu
+        $j("#amount").val($j("#slider-range").slider("values", 0) + " VND - " + $j("#slider-range").slider("values", 1) + " VND");
+
+        // Xử lý nút lọc
+        $j('.filter_button').on('click', function () {
+            var priceRange = $j("#slider-range").slider("values");
+            var minPrice = priceRange[0];
+            var maxPrice = priceRange[1];
+            updateUrlParam('minPrice', minPrice);
+            updateUrlParam('maxPrice', maxPrice);
+        });
+
+        function updateUrlParam(param, value) {
+            var url = new URL(window.location.href);
+            url.searchParams.set(param, value);
+            window.location.href = url.toString();
         }
     });
-
-    // Đảm bảo giá hiển thị ngay từ đầu
-    $j("#amount").val($j("#slider-range").slider("values", 0) + " VND - " + $j("#slider-range").slider("values", 1) + " VND");
-
-    // Xử lý nút lọc
-    $j('.filter_button').on('click', function () {
-        var priceRange = $j("#slider-range").slider("values");
-        var minPrice = priceRange[0];
-        var maxPrice = priceRange[1];
-        updateUrlParam('minPrice', minPrice);
-        updateUrlParam('maxPrice', maxPrice);
-    });
-
-    function updateUrlParam(param, value) {
-        var url = new URL(window.location.href);
-        url.searchParams.set(param, value);
-        window.location.href = url.toString();
-    }
-});
 
 
     $j(document).ready(function () {

@@ -574,7 +574,7 @@ section
 .sidebar
 {
 	float: left;
-	width: 200px;
+	width: 250px;
 	padding-right: 17px;
 }
 .sidebar_section
@@ -712,7 +712,7 @@ section
 .main_content
 {
 	float: left;
-	width: calc(100% - 200px);
+	width: calc(100% - 250px);
 	padding-left: 34px;
 }
 
