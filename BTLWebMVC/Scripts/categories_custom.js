@@ -392,16 +392,16 @@ jQuery(document).ready(function($)
 		$( "#slider-range" ).slider(
 		{
 			range: true,
-			min: 0,
-			max: 1000,
-			values: [ 0, 580 ],
+			min: pricemin,
+			max: pricemax,
+			values: [ pricemin, pricemax ],
 			slide: function( event, ui )
 			{
-				$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+				$( "#amount" ).val(ui.values[ 0 ] + " VND - " + ui.values[ 1 ] + " VND");
 			}
 		});
 			
-		$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) + " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+		$( "#amount" ).val($( "#slider-range" ).slider( "values", 0 ) + " VND - " + $( "#slider-range" ).slider( "values", 1 )+" VND" );
     }
 
     /* 

@@ -31,18 +31,64 @@ namespace BTLWebMVC.Controllers
             return View(products); 
         }
 
-        public ActionResult categories(int? page)
+        public ActionResult Categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
-            int pageSize = 16;
-            int pageNumber = (page ?? 1); 
+            int pageSizeValue = 12;
+            int pageNumber = page ?? 1;
 
-            var products = db.Products.OrderBy(p => p.ProductID)
-                .Include(p => p.Images)
-                .Include (p => p.Category)
-                .ToPagedList(pageNumber, pageSize);
+            ViewBag.Categories = db.Categories.AsNoTracking().ToList();
 
-            return View(products);
+            // Lấy giá trị min và max cho giá sản phẩm
+            var priceRange = db.Products.Select(p => p.UnitPrice);
+            ViewBag.PriceMin = minPrice ?? priceRange.Min();
+            ViewBag.PriceMax = maxPrice ?? priceRange.Max();
+
+            var products = db.Products.AsQueryable();
+
+            // Tìm kiếm sản phẩm theo tên
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.ProductName.Contains(searchString));
+            }
+
+            // Lọc theo giá
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.UnitPrice >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.UnitPrice <= maxPrice.Value);
+            }
+
+            // Lọc theo danh mục (category)
+            if (categoryId.HasValue)
+            {
+                products = products.Where(p => p.CategoryID == categoryId.Value);
+            }
+
+            switch (sortOrder)
+            {
+                case "price":
+                    products = products.OrderBy(p => p.UnitPrice);
+                    break;
+                case "name":
+                    products = products.OrderBy(p => p.ProductName);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.ProductID);
+                    break;
+            }
+            // Phân trang và nạp dữ liệu liên quan
+            var pagedProducts = products
+                                .Include(p => p.Images)
+                                .Include(p => p.Category)
+                                .AsNoTracking()
+                                .ToPagedList(pageNumber, pageSizeValue);
+
+            return View(pagedProducts);
         }
+
         public ActionResult Details(int id) 
         { 
             return View();
