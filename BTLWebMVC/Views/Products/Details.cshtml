@@ -2,89 +2,94 @@
 
 @{
     ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
-<h2>Details</h2>
+<div class="content-wrapper">
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-        Loại sản phẩm
-        </dt>
+    <h2>Thông tin chi tiết sản phẩm</h2>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.CategoryName)
-        </dd>
+    <div>
+        <h4>Product</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Loại sản phẩm
+            </dt>
 
-        <dt>
-         Nhà cung cấp
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Category.CategoryName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Supplier.SupplierName)
-        </dd>
+            <dt>
+                Nhà cung cấp
+            </dt>
 
-        <dt>
-            Tên sản phẩm
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Supplier.SupplierName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProductName)
-        </dd>
+            <dt>
+                Tên sản phẩm
+            </dt>
 
-        <dt>
-          Số lượng
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ProductName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.QuantityPerUnit)
-        </dd>
+            <dt>
+                Số lượng
+            </dt>
 
-        <dt>
-         Giá đơn vị
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.QuantityPerUnit)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.UnitPrice)
-        </dd>
+            <dt>
+                Giá đơn vị
+            </dt>
 
-        <dt>
-          Số lượng kho
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UnitPrice)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.UnitsInStock)
-        </dd>
+            <dt>
+                Số lượng kho
+            </dt>
 
-        <dt>
-           Số lượng đơn hàng
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UnitsInStock)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.UnitsOnOrder)
-        </dd>
+            <dt>
+                Số lượng đơn hàng
+            </dt>
 
-        <dt>
-         Tình trạng
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UnitsOnOrder)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Discontinued)
-        </dd>
+            <dt>
+                Tình trạng
+            </dt>
 
-        <dt>
-            Mô tả chi tiết
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Discontinued)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProductDescription)
-        </dd>
+            <dt>
+                Mô tả chi tiết
+            </dt>
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+            <dd>
+                @Html.DisplayFor(model => model.ProductDescription)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+</div> 
