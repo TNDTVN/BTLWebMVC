@@ -2280,7 +2280,6 @@
     <Content Include="Scripts\cldr\event.js" />
     <Content Include="Scripts\cldr\supplemental.js" />
     <Content Include="Scripts\cldr\unresolved.js" />
-    <Content Include="Scripts\categories_custom.js" />
     <Content Include="Scripts\contact_custom.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\globalize.js" />
