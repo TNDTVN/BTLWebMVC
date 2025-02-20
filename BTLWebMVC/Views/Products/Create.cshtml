@@ -5,91 +5,151 @@
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
+<style>
+    body {
+        background-color: #f5f7fa;
+    }
 
+    .content-wrapper {
+        padding: 2rem;
+    }
+
+    #custom-card {
+        border-radius: 10px;
+        border: none;
+        background: #fff;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 1rem 1.5rem;
+    }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        box-shadow: none;
+        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.4);
+        transition: opacity 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+    .btn-outline-secondary {
+        border: 1px solid #6c757d;
+        color: #6c757d;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+</style>
 
 <div class="content-wrapper">
-   
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="card shadow-lg p-4" id="custom-card">
-            <div class="card-header text-center text-black">
-                <h2>Tạo sản phẩm</h2>
+        <div class="card shadow-lg p-4 rounded-3 border-0" id="custom-card">
+            <div class="card-header text-center text-white bg-primary rounded-top">
+                <h2 class="fw-bold">Tạo sản phẩm</h2>
             </div>
             <div class="card-body">
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label class="form-label">Tên sản phẩm</label>
-                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Tên sản phẩm</label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control border-primary" } })
                             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Mã loại sản phẩm</label>
-                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-select" })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Mã loại sản phẩm</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-select select2bs4 border-primary" })
                             @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Mã nhà cung cấp</label>
-                            @Html.DropDownList("SupplierID", null, htmlAttributes: new { @class = "form-select" })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Mã nhà cung cấp</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("SupplierID", null, htmlAttributes: new { @class = "form-select select2bs4 border-primary" })
                             @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "text-danger" })
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Số lượng</label>
-                            @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Số lượng</label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control border-primary" } })
                             @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "text-danger" })
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Giá Đơn Vị</label>
-                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Giá Đơn Vị</label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control border-primary" } })
                             @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Số lượng tồn kho</label>
-                            @Html.EditorFor(model => model.UnitsInStock, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.UnitsInStock, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Số lượng hóa đơn</label>
-                            @Html.EditorFor(model => model.UnitsOnOrder, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.UnitsOnOrder, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-check">
-                                @Html.EditorFor(model => model.Discontinued, new { htmlAttributes = new { @class = "form-check-input" } })
-                                <label class="form-check-label">Tình trạng hàng</label>
-                                @Html.ValidationMessageFor(model => model.Discontinued, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Mô tả chi tiết sản phẩm</label>
-                            @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = "3" })
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Mô tả chi tiết sản phẩm</label>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control border-primary", rows = "3" })
                             @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "text-danger" })
                         </div>
-
-                        <div class="col-md-12 text-center mt-3">
-                            <button type="submit" class="btn btn-primary px-4">Tạo sản phẩm</button>
-                            @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-light ms-2" })
+                        <div class="offset-md-3 col-md-9 text-center">
+                            <button type="submit" class="btn btn-primary px-5 fw-semibold shadow">Tạo sản phẩm</button>
+                            @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-secondary px-4 ms-2 fw-semibold" })
                         </div>
                     </div>
+
+                    
                 }
             </div>
         </div>
     </div>
-
-
 </div>
 
-
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+<!-- Select2 Script -->
+<script>
+    $(document).ready(function () {
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        });
+    });
+</script>
