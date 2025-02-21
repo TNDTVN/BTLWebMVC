@@ -31,6 +31,10 @@ namespace BTLWebMVC.Controllers
             {
                 return RedirectToAction("Index", "HomeManager", new { id = account.AccountID });
             }
+            else if (account.Role == "Employee")
+            {
+                return RedirectToAction("Index", "HomeManager", new { id = account.AccountID });
+            }
             else if (account.Role == "Customer")
             {
                 return RedirectToAction("Index", "Home", new { id = account.AccountID });
