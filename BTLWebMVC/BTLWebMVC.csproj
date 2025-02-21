@@ -2166,6 +2166,8 @@
     <Content Include="Content\styles\main_styles.css" />
     <Content Include="Content\styles\pagination.css" />
     <Content Include="Content\styles\responsive.css" />
+    <Content Include="Content\styles\single_responsive.css" />
+    <Content Include="Content\styles\single_styles.css" />
     <Content Include="Content\styles\spinner.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
