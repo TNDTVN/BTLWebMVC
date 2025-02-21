@@ -7,89 +7,66 @@
 
 <div class="content-wrapper">
 
-    <h2>Thông tin chi tiết sản phẩm</h2>
 
-    <div>
-        <h4>Product</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                Loại sản phẩm
-            </dt>
+    <div class="card shadow-sm p-4">
+        <h2 class="text-primary text-center mb-4">Thông tin chi tiết sản phẩm</h2>
 
-            <dd>
-                @Html.DisplayFor(model => model.Category.CategoryName)
-            </dd>
+        <div class="row">
+            <div class="col-md-6">
+                <dt class="col-sm-8 shadow-sm">
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        var img = Model.Images.First();
+            <img src="@Url.Content("~/Content/Images/" + img.ImageName)" alt="Product Image" class="img-fluid rounded shadow-sm" style="max-height:400px;" /> }
+                        else
+                        {
+            <span>Không có hình ảnh</span>}
+                </dt>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-secondary">Thông tin sản phẩm</h4>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-4 fw-bold">Loại sản phẩm</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Category.CategoryName)</dd>
 
-            <dt>
-                Nhà cung cấp
-            </dt>
+                    <dt class="col-sm-4 fw-bold">Nhà cung cấp</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Supplier.SupplierName)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Supplier.SupplierName)
-            </dd>
+                    <dt class="col-sm-4 fw-bold">Tên sản phẩm</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ProductName)</dd>
 
-            <dt>
-                Tên sản phẩm
-            </dt>
+                    <dt class="col-sm-4 fw-bold">Số lượng</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.QuantityPerUnit)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.ProductName)
-            </dd>
+                    <dt class="col-sm-4 fw-bold">Giá đơn vị</dt>
+                    <dd class="col-sm-8 text-danger fw-bold">@Html.DisplayFor(model => model.UnitPrice) VNĐ</dd>
 
-            <dt>
-                Số lượng
-            </dt>
+                    <dt class="col-sm-4 fw-bold">Số lượng kho</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.UnitsInStock)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.QuantityPerUnit)
-            </dd>
+                    <dt class="col-sm-4 fw-bold">Số lượng đơn hàng</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.UnitsOnOrder)</dd>
 
-            <dt>
-                Giá đơn vị
-            </dt>
+                    <dt class="col-sm-4 fw-bold">Tình trạng</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Discontinued)
+                        {
+            <span class="badge bg-danger">Ngừng bán</span> }
+                        else
+                        {
+            <span class="badge bg-success">Còn hàng</span>}
+                    </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.UnitPrice)
-            </dd>
+                    <dt class="col-sm-4 fw-bold">Mô tả chi tiết</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ProductDescription)</dd>
+                </dl>
+            </div>
+        </div>
 
-            <dt>
-                Số lượng kho
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UnitsInStock)
-            </dd>
-
-            <dt>
-                Số lượng đơn hàng
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UnitsOnOrder)
-            </dd>
-
-            <dt>
-                Tình trạng
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Discontinued)
-            </dd>
-
-            <dt>
-                Mô tả chi tiết
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ProductDescription)
-            </dd>
-
-        </dl>
+        <div class="text-center mt-4">
+            @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-warning me-2" })
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
     </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-
-</div> 
+</div>
