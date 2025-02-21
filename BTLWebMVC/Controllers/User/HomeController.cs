@@ -85,8 +85,14 @@ namespace BTLWebMVC.Controllers
             return View(pagedProducts);
         }
         public ActionResult Details(int id) 
-        { 
-            return View();
+        {
+            var products = db.Products.FirstOrDefault(p => p.ProductID == id);
+            if (products == null)
+            {
+                TempData["ErrorMessage"] = "Không tồn tại sản phẩm với id: " + id;
+                return RedirectToAction("Index","Home");
+            }
+            return View(products);
         }
     }
 }
