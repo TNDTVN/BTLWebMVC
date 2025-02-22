@@ -37,10 +37,8 @@
             }
         });
     </script>
-  
 
     <div class="wrapper">
-        <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake"
                  src="dist/img/AdminLTELogo.png"
@@ -257,7 +255,7 @@
                         role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                    with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="@Url.Action("Index","HomeManager")" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -307,7 +305,7 @@
             </div>
             <!-- /.sidebar -->
         </aside>
-   
+
         <!-- Content Wrapper. Contains page content -->
 
         <div>
@@ -367,5 +365,24 @@
     <script src="~/Content/dist/js/adminlte.js"></script>
     AdminLTE dashboard demo (This is only for demo purposes)
     <script src="~/Content/dist/js/adminlte.js"></script>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+             $(document).ready(function () {
+                 alert(@Html.Raw(Json.Encode(TempData["SuccessMessage"])));
+                 console.log("SuccessMessage: " + @Html.Raw(Json.Encode(TempData["SuccessMessage"])));
+             });
+        </script>
+        TempData["SuccessMessage"] = null;
+    }
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+             $(document).ready(function () {
+                 alert(@Html.Raw(Json.Encode(TempData["ErrorMessage"])));
+                 console.log("ErrorMessage: " + @Html.Raw(Json.Encode(TempData["ErrorMessage"])));
+             });
+        </script>
+    }
 </body>
 </html>

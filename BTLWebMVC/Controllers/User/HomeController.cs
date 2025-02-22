@@ -31,7 +31,7 @@ namespace BTLWebMVC.Controllers
             return View(products); 
         }
 
-        public ActionResult Categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
+        public ActionResult categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
             int pageSizeValue = 12;
             int pageNumber = page ?? 1;
@@ -85,8 +85,17 @@ namespace BTLWebMVC.Controllers
             return View(pagedProducts);
         }
         public ActionResult Details(int id) 
-        { 
-            return View();
+        {
+            var products = db.Products.FirstOrDefault(p => p.ProductID == id);
+            var images = db.Images.Where(p => p.ProductID == id).ToList();
+            if (products == null)
+            {
+                TempData["ErrorMessage"] = "Không tồn tại sản phẩm với id: " + id;
+                return RedirectToAction("Index","Home");
+            }
+            ViewBag.Images = images;
+            ViewBag.ReturnUrl = Request.UrlReferrer?.ToString() ?? Url.Action("Index", "Home");
+            return View(products);
         }
     }
 }

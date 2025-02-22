@@ -2165,6 +2165,8 @@
     <Content Include="Content\styles\main_styles.css" />
     <Content Include="Content\styles\pagination.css" />
     <Content Include="Content\styles\responsive.css" />
+    <Content Include="Content\styles\single_responsive.css" />
+    <Content Include="Content\styles\single_styles.css" />
     <Content Include="Content\styles\spinner.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -2314,6 +2316,7 @@
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\Home\categories.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\Customers\Create.cshtml" />
     <Content Include="Views\Customers\Delete.cshtml" />
     <Content Include="Views\Customers\Details.cshtml" />
