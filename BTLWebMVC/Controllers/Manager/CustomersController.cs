@@ -22,21 +22,7 @@ namespace BTLWebMVC.Controllers
             return View(customers.ToList());
         }
 
-        // GET: Customers/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
-        }
-
+   
         
    
 
