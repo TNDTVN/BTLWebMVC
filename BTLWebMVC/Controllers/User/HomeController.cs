@@ -87,11 +87,13 @@ namespace BTLWebMVC.Controllers
         public ActionResult Details(int id) 
         {
             var products = db.Products.FirstOrDefault(p => p.ProductID == id);
+            var images = db.Images.Where(p => p.ProductID == id).ToList();
             if (products == null)
             {
                 TempData["ErrorMessage"] = "Không tồn tại sản phẩm với id: " + id;
                 return RedirectToAction("Index","Home");
             }
+            ViewBag.Images = images;
             return View(products);
         }
     }
