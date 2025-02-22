@@ -37,7 +37,7 @@ namespace BTLWebMVC.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Edit/5
+        
    
 
     }
