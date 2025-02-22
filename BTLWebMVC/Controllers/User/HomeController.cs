@@ -31,7 +31,7 @@ namespace BTLWebMVC.Controllers
             return View(products); 
         }
 
-        public ActionResult Categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
+        public ActionResult categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
             int pageSizeValue = 12;
             int pageNumber = page ?? 1;
@@ -94,6 +94,7 @@ namespace BTLWebMVC.Controllers
                 return RedirectToAction("Index","Home");
             }
             ViewBag.Images = images;
+            ViewBag.ReturnUrl = Request.UrlReferrer?.ToString() ?? Url.Action("Index", "Home");
             return View(products);
         }
     }
