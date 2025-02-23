@@ -1,3 +1,18 @@
+System.Data.SqlClient.SqlException (0x80131904): Login failed for user 'IIS APPPOOL\psymint.it'.
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.SqlClient.SqlConnection.TryOpenInner(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.Open()
+   at System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext](TTarget target, Action`2 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   at System.Data.Entity.Infrastructure.Interception.DbConnectionDispatcher.Open(DbConnection connection, DbInterceptionContext interceptionContext)
+   at System.Data.Entity.SqlServer.SqlProviderServices.<>c__DisplayClass33.<UsingConnection>b__32()
+   at System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.<>c__DisplayClass1.<Execute>b__0()
+   at System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   at System.Data.Entity.SqlServer.SqlProviderServices.UsingMasterConnection(DbConnection sqlConnection, Action`1 act)
+   at System.Data.Entity.SqlServer.SqlProviderServices.CreateDatabaseFromScript(Nullable`1 commandTimeout, DbConnection sqlConnection, String createDatabaseScript)
 System.Data.SqlClient.SqlException (0x80131904): Database 'MVC' already exists. Choose a different database name.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -22,6 +37,9 @@ System.Data.SqlClient.SqlException (0x80131904): Database 'MVC' already exists. 
    at System.Data.Entity.CreateDatabaseIfNotExists`1.InitializeDatabase(TContext context)
    at System.Data.Entity.Internal.InternalContext.PerformInitializationAction(Action action)
    at System.Data.Entity.Internal.InternalContext.PerformDatabaseInitialization()
+   at BTLWebMVC.MvcApplication.Application_Start() in D:\Dthu\HK6\MVC\BTL_MVC\BTLWebMVC\BTLWebMVC\Global.asax.cs:line 21
+ClientConnectionId:1d82ff37-f0eb-41f9-aae8-57968af4db65
+Error Number:18456,State:1,Class:14
    at BTLWebMVC.MvcApplication.Application_Start() in D:\LapTrinhWebMVC\BTLWebMVC\BTLWebMVC\Global.asax.cs:line 21
 ClientConnectionId:15c7d613-2a4c-4e77-93b3-c41d1e35b5f8
 Error Number:1801,State:3,Class:16
