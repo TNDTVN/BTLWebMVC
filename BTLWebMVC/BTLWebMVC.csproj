@@ -135,6 +135,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Manager\CustomersController.cs" />
+    <Compile Include="Controllers\Manager\OrdersController.cs" />
     <Compile Include="Controllers\Manager\ProductsController.cs" />
     <Compile Include="Controllers\User\HomeController.cs" />
     <Compile Include="Controllers\Manager\HomeManagerController.cs" />
@@ -2328,6 +2329,8 @@
     <Content Include="Views\Customers\Details.cshtml" />
     <Content Include="Views\Customers\Edit.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
