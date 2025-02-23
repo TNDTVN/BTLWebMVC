@@ -71,10 +71,10 @@
                 <div class="product_price">@Model.UnitPrice.ToString("N0") VND</div>
                 <ul class="star_rating">
                     @*<li><i class="fa fa-star" aria-hidden="true"></i></li>
-                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                    <li><i class="fa fa-star-o" aria-hidden="true"></i></li>*@
+                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>*@
                 </ul>
                 <div class="product_color">
                     @{
@@ -85,11 +85,11 @@
                 <div class="product_color">
                     <span>Đơn vị trên sản phẩm: @Model.QuantityPerUnit</span>
                     @*<span>Select Color:</span>
-                    <ul>
-                        <li style="background: #e54e5d"></li>
-                        <li style="background: #252525"></li>
-                        <li style="background: #60b3f3"></li>
-                    </ul>*@
+                        <ul>
+                            <li style="background: #e54e5d"></li>
+                            <li style="background: #252525"></li>
+                            <li style="background: #60b3f3"></li>
+                        </ul>*@
                 </div>
                 <div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
                     <span>Số Lượng:</span>
@@ -107,53 +107,80 @@
             </div>
         </div>
     </div>
-
+    <div id="addToCartModal" class="modal fade" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addToCartModalLabel">Xác nhận thêm vào giỏ hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <img id="modalProductImage" src="" alt="Ảnh sản phẩm" class="img-fluid mb-3" style="max-width: 200px;">
+                    </div>
+                    <p><strong>Tên sản phẩm:</strong> <span id="modalProductName"></span></p>
+                    <p><strong>Giá:</strong> <span id="modalProductPrice"></span> VND</p>
+                    <p><strong>Số lượng:</strong> <span id="modalQuantity"></span></p>
+                    <p><strong>Số lượng tồn:</strong> <span id="modalStock"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="confirmAddToCart">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="~/Scripts/user/details.js"></script>
 <script>
+    accountId = @Session["AccountId"]
     document.addEventListener("DOMContentLoaded", function () {
-        const thumbnails = document.querySelectorAll("#thumbnail-list .thumbnail-item");
-        const mainImage = document.getElementById("main-image");
+    const addToCartButton = document.querySelector(".add_to_cart_button");
+    const quantityValue = document.getElementById("quantity_value");
+    const modal = document.getElementById("addToCartModal");
+    const modalInstance = new bootstrap.Modal(modal);
 
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener("click", function () {
-                thumbnails.forEach(item => item.classList.remove("active"));
+    const productName = "@Model.ProductName";
+    const productPrice = "@Model.UnitPrice.ToString("N0")";
+    const productStock = @Model.UnitsInStock;
+    const productImage = "@Url.Content("~/Content/Images/" + (images?.FirstOrDefault()?.ImageName ?? "default.jpg"))";
 
-                thumbnail.classList.add("active");
+    addToCartButton.addEventListener("click", function () {
+        const quantity = parseInt(quantityValue.textContent);
 
-                const imageUrl = thumbnail.getAttribute("data-image");
-                mainImage.style.backgroundImage = `url('${imageUrl}')`;
-            });
-        });
+        document.getElementById("modalProductName").textContent = productName;
+        document.getElementById("modalProductPrice").textContent = productPrice;
+        document.getElementById("modalQuantity").textContent = quantity;
+        document.getElementById("modalStock").textContent = productStock;
+        document.getElementById("modalProductImage").src = productImage;
+
+        modalInstance.show();
     });
-    document.addEventListener("DOMContentLoaded", function () {
-        const minusBtn = document.querySelector(".minus");
-        const plusBtn = document.querySelector(".plus");
-        const quantityValue = document.getElementById("quantity_value");
-        const addToCartButton = document.querySelector(".add_to_cart_button");
 
-        let quantity = 1;
+    document.getElementById("confirmAddToCart").addEventListener("click", function () {
+        const quantity = parseInt(quantityValue.textContent);
 
-        function updateButtonVisibility() {
-            console.log("Quantity:", quantity);
-            console.log("Button display:", quantity > 0 ? "inline-block" : "none");
-            addToCartButton.style.display = quantity > 0 ? "inline-block" : "none";
+        if (accountId == null) {
+            alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+            return;
         }
 
-        plusBtn.addEventListener("click", function () {
-            quantity++;
-            quantityValue.textContent = quantity;
-            updateButtonVisibility();
-        });
+        if (quantity > productStock) {
+            alert("Số lượng sản phẩm không đủ!");
+            return;
+        }
 
-        minusBtn.addEventListener("click", function () {
-            if (quantity > 1) {
-                quantity--;
-                quantityValue.textContent = quantity;
-                updateButtonVisibility();
+        $.post("@Url.Action("AddToCart", "Home")", { productId: @Model.ProductID, quantity: quantity }, function (response) {
+            if (response.success) {
+                alert("Sản phẩm đã được thêm vào giỏ hàng!");
+                modalInstance.hide();
+                location.reload();
+            } else {
+                alert(response.message);
             }
         });
-
-        updateButtonVisibility();
     });
+});
 
 </script>
+

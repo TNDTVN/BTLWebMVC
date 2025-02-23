@@ -97,6 +97,50 @@ namespace BTLWebMVC.Controllers
             ViewBag.ReturnUrl = Request.UrlReferrer?.ToString() ?? Url.Action("Index", "Home");
             return View(products);
         }
+        [HttpPost]
+        public JsonResult AddToCart(int productId, int quantity)
+        {
+            if (Session["AccountId"] == null)
+            {
+                return Json(new { success = false, message = "Bạn cần đăng nhập để thêm vào giỏ hàng!" });
+            }
+
+            var accountId = (int)Session["AccountId"];
+            var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId);
+            if (customer == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy thông tin khách hàng!" });
+            }
+
+            var product = db.Products.Include(p => p.Images).FirstOrDefault(p => p.ProductID == productId);
+            if (product == null || product.UnitsInStock < quantity)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại hoặc số lượng không đủ!" });
+            }
+
+            var cartItem = db.CartItems.FirstOrDefault(ci => ci.CustomerID == customer.CustomerID && ci.ProductID == productId);
+            if (cartItem != null)
+            {
+                cartItem.Quantity += quantity;
+            }
+            else
+            {
+                db.CartItems.Add(new CartItems
+                {
+                    CustomerID = customer.CustomerID,
+                    ProductID = productId,
+                    Quantity = quantity,
+                    UnitPrice = product.UnitPrice,
+                    ProductName = product.ProductName,
+                    ImageUrl = product.Images.FirstOrDefault()?.ImageName
+                });
+            }
+
+            product.UnitsInStock -= quantity; 
+            db.SaveChanges();
+
+            return Json(new { success = true });
+        }
 
     }
 }
