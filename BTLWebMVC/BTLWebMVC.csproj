@@ -139,6 +139,8 @@
     <Compile Include="Controllers\User\HomeController.cs" />
     <Compile Include="Controllers\Manager\HomeManagerController.cs" />
     <Compile Include="Controllers\About\LoginController.cs" />
+    <Compile Include="Controllers\User\UserAcountController.cs" />
+    <Compile Include="Controllers\User\UserCartItemsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2264,6 +2266,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\accountImages\" />
+    <Folder Include="Views\UserAcount\" />
+    <Folder Include="Views\UserCartItems\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css.map" />

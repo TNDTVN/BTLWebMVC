@@ -54,12 +54,12 @@ namespace BTLWebMVC.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
         public ActionResult Register()
         {
             return View();
         }
-        public ActionResult Register_check()
+        [HttpPost]
+        public ActionResult Register(string username, string password, string email, string phone, string contactname)
         {
             return View();
         }
