@@ -35,5 +35,6 @@ namespace BTLWebMVC.Controllers.Manager
 
             return View(order);
         }
+        
     }
 }

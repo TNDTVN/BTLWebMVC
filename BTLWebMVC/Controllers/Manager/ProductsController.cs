@@ -15,14 +15,14 @@ namespace BTLWebMVC.Controllers
     {
         private Context db = new Context();
 
-        // GET: Products
+
         public ActionResult Index()
         {
             var products = db.Products.Include(p => p.Category).Include(p => p.Supplier);
             return View(products.ToList());
         }
 
-        // GET: Products/Details/5
+ 
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,7 +37,7 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+
         public ActionResult Create()
         {
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
@@ -45,9 +45,8 @@ namespace BTLWebMVC.Controllers
             return View();
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+       
+  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product)
@@ -64,7 +63,7 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
-        // GET: Products/Edit/5
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -81,9 +80,7 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product)
@@ -99,7 +96,6 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
-        // GET: Products/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -114,7 +110,6 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -133,5 +128,8 @@ namespace BTLWebMVC.Controllers
             }
             base.Dispose(disposing);
         }
+
+    
+      
     }
 }
