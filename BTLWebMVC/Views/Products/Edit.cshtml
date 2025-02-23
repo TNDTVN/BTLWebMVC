@@ -106,7 +106,7 @@
                         }
                     </div>
 
-                    <!-- Cột bên phải: Hiển thị hình ảnh -->
+                    <!--  Hiển thị hình ảnh -->
                     <div class="col-md-4 d-flex flex-column align-items-center">
                         <div class="text-center">
                             @if (Model.Images != null && Model.Images.Any())
@@ -124,8 +124,20 @@
                             <input type="file" name="ImageFile" id="imageUpload" class="form-control" accept="image/*" onchange="previewImage(event)">
                         </div>
                     </div>
-                </div> <!-- Kết thúc row -->
+
+                </div> 
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('previewImage');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
