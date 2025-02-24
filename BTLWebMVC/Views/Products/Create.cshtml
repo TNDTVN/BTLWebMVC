@@ -33,6 +33,14 @@
             margin: 0;
         }
 
+    #previewImage {
+        max-height: 300px;
+        max-width: 100%;
+        border-radius: 5px;
+        object-fit: cover;
+    }
+
+
     .form-label {
         font-weight: 600;
         color: #333;
@@ -141,7 +149,7 @@
                         </div>
                     </div>
 
-                    // Khu vực upload ảnh
+
                     <div class="mb-3 row">
                         <label class="col-md-3 col-form-label fw-semibold">Hình ảnh sản phẩm</label>
                         <div class="col-md-9">
@@ -153,7 +161,8 @@
                             </div>
                             @Html.ValidationMessageFor(model => model.Images, "", new { @class = "text-danger" })
                         </div>
-                    </div> // Khu vực hiển thị ảnh xem trước
+                    </div>
+
                     <div class="mb-4 row">
                         <label class="col-md-3 col-form-label fw-semibold">Xem trước</label>
                         <div class="col-md-9">
@@ -167,6 +176,7 @@
                             </div>
                         </div>
                     </div>
+
                     // cac nut
                     <div class="mb-3 row">
                         <label class="col-md-3 col-form-label fw-semibold">Mô tả chi tiết sản phẩm</label>
@@ -188,14 +198,7 @@
     </div>
 </div>
 
-<!-- Select2 Script -->
 <script>
-    $(document).ready(function () {
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        });
-    });
-
     function previewImage(event) {
         var output = document.getElementById('previewImage');
         if (event.target.files && event.target.files[0]) {
@@ -205,8 +208,9 @@
             };
             reader.readAsDataURL(event.target.files[0]);
         } else {
-            output.src = "~/Content/Images/default-placeholder.png"; // Reset về ảnh mặc định
+            output.src = "/Content/Images/default-product.jpg";
         }
     }
 
+ 
 </script>

@@ -41,9 +41,10 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Create()
         {
+            Product product = new Product();
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
             ViewBag.SupplierID = new SelectList(db.Suppliers, "SupplierID", "SupplierName");
-            return View();
+            return View(product);
         }
 
        
@@ -54,20 +55,34 @@ namespace BTLWebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
-                db.SaveChanges();
-                //upload anh
-                if (ImageFile != null && ImageFile.ContentLength > 0)
+                try
                 {
-                    string tenFile = Path.GetFileName(ImageFile.FileName);
-                    string duongDanAnh = Path.Combine(Server.MapPath("~/Content/Images"), tenFile);
-                    ImageFile.SaveAs(duongDanAnh);
-
-                    db.Images.Add(new Image { ProductID = product.ProductID, ImageName = tenFile });
+                    db.Products.Add(product);
                     db.SaveChanges();
 
+                    if (ImageFile != null && ImageFile.ContentLength > 0)
+                    {
+                        string thuMuc = Server.MapPath("~/Content/Images/"); // Lưu vào Content/Images
+                        if (!Directory.Exists(thuMuc))
+                        {
+                            Directory.CreateDirectory(thuMuc);
+                        }
+                        string tenFileGoc = Path.GetFileNameWithoutExtension(ImageFile.FileName);
+                        string duoiFile = Path.GetExtension(ImageFile.FileName);
+                        string tenFile = $"{tenFileGoc}_{DateTime.Now.Ticks}{duoiFile}"; // Tạo tên file duy nhất
+                        string duongDanAnh = Path.Combine(thuMuc, tenFile);
+                        ImageFile.SaveAs(duongDanAnh);
+
+                        db.Images.Add(new Image { ProductID = product.ProductID, ImageName = tenFile });
+                        db.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Đã xảy ra lỗi khi lưu sản phẩm: " + ex.Message);
+                }
             }
 
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
