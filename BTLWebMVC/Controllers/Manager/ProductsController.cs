@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
 using BTLWebMVC.Models;
+using System.IO;
 
 namespace BTLWebMVC.Controllers
 {
@@ -49,12 +50,23 @@ namespace BTLWebMVC.Controllers
   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product)
+        public ActionResult Create([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product, HttpPostedFileBase ImageFile)
         {
             if (ModelState.IsValid)
             {
                 db.Products.Add(product);
                 db.SaveChanges();
+                //upload anh
+                if (ImageFile != null && ImageFile.ContentLength > 0)
+                {
+                    string tenFile = Path.GetFileName(ImageFile.FileName);
+                    string duongDanAnh = Path.Combine(Server.MapPath("~/Content/Images"), tenFile);
+                    ImageFile.SaveAs(duongDanAnh);
+
+                    db.Images.Add(new Image { ProductID = product.ProductID, ImageName = tenFile });
+                    db.SaveChanges();
+
+                }
                 return RedirectToAction("Index");
             }
 
@@ -83,14 +95,34 @@ namespace BTLWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product)
+        public ActionResult Edit([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product, HttpPostedFileBase FileAnh)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
+                // upload anh
+                if (FileAnh != null && FileAnh.ContentLength > 0)
+                {
+                    string tenFile = System.IO.Path.GetFileName(FileAnh.FileName);
+                    string duongDanAnh = System.IO.Path.Combine(Server.MapPath("~/Content/Images"), tenFile);
+
+                    FileAnh.SaveAs(duongDanAnh);
+
+                    var AnhHienTai = db.Images.FirstOrDefault(i => i.ProductID == product.ProductID);
+                    if(AnhHienTai != null)
+                    {
+                        AnhHienTai.ImageName = tenFile; // cap nhap anh moi
+                    } 
+                    else
+                    {
+                        db.Images.Add(new Image { ProductID = product.ProductID, ImageName = tenFile });
+                    }
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
+       
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
             ViewBag.SupplierID = new SelectList(db.Suppliers, "SupplierID", "SupplierName", product.SupplierID);
             return View(product);
@@ -128,7 +160,7 @@ namespace BTLWebMVC.Controllers
             }
             base.Dispose(disposing);
         }
-
+        
     
       
     }

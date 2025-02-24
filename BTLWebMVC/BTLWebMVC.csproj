@@ -246,6 +246,7 @@
     <Content Include="Content\Images\banner_1.jpg" />
     <Content Include="Content\Images\banner_2.jpg" />
     <Content Include="Content\Images\banner_3.jpg" />
+    <Content Include="Content\Images\default-product.jpg" />
     <Content Include="Content\Images\images %281%29.jpg" />
     <Content Include="Content\Images\images.jpg" />
     <Content Include="Content\Images\product_1.png" />

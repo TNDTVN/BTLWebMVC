@@ -16,7 +16,7 @@
                 <div class="row">
                     <!-- Form chỉnh sửa sản phẩm -->
                     <div class="col-md-8">
-                        @using (Html.BeginForm())
+                        @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
