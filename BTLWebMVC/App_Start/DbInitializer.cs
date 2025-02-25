@@ -14,7 +14,7 @@ namespace BTLWebMVC.App_Start
                         new Account {Username = "admin",
                         Password = "admin123",
                         Email = "admin@vtnn.com",
-                        ProfileImage = "profile.png",
+                        ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
                         Role = "Admin",
                         TokenCode = null
@@ -22,7 +22,7 @@ namespace BTLWebMVC.App_Start
                         new Account {Username = "customer",
                         Password = "customer123",
                         Email = "customer@vtnn.com",
-                        ProfileImage = "profile.png",
+                        ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
                         Role = "Customer",
                         TokenCode= null
@@ -30,7 +30,7 @@ namespace BTLWebMVC.App_Start
                         new Account {Username = "employee",
                         Password = "employee123",
                         Email = "employee@vtnn.com",
-                        ProfileImage = "profile.png",
+                        ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
                         Role = "Employee",
                         TokenCode = null
