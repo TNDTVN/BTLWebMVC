@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Data.Entity;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -17,6 +18,33 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    @{
+        if (Session["AccountId"] != null && int.TryParse(Session["AccountId"].ToString(), out int account))
+        {
+            using (var context = new BTLWebMVC.App_Start.Context())
+            {
+                var customer = context.Customers
+                    .Include(c => c.Account)
+                    .FirstOrDefault(c => c.AccountID == account);
+
+                if (customer != null)
+                {
+                    ViewBag.cartItem = context.CartItems.Count(c => c.CustomerID == customer.CustomerID);
+                    ViewBag.images = customer.Account?.ProfileImage ?? "profile.jpg";
+                }
+                else
+                {
+                    ViewBag.images = "profile.jpg";
+                    ViewBag.cartItem = 0;
+                }
+            }
+        }
+        else
+        {
+            ViewBag.images = "profile.jpg";
+            ViewBag.cartItem = 0;
+        }
+    }
     <div id="loading-spinner">
         <div class="spinner"></div>
     </div>
@@ -71,12 +99,11 @@
                                     </li>
                                 </ul>
                                 <ul class="navbar_user">
-                                    <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><img src="~/Content/accountImages/@ViewBag.images" alt="Profile" class="user-icon"/></a></li>
                                     <li class="checkout">
                                         <a href="#">
                                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                            <span id="checkout_items" class="checkout_items">0</span>
+                                            <span id="checkout_items" class="checkout_items">@ViewBag.cartItem</span>
                                         </a>
                                     </li>
                                 </ul>

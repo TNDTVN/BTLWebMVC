@@ -270,6 +270,27 @@ section
 	background: #FFFFFF;
 	z-index: 10;
 }
+.navbar_user {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+	.navbar_user li {
+		position: relative;
+	}
+
+	.navbar_user img {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+		display: block;
+		cursor: pointer;
+	}
 /*********************************
 3.1 Currency
 *********************************/
