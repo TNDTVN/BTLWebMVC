@@ -41,10 +41,10 @@ namespace BTLWebMVC.App_Start
 
             var categories = new List<Category>
                     {
-                        new Category { CategoryName = "Phân bón", Description = "Các loại phân cho cây trồng" },
-                        new Category { CategoryName = "Hạt giống", Description = "Hạt giống các loại cây trồng nông nghiệp" },
-                        new Category { CategoryName = "Thuốc trừ sâu", Description = "Các loại thuốc bảo vệ thực vật" },
-                        new Category { CategoryName = "Công cụ", Description = "Các loại công cụ cho nông nghiệp" }
+                        new Category { CategoryName = "Linh kiện", Description = "Linh kiện máy tính" },
+                        new Category { CategoryName = "Phụ kiện", Description = "Phụ kiện công nghệ" },
+                        new Category { CategoryName = "Thiết bị mạng", Description = "Thiết bị mạng" },
+                        new Category { CategoryName = "Ngoại vi", Description = "Thiết bị ngoại vi" }
                     };
             context.Categories.AddRange(categories);
             context.SaveChanges();
@@ -82,10 +82,10 @@ namespace BTLWebMVC.App_Start
                         new Product { ProductName = "Intel core I9-13900k", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 12900000m, UnitsInStock = 100, UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bộ xử lý - CPU Intel Core I9_13900k" },
                         new Product { ProductName = "AMD Radeon™ RX 7900 XTX 24G – 24GB GDDR6", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 31500000m, UnitsInStock = 150, UnitsOnOrder = 20, Discontinued = false, ProductDescription = "AMD Radeon™ RX 7900 XTX 24G – 24GB GDDR6" },
                         new Product { ProductName = "Mainboard Bo mạch chủ MSI A320M A PRO", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "5 kg", UnitPrice = 1270000m, UnitsInStock = 120, UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Mainboard Bo mạch chủ MSI A320M A PRO (AMD A320, Socket AM4, m-ATX, 2 khe RAM DDR4)" },
-                        new Product { ProductName = "Bộ nguồn Corsair", CategoryID = 2, SupplierID = 2, QuantityPerUnit = "500 g", UnitPrice = 4350000m, UnitsInStock = 200, UnitsOnOrder = 30, Discontinued = false, ProductDescription = "Corsair RMx Series RM850x 850 Watt Power Supply, 80 PLUS Gold, PSU, Fully Modular, ATX, Black, UK, (2021) | CP-9020200-UK" },
-                        new Product { ProductName = "Bộ nhớ trong DDR4", CategoryID = 2, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 2350000m, UnitsInStock = 250, UnitsOnOrder = 40, Discontinued = false, ProductDescription = "TeamGroup TF3D432G3600HC18JDC01 T-Force Delta RGB 32GB (2x16GB) DDR4-3600MHz CL18 1.35V Black Desktop Memory" },
-                        new Product { ProductName = "Ổ cứng lưu trữ Toshiba 4TB", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "100 ml", UnitPrice = 12250000m, UnitsInStock = 300, UnitsOnOrder = 50, Discontinued = false, ProductDescription = "Toshiba X300 4TB Performance Desktop and Gaming Hard Drive 7200 RPM 128MB Cache SATA 6.0Gb/s 3.5 Inch Internal Hard Drive Retail Packaging HDWE140XZSTA" },
-                        new Product { ProductName = "Quạt tản nhiệt NZXT", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "200 ml", UnitPrice = 3495000m, UnitsInStock = 147, UnitsOnOrder = 23, Discontinued = false, ProductDescription = "NZXT KRAKEN X63 RGB – 280MM AIO LIQUID COOLER WITH RGB FANS & INFINITY MIRROR DISPLAY" },
+                        new Product { ProductName = "Bộ nguồn Corsair", CategoryID = 1, SupplierID = 2, QuantityPerUnit = "500 g", UnitPrice = 4350000m, UnitsInStock = 200, UnitsOnOrder = 30, Discontinued = false, ProductDescription = "Corsair RMx Series RM850x 850 Watt Power Supply, 80 PLUS Gold, PSU, Fully Modular, ATX, Black, UK, (2021) | CP-9020200-UK" },
+                        new Product { ProductName = "Bộ nhớ trong DDR4", CategoryID = 1, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 2350000m, UnitsInStock = 250, UnitsOnOrder = 40, Discontinued = false, ProductDescription = "TeamGroup TF3D432G3600HC18JDC01 T-Force Delta RGB 32GB (2x16GB) DDR4-3600MHz CL18 1.35V Black Desktop Memory" },
+                        new Product { ProductName = "Ổ cứng lưu trữ Toshiba 4TB", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "100 ml", UnitPrice = 12250000m, UnitsInStock = 300, UnitsOnOrder = 50, Discontinued = false, ProductDescription = "Toshiba X300 4TB Performance Desktop and Gaming Hard Drive 7200 RPM 128MB Cache SATA 6.0Gb/s 3.5 Inch Internal Hard Drive Retail Packaging HDWE140XZSTA" },
+                        new Product { ProductName = "Quạt tản nhiệt NZXT", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "200 ml", UnitPrice = 3495000m, UnitsInStock = 147, UnitsOnOrder = 23, Discontinued = false, ProductDescription = "NZXT KRAKEN X63 RGB – 280MM AIO LIQUID COOLER WITH RGB FANS & INFINITY MIRROR DISPLAY" },
                         new Product { ProductName = "Bàn Phím Cơ", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 cái", UnitPrice = 590000m, UnitsInStock = 60, UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Bàn Phím Cơ K3 Premium Gaming Red Switch Có Dây" },
                         new Product { ProductName = "Chuột gaming Logitech", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 cái", UnitPrice = 416000m, UnitsInStock = 80, UnitsOnOrder = 20, Discontinued = false, ProductDescription = "Chuột gaming có dây Logitech G102 Gen 2 Lightsync RGB Black (910-005802)" },
                         new Product { ProductName = "Loa vi tính", CategoryID = 1, SupplierID = 1, QuantityPerUnit = "25 kg", UnitPrice = 140000, UnitsInStock = 130, UnitsOnOrder = 25, Discontinued = false, ProductDescription = "Loa máy tinh SOUNDMAX A-130 (2.0) - Protable Speaker System ~ Loa di động dành cho Laptop, ĐTDĐ" },
