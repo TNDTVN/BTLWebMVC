@@ -221,6 +221,7 @@
               console.log("ErrorMessage: " + @Html.Raw(Json.Encode(TempData["ErrorMessage"])));
           });
             </script>
+            TempData["ErrorMessage"] = null;
         }
     </div>
 </body>
