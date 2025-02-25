@@ -14,7 +14,8 @@ namespace BTLWebMVC.Controllers
         {
             return View();
         }
-        public ActionResult Check(string username, string password)
+        [HttpPost]
+        public ActionResult Login(string username, string password)
         {
             var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
 
