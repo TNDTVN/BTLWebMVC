@@ -33,6 +33,14 @@
             margin: 0;
         }
 
+    #previewImage {
+        max-height: 300px;
+        max-width: 100%;
+        border-radius: 5px;
+        object-fit: cover;
+    }
+
+
     .form-label {
         font-weight: 600;
         color: #333;
@@ -59,9 +67,15 @@
         transition: opacity 0.3s ease;
     }
 
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
 
     .btn-outline-secondary {
         border: 1px solid #6c757d;
@@ -73,6 +87,15 @@
             background-color: #6c757d;
             color: #fff;
         }
+
+    .preview-container {
+        text-align: center;
+    }
+
+        .preview-container img {
+            max-height: 300px;
+            border-radius: 5px;
+        }
 </style>
 
 <div class="content-wrapper">
@@ -82,7 +105,7 @@
                 <h2 class="fw-bold">Tạo sản phẩm</h2>
             </div>
             <div class="card-body">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
 
@@ -126,6 +149,35 @@
                         </div>
                     </div>
 
+
+                    <div class="mb-3 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Hình ảnh sản phẩm</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="file" name="ImageFile" id="imageUpload" class="form-control border-primary" accept="image/*" onchange="previewImage(event)">
+                                <label class="input-group-text" for="imageUpload">
+                                    <i class="fas fa-upload"></i> Chọn ảnh
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Images, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label class="col-md-3 col-form-label fw-semibold">Xem trước</label>
+                        <div class="col-md-9">
+                            <div class="preview-container shadow-sm p-3 bg-light rounded">
+                                <img id="previewImage"
+                                     src="~/Content/Images/default-product.jpg"
+                                     alt="Xem trước ảnh"
+                                     class="img-fluid rounded"
+                                     style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" />
+                                <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    // cac nut
                     <div class="mb-3 row">
                         <label class="col-md-3 col-form-label fw-semibold">Mô tả chi tiết sản phẩm</label>
                         <div class="col-md-9">
@@ -138,18 +190,27 @@
                         </div>
                     </div>
 
-                    
+
+
                 }
             </div>
         </div>
     </div>
 </div>
 
-<!-- Select2 Script -->
 <script>
-    $(document).ready(function () {
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        });
-    });
+    function previewImage(event) {
+        var output = document.getElementById('previewImage');
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            output.src = "/Content/Images/default-product.jpg";
+        }
+    }
+
+ 
 </script>
