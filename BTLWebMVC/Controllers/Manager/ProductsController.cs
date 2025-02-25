@@ -28,12 +28,14 @@ namespace BTLWebMVC.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["ErrorMessage"] = "Không có id sản phẩm!";
+                return View("Index");
             }
             Product product = db.Products.Find(id);
             if (product == null)
             {
-                return HttpNotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy sản phẩm!";
+                return View("Index");
             }
             return View(product);
         }
@@ -76,7 +78,7 @@ namespace BTLWebMVC.Controllers
                         db.Images.Add(new Image { ProductID = product.ProductID, ImageName = tenFile });
                         db.SaveChanges();
                     }
-
+                    TempData["SuccessMessage"] = "Tạo sản phẩm thành công!";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -100,6 +102,7 @@ namespace BTLWebMVC.Controllers
             Product product = db.Products.Find(id);
             if (product == null)
             {
+                TempData["ErrorMessage"] = "Không tìm thấy sản phẩm!";
                 return HttpNotFound();
             }
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
@@ -140,6 +143,7 @@ namespace BTLWebMVC.Controllers
        
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
             ViewBag.SupplierID = new SelectList(db.Suppliers, "SupplierID", "SupplierName", product.SupplierID);
+            TempData["SuccessMessage"] = "cập nhật sản phẩm thành công";
             return View(product);
         }
 
@@ -147,12 +151,14 @@ namespace BTLWebMVC.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["ErrorMessage"] = "Vui lòng truyền id!";
+                return View("Index");
             }
             Product product = db.Products.Find(id);
             if (product == null)
             {
-                return HttpNotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy sản phẩm";
+                return View("Index");
             }
             return View(product);
         }
@@ -164,6 +170,7 @@ namespace BTLWebMVC.Controllers
             Product product = db.Products.Find(id);
             db.Products.Remove(product);
             db.SaveChanges();
+            TempData["SuccessMessage"] = "Xóa sản phẩm thành công";
             return RedirectToAction("Index");
         }
 
