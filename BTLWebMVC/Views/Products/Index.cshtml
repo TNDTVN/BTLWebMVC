@@ -24,7 +24,7 @@
                             <th>Loại sản phẩm</th>
                             <th>Nhà cung cấp</th>
                             <th>Tên sản phẩm</th>
-                            <th>Số lượng</th>
+                   
                             <th>Giá</th>
                             <th>Số lượng tồn kho</th>
                             <th>Số lượng đặt hàng</th>
@@ -40,7 +40,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Supplier.SupplierName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.QuantityPerUnit)</td>
+                   
                                 <td>@item.UnitPrice.ToString("N0") VND</td>
                                 <td>@Html.DisplayFor(modelItem => item.UnitsInStock)</td>
                                 <td>@Html.DisplayFor(modelItem => item.UnitsOnOrder)</td>
