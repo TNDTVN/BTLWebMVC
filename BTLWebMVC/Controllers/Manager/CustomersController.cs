@@ -21,6 +21,11 @@ namespace BTLWebMVC.Controllers
             var customers = db.Customers.Include(c => c.Account);
             return View(customers.ToList());
         }
+        public ActionResult Create()
+        {
+
+            return View();
+        }
 
    
         
