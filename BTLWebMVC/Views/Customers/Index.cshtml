@@ -9,13 +9,13 @@
 
 <div class="content-wrapper">
 
-    <div class="container py-4">
+    <div style="margin:0.3cm;">
         <h2 class="mb-4">Danh sách khách hàng</h2>
-    
+
         <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead class="table-dark">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-light" style="white-space: nowrap;">
                         <tr>
                             <th>Tải khoản</th>
                             <th>Tên khách hàng</th>
@@ -24,7 +24,7 @@
                             <th>Quốc gia</th>
                             <th>Số điện thoại</th>
                             <th>email</th>
-                       
+
                         </tr>
                     </thead>
                     <tbody>
@@ -35,10 +35,10 @@
                                 <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ContactName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                                <td>@Html.DisplayFor(modelItem=>item.Country)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Country)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Phone)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                        
+
 
                             </tr>
                         }
