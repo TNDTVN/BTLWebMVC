@@ -55,7 +55,7 @@ namespace BTLWebMVC.Controllers.Manager
             document.Open();
 
 
-            // tieu de cho noi dung xuat
+            // tieu de cho noi dung
             var fontTieuDe = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18);
 
             Paragraph tieuDe = new Paragraph("HÓA ĐƠN KHÁCH HÀNG", fontTieuDe);
