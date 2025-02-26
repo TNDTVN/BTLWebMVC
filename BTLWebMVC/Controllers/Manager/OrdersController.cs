@@ -22,6 +22,7 @@ namespace BTLWebMVC.Controllers.Manager
         public ActionResult Index()
         {
             var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer);
+            
             return View(orders.ToList());
         }
         public ActionResult Details(int? id)
@@ -39,6 +40,7 @@ namespace BTLWebMVC.Controllers.Manager
 
             return View(order);
         }
+       
 
         // hamf xuat hoa don -> dinh dang pdf
         public ActionResult PrintInvoice(int id)
