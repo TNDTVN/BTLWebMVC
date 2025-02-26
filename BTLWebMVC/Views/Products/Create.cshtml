@@ -5,196 +5,95 @@
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
-<style>
-    body {
-        background-color: #f5f7fa;
-    }
-
-    .content-wrapper {
-        padding: 2rem;
-    }
-
-    #custom-card {
-        border-radius: 10px;
-        border: none;
-        background: #fff;
-    }
-
-    .card-header {
-        background: linear-gradient(135deg, #007bff, #00d4ff);
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        padding: 1rem 1.5rem;
-    }
-
-        .card-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-    #previewImage {
-        max-height: 300px;
-        max-width: 100%;
-        border-radius: 5px;
-        object-fit: cover;
-    }
-
-
-    .form-label {
-        font-weight: 600;
-        color: #333;
-    }
-
-    .form-control,
-    .form-select {
-        border-radius: 5px;
-        border: 1px solid #ced4da;
-        box-shadow: none;
-        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
-        }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #007bff, #00d4ff);
-        border: none;
-        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.4);
-        transition: opacity 0.3s ease;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: #333;
-    }
-
-
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-    .btn-outline-secondary {
-        border: 1px solid #6c757d;
-        color: #6c757d;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            color: #fff;
-        }
-
-    .preview-container {
-        text-align: center;
-    }
-
-        .preview-container img {
-            max-height: 300px;
-            border-radius: 5px;
-        }
-</style>
-
 <div class="content-wrapper">
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="card shadow-lg p-4 rounded-3 border-0" id="custom-card">
-            <div class="card-header text-center text-white bg-primary rounded-top">
-                <h2 class="fw-bold">Tạo sản phẩm</h2>
-            </div>
-            <div class="card-body">
-                @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    @Html.AntiForgeryToken()
+    <div class="container mt-4">
+        <h2 class="mb-4">Tạo sản phẩm</h2>
+        <hr />
 
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Tên sản phẩm</label>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control border-primary" } })
+        @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="row">
+                <!-- Cột trái: Thông tin sản phẩm -->
+                <div class="col-md-6">
+                    <div class="mb-3 row align-items-center">
+                
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Tên sản phẩm</div>
+                        <div class="col-sm-9">
+                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Mã loại sản phẩm</label>
-                        <div class="col-md-9">
-                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-select select2bs4 border-primary" })
+                    <div class="mb-3 row align-items-center">
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mã loại sản phẩm</div>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-select" })
                             @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Mã nhà cung cấp</label>
-                        <div class="col-md-9">
-                            @Html.DropDownList("SupplierID", null, htmlAttributes: new { @class = "form-select select2bs4 border-primary" })
+                    <div class="mb-3 row align-items-center">
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mã nhà cung cấp</div>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("SupplierID", null, htmlAttributes: new { @class = "form-select" })
                             @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Số lượng</label>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control border-primary" } })
+                    <div class="mb-3 row align-items-center">
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Khối lượng</div>
+                        <div class="col-sm-9">
+                            @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Giá Đơn Vị</label>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control border-primary" } })
+                    <div class="mb-3 row align-items-center">
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Giá</div>
+                        <div class="col-sm-9">
+                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Hình ảnh sản phẩm</label>
-                        <div class="col-md-9">
-                            <div class="input-group">
-                                <input type="file" name="ImageFile" id="imageUpload" class="form-control border-primary" accept="image/*" onchange="previewImage(event)">
-                                <label class="input-group-text" for="imageUpload">
-                                    <i class="fas fa-upload"></i> Chọn ảnh
-                                </label>
-                            </div>
-                            @Html.ValidationMessageFor(model => model.Images, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="mb-4 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Xem trước</label>
-                        <div class="col-md-9">
-                            <div class="preview-container shadow-sm p-3 bg-light rounded">
-                                <img id="previewImage"
-                                     src="~/Content/Images/default-product.jpg"
-                                     alt="Xem trước ảnh"
-                                     class="img-fluid rounded"
-                                     style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" />
-                                <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    // cac nut
-                    <div class="mb-3 row">
-                        <label class="col-md-3 col-form-label fw-semibold">Mô tả chi tiết sản phẩm</label>
-                        <div class="col-md-9">
-                            @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control border-primary", rows = "3" })
+                    <div class="mb-3 row align-items-center">
+                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mô tả</div>
+                        <div class="col-sm-9">
+                            @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = "3" })
                             @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "text-danger" })
                         </div>
-                        <div class="offset-md-3 col-md-9 text-center">
-                            <button type="submit" class="btn btn-primary px-5 fw-semibold shadow">Tạo sản phẩm</button>
-                            @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-secondary px-4 ms-2 fw-semibold" })
-                        </div>
                     </div>
+                </div>
 
-
-
-                }
-            </div>
-        </div>
+                <!-- Cột phải: Hình ảnh sản phẩm -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh sản phẩm</label>
+                    </div>
+                    <div class="preview-container text-center">
+                        <img id="previewImage" src="~/Content/Images/default-product.jpg" alt="Xem trước ảnh" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" />
+                        <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
+                    </div>
+                    <div>
+                        <div class="input-group">
+                            <input type="file" name="ImageFile" id="imageUpload" class="form-control" accept="image/*" onchange="previewImage(event)">
+                            <label class="input-group-text" for="imageUpload">
+                                <i class="fas fa-upload"></i> Chọn ảnh
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Images, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div> <!-- Nút hành động -->
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary px-5 fw-semibold shadow">Tạo sản phẩm</button>
+                    @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-secondary px-4 ms-2 fw-semibold" })
+                </div>
+            </div>}
     </div>
 </div>
 
@@ -211,6 +110,4 @@
             output.src = "/Content/Images/default-product.jpg";
         }
     }
-
- 
 </script>
