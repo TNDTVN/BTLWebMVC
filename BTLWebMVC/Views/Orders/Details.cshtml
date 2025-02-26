@@ -35,13 +35,15 @@
                     <tbody>
                         @foreach (var detail in Model.OrderDetails)
                         {
-            <tr>
-                <td>@detail.Product.ProductID</td>
-                <td>@detail.Product.ProductName</td>
-                <td>@detail.Quantity</td>
-                <td>@detail.UnitPrice.ToString("N0") VND</td>
-                <td>@(detail.UnitPrice * detail.Quantity) VND</td>
-            </tr>}
+                            <tr>
+                                <td>@detail.Product.ProductID</td>
+                                <td>@detail.Product.ProductName</td>
+                                <td>@detail.Quantity</td>
+                                <td>@detail.UnitPrice.ToString("N0") VND</td>
+                                @{ var thanhtien = detail.UnitPrice * detail.Quantity;}
+                                <td>@thanhtien.ToString("N0") VND</td>
+                            </tr>
+}
                     </tbody>
                 </table>
             </div>

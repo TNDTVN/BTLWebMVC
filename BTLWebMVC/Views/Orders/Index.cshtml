@@ -44,6 +44,11 @@
                                 <td>
                                     <a href="@Url.Action("Details", "Orders", new { id = item.CustomerID })" class="btn btn-primary btn-sm">Chi tiết</a>
                                     <a href="@Url.Action("Edit", "Orders", new { id = item.CustomerID })" class="btn btn-info btn-sm">Cập nhập</a>
+                                    @if (item.EmployeeID != null)
+                                    {
+                                        <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning">In</a>
+
+                                    }
 
                                 </td>
                             </tr>
