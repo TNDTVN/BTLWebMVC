@@ -1,7 +1,7 @@
 ﻿@model PagedList.IPagedList<BTLWebMVC.Models.Product>
 @using PagedList.Mvc;
 @{
-    ViewBag.Title = "categories";
+    ViewBag.Title = "Sản phẩm đã mua";
     Layout = "~/Views/Shared/LayoutUsers.cshtml";
 }
 <link rel="stylesheet" href="~/Content/styles/categories_styles.css" />
@@ -85,7 +85,7 @@
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
                     <li><a href="@Url.Action("Index","Home")">Nhà</a></li>
-                    <li class="active"><a href="@Url.Action("categories","Home")"><i class="fa fa-angle-right" aria-hidden="true"></i>Cửa Hàng</a></li>
+                    <li class="active"><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})"><i class="fa fa-angle-right" aria-hidden="true"></i>Đã mua</a></li>
                 </ul>
             </div>
 
@@ -95,12 +95,16 @@
                         <h5>Loại Sản Phẩm</h5>
                     </div>
                     <ul class="sidebar_categories">
-                        <li><a href="@Url.Action("categories")">Tất Cả</a></li>
+                        <li><a href="@Url.Action("HistoryProduct", "UserCartItems", new { accountid = ViewBag.accountId })">Tất Cả</a></li>
                         @if (ViewBag.Categories != null)
                         {
                             foreach (var category in ViewBag.Categories)
                             {
-                                <li><a href="@Url.Action("categories", new { categoryId = category.CategoryID })">@category.CategoryName</a></li>
+                                <li>
+                                    <a href="@Url.Action("HistoryProduct", "UserCartItems", new { categoryId = category.CategoryID, accountid = ViewBag.accountId })">
+                                        @category.CategoryName
+                                    </a>
+                                </li>
                             }
                         }
                     </ul>
@@ -147,7 +151,7 @@
                                     <div id="prev_page" class="page_next me-4">
                                         @if (Model.HasPreviousPage)
                                         {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber - 1 })">
+                                            <a href="@Url.Action("HistoryProduct", new { page = Model.PageNumber - 1, accountid = ViewBag.accountId })">
                                                 <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
                                             </a>
                                         }
@@ -159,7 +163,7 @@
                                             @for (int i = 1; i <= Model.PageCount; i++)
                                             {
                                                 <li class="@(i == Model.PageNumber ? "active" : "")">
-                                                    <a href="@Url.Action("categories", new { page = i })">@i</a>
+                                                    <a href="@Url.Action("HistoryProduct", new { page = i , accountid = ViewBag.accountId})">@i</a>
                                                 </li>
                                             }
                                         </ul>
@@ -170,7 +174,7 @@
                                     <div id="next_page" class="page_next">
                                         @if (Model.HasNextPage)
                                         {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber + 1 })">
+                                            <a href="@Url.Action("HistoryProduct", new { page = Model.PageNumber + 1 , accountid = ViewBag.accountId})">
                                                 <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                             </a>
                                         }
@@ -207,7 +211,7 @@
                                     <div id="prev_page" class="page_next me-4">
                                         @if (Model.HasPreviousPage)
                                         {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber - 1 })">
+                                            <a href="@Url.Action("HistoryProduct", new { page = Model.PageNumber - 1 , accountid = ViewBag.accountId})">
                                                 <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
                                             </a>
                                         }
@@ -219,7 +223,7 @@
                                             @for (int i = 1; i <= Model.PageCount; i++)
                                             {
                                                 <li class="@(i == Model.PageNumber ? "active" : "")">
-                                                    <a href="@Url.Action("categories", new { page = i })">@i</a>
+                                                    <a href="@Url.Action("HistoryProduct", new { page = i , accountid = ViewBag.accountId})">@i</a>
                                                 </li>
                                             }
                                         </ul>
@@ -230,13 +234,13 @@
                                     <div id="next_page" class="page_next">
                                         @if (Model.HasNextPage)
                                         {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber + 1 })">
+                                            <a href="@Url.Action("HistoryProduct", new { page = Model.PageNumber + 1 , accountid = ViewBag.accountId})">
                                                 <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
                                             </a>
                                         }
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                         </div>

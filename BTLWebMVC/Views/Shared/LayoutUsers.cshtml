@@ -29,6 +29,7 @@
 
                 if (customer != null)
                 {
+                    ViewBag.accountId = account != 0 ? account : 0;
                     ViewBag.cartItem = context.CartItems.Count(c => c.CustomerID == customer.CustomerID);
                     ViewBag.images = customer.Account?.ProfileImage ?? "profile.jpg";
                 }
@@ -36,6 +37,7 @@
                 {
                     ViewBag.images = "profile.jpg";
                     ViewBag.cartItem = 0;
+                    ViewBag.accountId = 0;
                 }
             }
         }
@@ -44,6 +46,9 @@
             ViewBag.images = "profile.jpg";
             ViewBag.cartItem = 0;
         }
+    }
+    @{
+        var accountId = Session["AccountId"];
     }
     <div id="loading-spinner">
         <div class="spinner"></div>
@@ -69,6 +74,10 @@
                                 <ul class="navbar_menu">
                                     <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
                                     <li><a href="@Url.Action("categories", "Home")">Cửa hàng</a></li>
+                                    @if (accountId != null)
+                                    {
+                                        <li><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
+                                    }
                                     <li><a href="#">Giỏ hàng</a></li>
                                     <li><a href="#">lịch sử mua hàng</a></li>
                                     <li><a href="#">Liên hệ</a></li>
@@ -78,10 +87,6 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="account_selection">
-                                            @{
-                                                var accountId = Session["AccountId"];
-                                            }
-
                                             @if (accountId == null)
                                             {
                                                 <li><a href="@Url.Action("Login", "Login")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
@@ -98,7 +103,7 @@
                                     </li>
                                 </ul>
                                 <ul class="navbar_user">
-                                    <li><a href="#"><img src="~/Content/accountImages/@ViewBag.images" alt="Profile" class="user-icon"/></a></li>
+                                    <li><a href="#"><img src="~/Content/accountImages/@ViewBag.images" alt="Profile" class="user-icon" /></a></li>
                                     <li class="checkout">
                                         <a href="#">
                                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -123,6 +128,10 @@
                 <ul class="menu_top_nav">
                     <li class="menu_item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
                     <li class="menu_item"><a href="@Url.Action("categories","Home")">Cửa hàng</a></li>
+                    @if (accountId != null)
+                    {
+                        <li class="menu_item"><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
+                    }
                     <li class="menu_item"><a href="#">Giỏ hàng</a></li>
                     <li class="menu_item"><a href="#">Lịch sử mua hàng</a></li>
                     <li class="menu_item has-children">
