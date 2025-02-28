@@ -77,9 +77,9 @@
                                     @if (accountId != null)
                                     {
                                         <li><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
+                                        <li><a href="#">lịch sử mua hàng</a></li>
+                                        <li><a href="#">Giỏ hàng</a></li>
                                     }
-                                    <li><a href="#">Giỏ hàng</a></li>
-                                    <li><a href="#">lịch sử mua hàng</a></li>
                                     <li><a href="#">Liên hệ</a></li>
                                     <li class="account">
                                         <a href="#">
@@ -89,7 +89,11 @@
                                         <ul class="account_selection">
                                             @if (accountId == null)
                                             {
-                                                <li><a href="@Url.Action("Login", "Login")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
+                                               <li>
+                                                   <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                                       <i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập
+                                                   </a>
+                                               </li>
                                                 <li><a href="@Url.Action("Register", "Login")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
                                                 <li><a href="@Url.Action("Forgotpassword", "Login")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
                                             }
@@ -131,9 +135,9 @@
                     @if (accountId != null)
                     {
                         <li class="menu_item"><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
+                        <li class="menu_item"><a href="#">Lịch sử mua hàng</a></li>
+                        <li class="menu_item"><a href="#">Giỏ hàng</a></li>
                     }
-                    <li class="menu_item"><a href="#">Giỏ hàng</a></li>
-                    <li class="menu_item"><a href="#">Lịch sử mua hàng</a></li>
                     <li class="menu_item has-children">
                         <a href="#">
                             Tài khoản
@@ -142,7 +146,11 @@
                         <ul class="menu_selection">
                             @if (accountId == null)
                             {
-                                <li><a href="@Url.Action("Login", "Home")"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</a></li>
+                                <li>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập
+                                    </a>
+                                </li>
                                 <li><a href="@Url.Action("Register", "Home")"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký</a></li>
                                 <li><a href="@Url.Action("Forgotpassword", "Home")"><i class="fa fa-unlock" aria-hidden="true"></i> Quên mật khẩu</a></li>
                             }
@@ -231,5 +239,60 @@
             TempData["ErrorMessage"] = null;
         }
     </div>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div id="loginMessage" class="text-danger"></div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(function (e) {
+                e.preventDefault();
+
+                var username = $("#username").val();
+                var password = $("#password").val();
+
+                $.ajax({
+                    url: "/Login/Loginnew",
+                    type: "POST",
+                    data: { username: username, password: password },
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.redirectUrl) {
+                                window.location.href = response.redirectUrl;
+                            } else if (response.reload) {
+                                location.reload();
+                            }
+                        } else {
+                            $("#loginMessage").text(response.message);
+                        }
+                    },
+                    error: function () {
+                        $("#loginMessage").text("Có lỗi xảy ra, vui lòng thử lại!");
+                    }
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>

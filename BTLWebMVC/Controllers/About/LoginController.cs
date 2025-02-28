@@ -4,49 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
+using BTLWebMVC.Models;
 
 namespace BTLWebMVC.Controllers
 {
     public class LoginController : Controller
     {
         private Context db = new Context();
-        public ActionResult Login()
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Login(string username, string password)
-        {
-            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
-
-            if (account == null)
-            {
-                TempData["ErrorMessage"] = "Tên đăng nhập hoặc mật khẩu không đúng!";
-                return View("Login");
-            }
-
-            Session["AccountId"] = account.AccountID;
-            Session["Role"] = account.Role;
-            TempData["SuccessMessage"] = "Bạn đã đăng nhập thành công!";
-            if (account.Role == "Admin" || account.Role == "Employee")
-            {
-                return RedirectToAction("Index", "HomeManager", new { id = account.AccountID });
-            }
-            else if (account.Role == "Employee")
-            {
-                return RedirectToAction("Index", "HomeManager", new { id = account.AccountID });
-            }
-            else if (account.Role == "Customer")
-            {
-                return RedirectToAction("Index", "Home", new { id = account.AccountID });
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Quyền không hợp lệ!";
-                return RedirectToAction("Login");
-            }
-        }
-
         public ActionResult Logout()
         {
             Session.Clear();
@@ -67,6 +31,27 @@ namespace BTLWebMVC.Controllers
         public ActionResult Forgotpassword()
         {
             return View();
+        }
+        [HttpPost]
+        public JsonResult Loginnew(string username, string password)
+        {
+            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
+
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
+            }
+            Session["AccountId"] = account.AccountID;
+            Session["Role"] = account.Role;
+
+            if (account.Role == "Admin" || account.Role == "Employee")
+            {
+                return Json(new { success = true, redirectUrl = Url.Action("Index", "HomeManager", new { id = account.AccountID }) });
+            }
+            else
+            {
+                return Json(new { success = true, reload = true });
+            }
         }
     }
 }
