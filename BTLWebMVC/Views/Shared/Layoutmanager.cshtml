@@ -24,6 +24,7 @@
     <!-- summernote -->
     <link rel="stylesheet" href="~/Content/plugins/summernote/summernote-bs4.min.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div id="loading-spinner">
@@ -254,7 +255,7 @@
                         data-widget="treeview"
                         role="menu"
                         data-accordion="false">
-                    
+
                         <li class="nav-item menu-open">
                             <a href="@Url.Action("Index","HomeManager")" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -285,7 +286,16 @@
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     Employee
-                               
+
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="@Url.Action("Logout", "Login")" class="nav-link">
+                                <i class="nav-icon fa-solid fa-right-from-bracket"></i>
+                                <p>
+                                    Thoát
                                 </p>
                             </a>
                         </li>
