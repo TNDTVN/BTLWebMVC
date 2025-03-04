@@ -53,5 +53,39 @@ namespace BTLWebMVC.Controllers
                 return Json(new { success = true, reload = true });
             }
         }
+        [HttpPost]
+        public JsonResult ChangePassword(string oldPassword, string newPassword, string newReEnterPassword) 
+        {
+            var accountId = Session["AccountId"];
+            if (accountId == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập lại!" });
+            }
+            int id = Convert.ToInt32(accountId);
+            var account = db.Accounts.FirstOrDefault(a => a.AccountID == id);
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập lại!" });
+            }
+            if (account.Password != oldPassword)
+            {
+                return Json(new { success = false, message = "Mật khẩu hiện tại không chính xác!" });
+            }
+            if (newPassword != newReEnterPassword)
+            {
+                return Json(new { success = false, message = "Mật khẩu mới và mật khẩu nhập lại không chính xác!" });
+            }
+            if (account.Password == newPassword)
+            {
+                return Json(new { success = false, message = "Vui lòng nhập mật khẩu mới và mật khẩu cũ khác nhau!" });
+            }
+            if (newPassword.Length < 6 || newReEnterPassword.Length < 6)
+            {
+                return Json(new { success = false, message = "Vui lòng nhập mật khẩu mới dài hơn 6 ký tự!" });
+            }
+            account.Password = newPassword;
+            db.SaveChanges();
+            return Json(new { success = true, message = "Đổi mật khẩu thành công!" });
+        }
     }
 }

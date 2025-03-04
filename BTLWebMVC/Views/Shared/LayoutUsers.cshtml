@@ -309,6 +309,18 @@
                             <label for="newPassword" class="form-label">Mật khẩu</label>
                             <input type="password" class="form-control" id="newPassword" name="newPassword" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="newName" class="form-label">Họ Tên</label>
+                            <input type="text" class="form-control" id="newName" name="newName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="newEmail" name="newEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPhone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="newPhone" name="newPhone" required>
+                        </div>
                         <button type="submit" class="btn btn-success w-100">Đăng ký</button>
                     </form>
                     <div class="text-center mt-3">
@@ -355,9 +367,15 @@
                             <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
                         </div>
                         <div class="mb-3">
-                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
-                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                            <label for="newPasswordchange" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPasswordchange" name="newPasswordchange" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="newReEnterPassword" class="form-label">Nhập lại khẩu mới</label>
+                            <input type="password" class="form-control" id="newReEnterPassword" name="newReEnterPassword" required>
+                        </div>
+                        <div id="changePasswordMessage" class="text-danger text-center w-100 mb-2"></div>
+                        <div id="changePasswordMessageSucess" class="text-success text-center w-100 mb-2"></div>
                         <button type="submit" class="btn btn-danger w-100">Đổi mật khẩu</button>
                     </form>
                 </div>
@@ -393,7 +411,34 @@
                 });
             });
         });
+        $(document).ready(function () {
+            $("#changePasswordForm").submit(function (e) {
+                e.preventDefault();
 
+                var password = $("#currentPassword").val();
+                var newpassword = $("#newPasswordchange").val();
+                var newreenterpassword = $("#newReEnterPassword").val();
+
+                console.log("New Password:", newpassword);
+                console.log("Re-enter Password:", newreenterpassword);
+
+                $.ajax({
+                    url: "/Login/ChangePassword",
+                    type: "POST",
+                    data: { oldPassword: password, newPassword: newpassword, newReEnterPassword: newreenterpassword },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#changePasswordMessageSucess").text(response.message);
+                        } else {
+                            $("#changePasswordMessage").text(response.message);
+                        }
+                    },
+                    error: function () {
+                        $("#changePasswordMessage").text("Có lỗi xảy ra, vui lòng thử lại!");
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
