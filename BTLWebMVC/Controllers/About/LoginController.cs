@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
@@ -19,39 +21,111 @@ namespace BTLWebMVC.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        public ActionResult Register()
+       
+        public ActionResult ResetPassword(string token)
         {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Register(string username, string password, string email, string phone, string contactname)
-        {
-            return View();
-        }
-        public ActionResult Forgotpassword()
-        {
-            return View();
-        }
-        [HttpPost]
-        public JsonResult Loginnew(string username, string password)
-        {
-            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
-
+            var account = db.Accounts.FirstOrDefault(a => a.TokenCode == token);
             if (account == null)
             {
-                return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
-            }
-            Session["AccountId"] = account.AccountID;
-            Session["Role"] = account.Role;
-
-            if (account.Role == "Admin" || account.Role == "Employee")
-            {
-                return Json(new { success = true, redirectUrl = Url.Action("Index", "HomeManager", new { id = account.AccountID }) });
+                ViewBag.Message = "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu đặt lại mật khẩu mới!";
+                ViewBag.Token = null; 
             }
             else
             {
-                return Json(new { success = true, reload = true });
+                ViewBag.Token = token;
             }
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ResetPasswordConfirm(string token, string newPassword)
+        {
+            var account = db.Accounts.FirstOrDefault(a => a.TokenCode == token);
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Liên kết không hợp lệ!" });
+            }
+
+            if (newPassword.Length < 6)
+            {
+                return Json(new { success = false, message = "Vui lòng nhập nhiều hơn 6 ký tự!" });
+            }
+            account.Password = newPassword;
+            account.TokenCode = null;
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Mật khẩu đã được cập nhật!" });
+        }
+        [HttpPost]
+        public JsonResult Forgotpassword(string username, string email, string phoneNumber)
+        {
+            if (!ValidateUserInformation(username, email, phoneNumber))
+            {
+                return Json(new { success = false, message = "Thông tin không hợp lệ!" });
+            }
+
+            SendPasswordResetEmail(email, username);
+            return Json(new { success = true, message = "Yêu cầu đã được gửi, vui lòng kiểm tra email!" });
+        }
+        private bool ValidateUserInformation(string username, string email, string phoneNumber)
+        {
+
+            var user = db.Accounts.FirstOrDefault(a => a.Username == username && a.Email == email);
+
+            if (user != null)
+            {
+                int accountId = user.AccountID;
+
+                var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId && c.Phone == phoneNumber);
+                var employee = db.Employees.FirstOrDefault(e => e.AccountID == accountId && e.Phone == phoneNumber);
+
+                if (customer != null || employee != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private void SendPasswordResetEmail(string email, string username)
+        {
+            string token = Guid.NewGuid().ToString();
+            DateTime expirationTime = DateTime.Now.AddMinutes(10);
+
+            var account = db.Accounts.FirstOrDefault(a => a.Email == email && a.Username == username);
+            if (account == null) return;
+
+            account.TokenCode = token;
+            db.SaveChanges();
+
+            string resetLink = $"{Request.Url.GetLeftPart(UriPartial.Authority)}/Login/ResetPassword?token=" + token;
+
+            string body = $@"
+            <html>
+            <body>
+                <p>Xin chào,</p>
+                <p>Bạn đã yêu cầu đặt lại mật khẩu. Nhấp vào liên kết bên dưới để tiếp tục:</p>
+                <p><a href='{resetLink}' style='background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none;'>Đặt lại mật khẩu</a></p>
+                <p>Nếu bạn không yêu cầu, hãy bỏ qua email này.</p>
+            </body>
+            </html>";
+
+            MailMessage mail = new MailMessage
+            {
+                From = new MailAddress("dhao3017@gmail.com", "Cửa hàng HPH"),
+                Subject = "Đặt lại mật khẩu",
+                Body = body,
+                IsBodyHtml = true
+            };
+            mail.To.Add(email);
+
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587)
+            {
+                Credentials = new NetworkCredential("dhao3017@gmail.com", "ttpm evrc vlcp qnme"),
+                EnableSsl = true
+            };
+
+            smtp.Send(mail);
         }
         [HttpPost]
         public JsonResult ChangePassword(string oldPassword, string newPassword, string newReEnterPassword) 
@@ -86,6 +160,68 @@ namespace BTLWebMVC.Controllers
             account.Password = newPassword;
             db.SaveChanges();
             return Json(new { success = true, message = "Đổi mật khẩu thành công!" });
+        }
+        [HttpPost]
+        public JsonResult Register(string newUsername, string newPassword, string newName, string newEmail, string newPhone)
+        {
+            if (db.Accounts.Any(a => a.Username == newUsername))
+            {
+                return Json(new { success = false, message = "Tên đăng nhập đã tồn tại." });
+            }
+
+            if (db.Accounts.Any(a => a.Email == newEmail))
+            {
+                return Json(new { success = false, message = "Email đã được sử dụng." });
+            }
+            if (newPassword.Length < 6)
+            {
+                return Json(new { success = false, message = "Mật khẩu vui lòng nhập nhiều hơn 6 ký tự." });
+            }
+            var account = new Account
+            {
+                Username = newUsername,
+                Password = newPassword,
+                Email = newEmail,
+                ProfileImage = "profile.jpg",
+                CreatedDate = DateTime.Now,
+                Role = "Customer"
+            };
+            db.Accounts.Add(account);
+            db.SaveChanges();
+
+            var customer = new Customer
+            {
+                CustomerName = newName,
+                ContactName = newName,
+                Phone = newPhone,
+                Email = newEmail,
+                AccountID = account.AccountID
+            };
+            db.Customers.Add(customer);
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Đăng ký thành công!" });
+        }
+        [HttpPost]
+        public JsonResult Loginnew(string username, string password)
+        {
+            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
+
+            if (account == null)
+            {
+                return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
+            }
+            Session["AccountId"] = account.AccountID;
+            Session["Role"] = account.Role;
+
+            if (account.Role == "Admin" || account.Role == "Employee")
+            {
+                return Json(new { success = true, redirectUrl = Url.Action("Index", "HomeManager", new { id = account.AccountID }) });
+            }
+            else
+            {
+                return Json(new { success = true, reload = true });
+            }
         }
     }
 }

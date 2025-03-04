@@ -292,6 +292,68 @@
         </div>
     </div>
 
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPasswordchange" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPasswordchange" name="newPasswordchange" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newReEnterPassword" class="form-label">Nhập lại khẩu mới</label>
+                            <input type="password" class="form-control" id="newReEnterPassword" name="newReEnterPassword" required>
+                        </div>
+                        <div id="changePasswordMessage" class="text-danger text-center w-100 mb-2"></div>
+                        <div id="changePasswordMessageSucess" class="text-success text-center w-100 mb-2"></div>
+                        <button type="submit" class="btn btn-danger w-100">Đổi mật khẩu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgotPasswordModalLabel">Quên mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="forgotPasswordForm">
+                        <div class="mb-3">
+                            <label for="usernameForgotPassword" class="form-label">Nhập tên đăng nhập</label>
+                            <input type="text" class="form-control" id="usernameForgotPassword" name="usernameForgotPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phoneForgotPassword" class="form-label">Nhập số điện thoại</label>
+                            <input type="text" class="form-control" id="phoneForgotPassword" name="phoneForgotPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Nhập email của bạn</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div id="forgotPasswordMessage" class="text-danger text-center w-100 mb-2"></div>
+                        <div id="forgotPasswordMessageSucess" class="text-success text-center w-100 mb-2"></div>
+                        <button type="submit" class="btn btn-warning w-100">Gửi yêu cầu</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Quay lại Đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -323,6 +385,7 @@
                         </div>
                         <button type="submit" class="btn btn-success w-100">Đăng ký</button>
                     </form>
+                    <div id="registerMessage" class="text-danger text-center w-100 mb-2"></div>
                     <div class="text-center mt-3">
                         <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Đã có tài khoản? Đăng nhập</a>
                     </div>
@@ -331,57 +394,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="forgotPasswordModalLabel">Quên mật khẩu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="forgotPasswordForm">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Nhập email của bạn</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <button type="submit" class="btn btn-warning w-100">Gửi yêu cầu</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Quay lại Đăng nhập</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="changePasswordForm">
-                        <div class="mb-3">
-                            <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
-                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newPasswordchange" class="form-label">Mật khẩu mới</label>
-                            <input type="password" class="form-control" id="newPasswordchange" name="newPasswordchange" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newReEnterPassword" class="form-label">Nhập lại khẩu mới</label>
-                            <input type="password" class="form-control" id="newReEnterPassword" name="newReEnterPassword" required>
-                        </div>
-                        <div id="changePasswordMessage" class="text-danger text-center w-100 mb-2"></div>
-                        <div id="changePasswordMessageSucess" class="text-success text-center w-100 mb-2"></div>
-                        <button type="submit" class="btn btn-danger w-100">Đổi mật khẩu</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (e) {
@@ -419,18 +431,17 @@
                 var newpassword = $("#newPasswordchange").val();
                 var newreenterpassword = $("#newReEnterPassword").val();
 
-                console.log("New Password:", newpassword);
-                console.log("Re-enter Password:", newreenterpassword);
-
                 $.ajax({
                     url: "/Login/ChangePassword",
                     type: "POST",
                     data: { oldPassword: password, newPassword: newpassword, newReEnterPassword: newreenterpassword },
                     success: function (response) {
                         if (response.success) {
-                            $("#changePasswordMessageSucess").text(response.message);
+                            $("#changePasswordMessageSucess").text(response.message).show();
+                            $("#changePasswordMessage").text(response.message).hide();
                         } else {
-                            $("#changePasswordMessage").text(response.message);
+                            $("#changePasswordMessage").text(response.message).show();
+                            $("#changePasswordMessageSucess").text(response.message).hide();
                         }
                     },
                     error: function () {
@@ -439,6 +450,70 @@
                 });
             });
         });
+        $(document).ready(function () {
+            $("#forgotPasswordForm").submit(function (e) {
+                e.preventDefault();
+
+                var username = $("#usernameForgotPassword").val();
+                var email = $("#email").val();
+                var phoneNumber = $("#phoneForgotPassword").val();
+
+                $.ajax({
+                    url: "/Login/Forgotpassword",
+                    type: "POST",
+                    data: { username: username, email: email, phoneNumber: phoneNumber },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#forgotPasswordMessageSucess").text(response.message).show();
+                            $("#forgotPasswordMessage").text(response.message).hide();
+                        } else {
+                            $("#forgotPasswordMessage").text(response.message).show();
+                            $("#forgotPasswordMessageSucess").text(response.message).hide();
+                        }
+                    },
+                    error: function () {
+                        $("#forgotPasswordMessage").text("Có lỗi xảy ra, vui lòng thử lại!").show();
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#registerForm").submit(function (e) {
+                e.preventDefault();
+
+                var formData = {
+                    newUsername: $("#newUsername").val(),
+                    newPassword: $("#newPassword").val(),
+                    newName: $("#newName").val(),
+                    newEmail: $("#newEmail").val(),
+                    newPhone: $("#newPhone").val()
+                };
+
+                $.ajax({
+                    url: "/Login/Register",
+                    type: "POST",
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $("#registerMessage").text(response.message).hide();
+                            alert(response.message);
+
+                            $("#registerModal").modal("hide");
+
+                            $("#registerModal").on("hidden.bs.modal", function () {
+                                $("#loginModal").modal("show");
+                            });
+                        } else {
+                            $("#registerMessage").text(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra, vui lòng thử lại!");
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 </html>
