@@ -17,6 +17,7 @@ namespace BTLWebMVC.App_Start
                         ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
                         Role = "Admin",
+                        IsLock = false,
                         TokenCode = null
                         },
                         new Account {Username = "customer",
@@ -25,6 +26,7 @@ namespace BTLWebMVC.App_Start
                         ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
                         Role = "Customer",
+                        IsLock = false,
                         TokenCode= null
                         },
                         new Account {Username = "employee",
@@ -32,6 +34,7 @@ namespace BTLWebMVC.App_Start
                         Email = "employee@vtnn.com",
                         ProfileImage = "profile.jpg",
                         CreatedDate = DateTime.Now,
+                        IsLock= false,
                         Role = "Employee",
                         TokenCode = null
                         }

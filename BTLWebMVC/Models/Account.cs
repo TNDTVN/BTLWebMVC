@@ -14,6 +14,7 @@ namespace BTLWebMVC.Models
         public string ProfileImage { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Role { get; set; }
+        public bool IsLock { get; set; }
         public string TokenCode { get; set; }
 
         public virtual ICollection<Customer> Customers { get; set; }

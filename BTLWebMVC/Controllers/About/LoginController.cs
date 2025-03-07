@@ -184,6 +184,7 @@ namespace BTLWebMVC.Controllers
                 Email = newEmail,
                 ProfileImage = "profile.jpg",
                 CreatedDate = DateTime.Now,
+                IsLock = false,
                 Role = "Customer"
             };
             db.Accounts.Add(account);
@@ -210,6 +211,10 @@ namespace BTLWebMVC.Controllers
             if (account == null)
             {
                 return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
+            }
+            if (account.IsLock)
+            {
+                return Json(new { success = false, message = "Tài Khoản bị khóa vui lòng liên hệ quản lý!" });
             }
             Session["AccountId"] = account.AccountID;
             Session["Role"] = account.Role;
