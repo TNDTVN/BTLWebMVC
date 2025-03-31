@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-
+using PagedList;
 
 namespace BTLWebMVC.Controllers.Manager
 {
@@ -19,11 +19,13 @@ namespace BTLWebMVC.Controllers.Manager
         // GET: Orders
         private Context db = new Context();
         // danh sách đơn hàng
-        public ActionResult Index()
+        public ActionResult Index(int ? page)
         {
-            var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer).OrderBy(o => o.OrderID).ToPagedList(pageNumber, pageSize);
             
-            return View(orders.ToList());
+            return View(orders);
         }
         public ActionResult Details(int? id)
         {

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using BTLWebMVC.App_Start;
 using BTLWebMVC.Models;
 using System.IO;
+using PagedList;
 
 namespace BTLWebMVC.Controllers
 {
@@ -17,10 +18,13 @@ namespace BTLWebMVC.Controllers
         private Context db = new Context();
 
 
-        public ActionResult Index()
+        public ActionResult Index(int ? page)
         {
-            var products = db.Products.Include(p => p.Category).Include(p => p.Supplier);
-            return View(products.ToList());
+            int pageSize =6;
+            int pageNumber = (page ?? 1);
+            //var products = db.Products.Include(p => p.Category).Include(p => p.Supplier);
+            var products = db.Products.Include(p => p.Category).Include(p => p.Supplier).OrderBy(p => p.ProductID).ToPagedList(pageNumber, pageSize);
+            return View(products);
         }
 
  

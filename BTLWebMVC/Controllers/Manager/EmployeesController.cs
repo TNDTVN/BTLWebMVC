@@ -18,8 +18,8 @@ namespace BTLWebMVC.Controllers.Manager
         // GET: Employees
         public ActionResult Index()
         {
-            var employees = db.Employees.Include(e => e.Account);
-            return View(employees.ToList());
+            var employees = db.Employees.Include(e => e.Account).ToList();
+            return View(employees);
         }
 
 
