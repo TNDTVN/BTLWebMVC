@@ -80,7 +80,7 @@
                                         <li><a href="#">lịch sử mua hàng</a></li>
                                         <li><a href="#">Giỏ hàng</a></li>
                                     }
-                                    <li><a href="#">Liên hệ</a></li>
+                                    <li><a href="@Url.Action("Index","Contact")">Liên hệ</a></li>
                                     <li class="account">
                                         <a href="#">
                                             Tài khoản
@@ -393,7 +393,7 @@
             </div>
         </div>
     </div>
-
+    @RenderSection("scripts", required: false)
     <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (e) {

@@ -141,6 +141,7 @@
     <Compile Include="App_Start\DbInitializer.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\About\ContactController.cs" />
     <Compile Include="Controllers\Manager\CustomersController.cs" />
     <Compile Include="Controllers\Manager\EmployeesController.cs" />
     <Compile Include="Controllers\Manager\OrdersController.cs" />
@@ -2175,6 +2176,8 @@
     <Content Include="Content\pages\widgets.html" />
     <Content Include="Content\styles\categories_responsive.css" />
     <Content Include="Content\styles\categories_styles.css" />
+    <Content Include="Content\styles\contact_responsive.css" />
+    <Content Include="Content\styles\contact_styles.css" />
     <Content Include="Content\styles\main_styles.css" />
     <Content Include="Content\styles\pagination.css" />
     <Content Include="Content\styles\responsive.css" />
@@ -2339,6 +2342,7 @@
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\UserCartItems\HistoryProduct.cshtml" />
     <Content Include="Views\Login\ResetPassword.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
