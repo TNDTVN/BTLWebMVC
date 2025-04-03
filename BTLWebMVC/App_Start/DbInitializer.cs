@@ -308,32 +308,287 @@ namespace BTLWebMVC.App_Start
                         new Product { ProductName = "Sạc laptop Dell 20V-4.5A 90W USB Type C Oval", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 690000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Sạc Laptop Dell 20V-4.5A 90W USB Type C Oval là phụ kiện hoàn hảo dành cho các dòng laptop Dell hiện đại. Với công suất 90W và chuẩn sạc 20V-4.5A, thiết bị cung cấp nguồn năng lượng ổn định, đảm bảo hiệu suất hoạt động tối đa cho máy tính của bạn. Đầu sạc USB Type C tiên tiến giúp kết nối nhanh chóng và tiện lợi, phù hợp với các xu hướng công nghệ hiện nay. Thiết kế Oval nhỏ gọn, hiện đại, dễ dàng mang theo trong những chuyến công tác hay du lịch. Đây là sự lựa chọn tối ưu để duy trì và bảo vệ tuổi thọ của laptop Dell." },
                 // Giá đỡ laptop 91 - 100
-                        new Product { ProductName = "Giá Đỡ Tản Nhiệt Đa Năng Baseus UltraStable Pro Series Xoay 360 Độ Dùng cho Laptop/Macbook", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 674000m, UnitsInStock = 100,
+                        new Product { ProductName = "Giá Đỡ Tản Nhiệt Đa Năng Baseus UltraStable Pro Series Xoay 360", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 674000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop 360 độ là một sản phẩm tiện ích, giúp bạn dễ dàng điều chỉnh góc độ và vị trí của laptop một cách linh hoạt. Với thiết kế 360 độ xoay, bạn có thể dễ dàng điều chỉnh góc độ, độ cao và hướng của laptop một cách linh hoạt, phù hợp với nhu cầu làm việc, học tập hoặc giải trí của bạn. Sản phẩm được làm từ chất liệu cao cấp, bền bỉ, chịu lực tốt, đảm bảo an toàn cho laptop của bạn. Thiết kế nhỏ gọn, dễ dàng sử dụng, phù hợp với nhiều môi trường làm việc khác nhau. Đây là phụ kiện không thể thiếu cho những người thường xuyên sử dụng laptop!" },
                         new Product { ProductName = "Giá đỡ laptop SENZANS", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 650000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop SENZANS là giải pháp hoàn hảo để nâng cao trải nghiệm sử dụng laptop của bạn. Với thiết kế nhỏ gọn, hiện đại và chất liệu hợp kim nhôm bền bỉ, sản phẩm không chỉ đảm bảo độ chắc chắn mà còn hỗ trợ tản nhiệt hiệu quả. Đặc biệt, khả năng điều chỉnh độ cao và xoay 360 độ giúp tối ưu hóa tư thế ngồi, bảo vệ sức khỏe người dùng. Đây chắc chắn là phụ kiện hữu ích dành cho dân văn phòng, học sinh, sinh viên và những ai thường xuyên làm việc với laptop." },
                         new Product { ProductName = "SKU312 - Giá đỡ Laptop Xoay 360 độ YL-906 có quạt", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 245000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ Laptop Xoay 360 độ YL-906 có quạt là một sản phẩm đa năng, lý tưởng cho những ai thường xuyên sử dụng laptop. Với thiết kế xoay 360 độ, sản phẩm mang lại sự linh hoạt tối đa, giúp bạn dễ dàng điều chỉnh góc độ phù hợp với tư thế ngồi. Đặc biệt, quạt tản nhiệt tích hợp giúp làm mát laptop hiệu quả, bảo vệ thiết bị khỏi tình trạng quá nhiệt khi sử dụng lâu dài.\r\n\r\nSản phẩm được làm từ chất liệu thép cacbon bền bỉ, phù hợp với các dòng laptop từ 10 đến 17 inch. Đây là lựa chọn hoàn hảo để nâng cao trải nghiệm làm việc và học tập của bạn." },
-                        new Product { ProductName = "Giá đỡ kiêm đế tản nhiệt làm mát DIGIMIX từ hợp kim nhôm V3, V4, V5 xoay 360 độ cao cấp cho máy 11 inch - 17 inch", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 690000m, UnitsInStock = 100,
+                        new Product { ProductName = "Giá đỡ kiêm đế tản nhiệt làm mát DIGIMIX", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 690000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop thường được làm bằng nhôm chắc chắn bề bỉ theo thời gian hoặc bằng gỗ hay nhựa giá rẻ nhưng đều có chung chức năng hỗ trợ tản nhiệt, làm mát máy tính laptop, macbook sử dụng trong thời gian dài. Giá đỡ laptop gấp gọn, điều chỉnh độ cao tùy ý đang là xu hướng hiện nay cho văn phòng, công ty." },
                         new Product { ProductName = "Giá đỡ laptop tablet DIGIMIX ", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 489000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop tablet DIGIMIX là phụ kiện thông minh được thiết kế để hỗ trợ tối ưu trong công việc và giải trí. Với chất liệu hợp kim nhôm cao cấp, sản phẩm mang lại độ bền vượt trội cùng vẻ ngoài sang trọng hiện đại. Thiết kế linh hoạt với khả năng điều chỉnh độ cao và góc nghiêng giúp bạn có tư thế ngồi thoải mái, bảo vệ sức khỏe lâu dài." },
                         new Product { ProductName = "Giá đỡ tản nhiệt hợp kim nhôm xoay 360 độ, kèm quạt tản nhiệt làm mát T602, T628, T619 cao cấp SIZIBOX", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 689000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ tản nhiệt hợp kim nhôm xoay 360 độ, kèm quạt tản nhiệt làm mát T602, T628, T619 cao cấp SIZIBOX là một sản phẩm đa năng, được thiết kế để tối ưu hóa trải nghiệm sử dụng laptop. Với chất liệu hợp kim nhôm cao cấp, sản phẩm mang lại độ bền vượt trội và khả năng chịu lực tốt." },
-                        new Product { ProductName = "Giá đỡ laptop bằng nhựa hợp kim nhôm, đế kim loại, hỗ trợ nâng cao, làm mát, điều chỉnh, di động", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 180000m, UnitsInStock = 100,
+                        new Product { ProductName = "Giá đỡ laptop bằng nhựa hợp kim nhôm, đế kim loại", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 180000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop bằng nhựa hợp kim nhôm, đế kim loại, hỗ trợ nâng cao, làm mát, điều chỉnh, di động là một sản phẩm tiện ích, được thiết kế để mang lại sự thoải mái và hiệu quả tối ưu khi sử dụng laptop. Với sự kết hợp giữa nhựa cao cấp và hợp kim nhôm, sản phẩm không chỉ bền bỉ mà còn nhẹ nhàng, dễ dàng mang theo." },
                         new Product { ProductName = "Giá đỡ laptop MacBook", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 550000m, UnitsInStock = 100,
                             UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Giá đỡ laptop MacBook là phụ kiện lý tưởng để nâng cao trải nghiệm sử dụng thiết bị của bạn. Với thiết kế hiện đại, chất liệu cao cấp như hợp kim nhôm, sản phẩm không chỉ mang lại sự chắc chắn mà còn giúp tản nhiệt hiệu quả, bảo vệ máy khỏi tình trạng quá nhiệt." },
-                        //new Product { ProductName = "Giá đỡ laptop SENZANS", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 650000m, UnitsInStock = 100,
-                        //    UnitsOnOrder = 10, Discontinued = false, ProductDescription = "" },
-                        //new Product { ProductName = "Giá đỡ laptop SENZANS", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 650000m, UnitsInStock = 100,
-                        //    UnitsOnOrder = 10, Discontinued = false, ProductDescription = "" },
+                        new Product { ProductName = "Giá Đỡ kim loại cho laptop máy tính bảng hỗ trợ tản nhiệt ", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 150000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Nâng tầm trải nghiệm làm việc và giải trí với giá đỡ kim loại cao cấp dành cho laptop và máy tính bảng! Sản phẩm được thiết kế chắc chắn, bền bỉ, giúp nâng thiết bị lên góc độ tối ưu, mang lại tư thế ngồi thoải mái, hạn chế đau vai gáy khi sử dụng lâu dài." },
+                        new Product { ProductName = "Giá đỡ Laptop, máy tính bảng gấp gọn Orico PFB-A24", CategoryID = 2, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 198000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Orico PFB-A24 được thiết kế từ hợp kim nhôm cao cấp, chắc chắn và bền bỉ. Với khả năng gấp gọn tiện lợi, dễ dàng mang theo mọi nơi. Góc nghiêng tối ưu giúp cải thiện tư thế ngồi, giảm mỏi cổ và hỗ trợ tản nhiệt hiệu quả, giữ cho thiết bị luôn mát mẻ. Phù hợp với nhiều dòng laptop, máy tính bảng. Lựa chọn hoàn hảo cho công việc và giải trí!" },
+                // Thiết bị mạng
+                // Bộ mở rộng sóng wifi 101 - 110
+                        new Product { ProductName = "Bộ Mở Rộng Sóng Wifi Xiaomi Mi Wifi Range Extender Pro", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 289000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bộ mở rộng sóng Wifi Xiaomi Mi Wifi Range Extender Pro là giải pháp tối ưu để mở rộng vùng phủ sóng Wifi trong nhà, giúp bạn truy cập Internet một cách nhanh chóng và ổn định hơn. Với thiết kế nhỏ gọn, dễ dàng lắp đặt và kết nối, sản phẩm giúp bạn mở rộng vùng phủ sóng Wifi đến mọi góc phòng, giảm tình trạng mất sóng, giật lag khi sử dụng Internet. Đặc biệt, bộ mở rộng sóng Wifi Xiaomi Mi Wifi Range Extender Pro hỗ trợ tốc độ truyền tải lên đến 300Mbps, tương thích với nhiều thiết bị và chuẩn Wifi phổ biến hiện nay. Đây là lựa chọn hoàn hảo để nâng cao trải nghiệm sử dụng Internet của bạn!" },
+                        new Product { ProductName = "Bộ Mở Rộng Sóng Wifi TP-Link TL-WA850RE", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 399000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bộ mở rộng sóng Wifi TP-Link TL-WA850RE là giải pháp tối ưu để mở rộng vùng phủ sóng Wifi trong nhà, giúp bạn truy cập Internet một cách nhanh chóng và ổn định hơn mà không cần kéo dây mạng. Với thiết kế nhỏ gọn, dễ dàng lắp đặt và kết nối, sản phẩm giúp bạn mở rộng vùng phủ sóng Wifi đến mọi góc phòng, giảm tình trạng mất sóng, giật lag khi sử dụng Internet. Đặc biệt, bộ mở rộng sóng Wifi TP-Link TL-WA850RE hỗ trợ tốc độ truyền tải lên đến 300Mbps, tương thích với nhiều thiết bị và chuẩn Wifi phổ biến hiện nay. Đây là lựa chọn hoàn hảo để nâng cao trải nghiệm sử dụng Internet của bạn!" },
+                        new Product { ProductName = "Thiết bị mở rộng sóng Wifi Tp-link băng tần kép AC1200 RE315", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 469000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "TP-Link RE315 giúp mở rộng phạm vi WiFi, tăng cường tín hiệu mạnh mẽ với băng tần kép AC1200 (2.4GHz & 5GHz), đảm bảo tốc độ ổn định cho mọi thiết bị. Thiết kế cắm trực tiếp vào ổ điện, dễ dàng cài đặt và sử dụng. Hỗ trợ chế độ Access Point, mang lại trải nghiệm mạng nhanh và liền mạch cho gia đình, văn phòng!" },
+                        new Product { ProductName = "Bộ kích sóng Wifi 6 TP-Link RE505X AX1500", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 849000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Re505X được trang bị công nghệ không dây wifi 6 mới nhất, tốc độ nhanh cùng dung lượng cực lớn, độ trễ giảm tối thiểu nhất. Công nghệ này còn giúp giảm tắc nghẽn mạng hiệu quả cho wifi nhà bạn. RE505X được trang bị đèn tín hiệu thông minh, có khả năng xác định vị trí để phủ sóng wifi tốt nhất cho toàn khu vực. Thiết bị còn giúp chỉ ra cường độ tín hiệu tại vị trí bạn đang đứng." },
+                        new Product { ProductName = "Bộ kích sóng Wifi Totolink băng tần kép EX1200T băng tần kép AC1200", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 499000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bộ mở rộng sóng Wi-Fi băng tần kép AC1200 TOTOLINK EX1200T sẽ là lựa chọn phù hợp cho người dùng đang có nhu cầu tìm kiếm một thiết bị mở rộng phạm vi phát Wi-Fi trong ngôi nhà của mình, nhưng vẫn đảm bảo tính linh hoạt, cài đặt dễ dàng tiện lợi." },
+                        new Product { ProductName = "Bộ kích sóng Wifi TP-Link Re205 Ac750", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 439000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bộ kích sóng Wifi TP-Link Re205 Ac750 đến từ thương hiệu nổi tiếng về các sản phẩm có chất lượng TP-Link. Bộ kích sóng này có thiết kế cực kì nhỏ gọn là 52 x 34 x 65mm cho người dùng dễ dàng lắp đặt trong căn phòng của mình mà không sợ chiếm quá nhiều diện tích. Các chi tiết được hoàn thiện tỉ mỉ từ các góc cạnh cho tới các cổng kết nối giúp sản phẩm thêm phần cứng cáp và người dùng dễ dàng sử dụng hơn." },
+                        new Product { ProductName = "Thiết bị mở rộng sóng Wifi băng tần kép chuẩn AC1200 Totolink EX1200T", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 569000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Thiết bị mở rộng sóng WiFi băng tần kép chuẩn AC1200 Totolink EX1200T sử dụng thiết kế công thái học nhỏ gọn với trang bị chuôi cắm, hỗ trợ cắm tường tiết kiệm không gian. Vỏ ngoài chắc chắn sẽ giúp bạn có thể lắp đặt ở cả những vị trí thấp mà không lo trầy xước hay nứt vỡ khi va đập." },
+                        new Product { ProductName = "Bộ kích sóng Wifi Totolink băng tần kép EX1200T băng tần kép AC1200", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 499000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Tối ưu trong thiết kế và lắp đặt linh kiện nên bộ mở rộng sóng Wi-Fi băng tần kép AC1200 TOTOLINK EX1200T có kích thước vô cùng nhỏ gọn, trọng lượng siêu nhẹ. Giúp bạn có thể mang theo thiết bị để kết nối trên mọi chuyến hành trình." },
+                        new Product { ProductName = "Thiết bị mở rộng sóng Wifi Mercusys ME10 300Mbps", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 185000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Thiết bị mở rộng sóng WiFi Mercusys ME10 300 Mbps được tăng cường tín hiệu WiFi với tốc độ tối đa 300Mbps ở băng tần 2.4GHz cùng cổng 10/100Mbps nhanh. Thêm vào đó, mẫu bộ kích sóng wifi này còn hỗ trợ mở rộng phạm vi phủ sóng với khả năng thiết lập dễ dàng. Ngoài ra, đèn LED nhiều màu báo vị trí phù hợp giúp người dùng tìm được điểm đặt hoàn hảo trong không gian." },
+                        new Product { ProductName = "Bộ kích sóng WiFi Tenda A9 chuẩn N tốc độ 300Mbps", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 219000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Thiết bị mở rộng sóng Wi-Fi chuẩn N tốc độ 300Mbps Tenda A9 được thiết kế để tăng cường vùng phủ sóng rộng hơn với tốc độ ổn định. Thiết bị được sử dụng đơn giản, nên hứa hẹn sẽ là lựa chọn để loại bỏ điểm chết WiFi cho gia đình. Thiết bị mở rộng sóng Wi-Fi chuẩn N tốc độ 300Mbps Tenda A9 sở hữu thiết kế gọn gàng chỉ 111 x 56 x 47.7mm. Do đó dù đặt nó ở đâu cũng không lo tốn quá nhiều không gian của ổ cắm điện." },
+                // Router wifi 111 - 120
+                        new Product { ProductName = "Router Wifi Tenda AC6 AC1200", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 599000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Router Wifi Tenda AC6 AC1200 là một trong những sản phẩm router wifi tốt nhất hiện nay, với tốc độ truyền tải lên đến 1200Mbps, giúp bạn truy cập Internet một cách nhanh chóng và ổn định hơn. Với thiết kế nhỏ gọn, dễ dàng lắp đặt và kết nối, sản phẩm giúp bạn mở rộng vùng phủ sóng Wifi đến mọi góc phòng, giảm tình trạng mất sóng, giật lag khi sử dụng Internet. Đặc biệt, router wifi Tenda AC6 AC1200 hỗ trợ tốc độ truyền tải lên đến 1200Mbps, tương thích với nhiều thiết bị và chuẩn Wifi phổ biến hiện nay. Đây là lựa chọn hoàn hảo để nâng cao trải nghiệm sử dụng Internet của bạn!" },
+                        new Product { ProductName = "Router Wifi Tenda AC10 AC1200", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 699000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Router Wifi Tenda AC10 AC1200 là một trong những sản phẩm router wifi tốt nhất hiện nay, với tốc độ truyền tải lên đến 1200Mbps, giúp bạn truy cập Internet một cách nhanh chóng và ổn định hơn. Với thiết kế nhỏ gọn, dễ dàng lắp đặt và kết nối, sản phẩm giúp bạn mở rộng vùng phủ sóng Wifi đến mọi góc phòng, giảm tình trạng mất sóng, giật lag khi sử dụng Internet. Đặc biệt, router wifi Tenda AC10 AC1200 hỗ trợ tốc độ truyền tải lên đến 1200Mbps, tương thích với nhiều thiết bị và chuẩn Wifi phổ biến hiện nay. Đây là lựa chọn hoàn hảo để nâng cao trải nghiệm sử dụng Internet của bạn!" },
+
+                        new Product { ProductName = "Tenda 4G03 - Router WiFi N300", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1280000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Với khả năng thu sóng di động 4G LTE , Tenda 4G03 có thể cung cấp Internet cho bạn ở bất cứ nơi đâu mà không cần triển khai cáp quang.Thích hợp cho những khu vực như ngoại ô, nông thôn, trang trại, gia đình đi du lịch. Tenda 4G03 cung cấp tốc độ tối đa của LTE CAT4 đến 150Mbps , bạn có thể tận hưởng phim HD mượt mà, download file dung lượng lớn và video call ở bất cứ đâu." },
+                        new Product { ProductName = "Tenda AC10 V4.0 - Router WiFi băng tần kép AC1200 Gigabit ", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 850000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Với CPU tốc độ 1GHz tiến trình 28nm, Tenda AC10 đảm bảo khả năng xử lý mạnh mẽ và tiết kiệm năng lượng, ít tỏa nhiệt. Đáp ứng tốt với cáp quang với băng thông trải dài từ 50 M, 100 M, 200 M đến thậm chí 1000 M, tận hưởng chơi game và xem video HD mượt mà." },
+                        new Product { ProductName = "Tenda F6 - Router WiFi chuẩn N 300Mbps ", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 379000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Tenda F6 là router WiFi chuẩn N 300Mbps, phù hợp cho gia đình và văn phòng nhỏ. Với 4 ăng-ten hiệu suất cao, thiết bị đảm bảo tín hiệu mạnh, phủ sóng rộng và kết nối ổn định. Hỗ trợ chế độ Repeater, giúp mở rộng mạng WiFi dễ dàng. Cài đặt đơn giản, giao diện thân thiện – giải pháp tối ưu cho nhu cầu internet hàng ngày! " },
+                        new Product { ProductName = "Tenda N301 - Router WiFi chuẩn N tốc độ 300Mbps", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 280000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Tenda N301 là router WiFi chuẩn N tốc độ 300Mbps, đáp ứng tốt nhu cầu lướt web, xem phim, học tập và làm việc online. Với 2 ăng-ten mạnh mẽ, thiết bị mang đến kết nối ổn định, phủ sóng rộng cho không gian gia đình và văn phòng nhỏ. Hỗ trợ bảo mật WPA/WPA2, đảm bảo an toàn mạng. Cài đặt đơn giản chỉ trong vài phút, dễ dàng sử dụng ngay!" },
+                        new Product { ProductName = "Tenda TX2 Pro - Router Wi-Fi 6 băng tần kép cổng Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1189000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "TX2 Pro là thiết bị Router Wi-Fi 6 với 3 cổng gigabit được thiết kế cho dùng trong gia đình với tốc độ lên đến 1501Mbps (2.4GHz: 300Mbps, 5GHz: 1201Mbps). TX2 Pro được trang bị FEMs hiệu suất cao và 5 ăng-ten ngoài độ lợi cao 6dBi. Hỗ trợ kết nối internet cùng lúc với nhiều thiết bị hơn, độ trễ thấp hơn và hiệu quả truyền tải được cải thiện đáng kể nhờ công nghệ OFDMA + MU-MIMO. Kết nối nhiều thiết bị có dây hơn cho tốc độ truyền tải nhanh hơn với cổng ethernet gigabit, đảm bảo mọi loại thiết bị có dây hoạt động ổn định, mượt mà, giúp bạn tận hưởng mạng với tốc độ cực cao." },
+                        new Product { ProductName = "Tenda AC5 - Router WiFi 2 băng tần AC1200", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 519000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Được trang bị công nghệ 802.11ac Wave 2.0 mới, Tenda AC5 cung cấp tốc độ WiFi lên đến 1167 Mbps, truyền dữ liệu nhanh hơn chuẩn 802.11n. Băng tần 5 GHz có thể cung cấp nhiều kênh truyền hơn, giảm nhiễu hơn và mang lại kết nối WiFi ổn định hơn. Ứng dụng công nghệ MU-MIMO cải thiện số lượng thiết bị kết nối đồng thời với mạng WiFi." },
+                        new Product { ProductName = "Tenda AC10 V4.0 - Router WiFi băng tần kép AC1200 Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 850000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Với CPU tốc độ 1GHz tiến trình 28nm, Tenda AC10 đảm bảo khả năng xử lý mạnh mẽ và tiết kiệm năng lượng, ít tỏa nhiệt. Đáp ứng tốt với cáp quang với băng thông trải dài từ 50 M, 100 M, 200 M đến thậm chí 1000 M, tận hưởng chơi game và xem video HD mượt mà." },
+                        new Product { ProductName = "Tenda 4G05 Router Wifi N300 dùng Sim 4G LTE", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 999000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Tenda 4G05 là Router LTE kết hợp LTE và truy cập Ethernet tốc độ cao, tốc độ WiFi lên tới 300Mbps. Tương thích với hầu hết thẻ Sim của các nhà mạng trên thế giới, 4G05 mang lại trải nghiệm Cắm và Dùng đơn giản mà không cần cấu hình . Sản phẩm 4G05 sử dụng cho biệt thự, phòng hội nghị, hệ thống Camera giám sát, cửa hàng lưu động hay mất điện, đảm bảo trải nghiệm mạng ổn định và tốc độ cao." },
+                // Switch mạng 120 - 130
+                        new Product { ProductName = "Switch mạng Tenda SG105 5 cổng Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 299000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Switch mạng Tenda SG105 5 cổng Gigabit là giải pháp lý tưởng để mở rộng mạng LAN tại nhà hoặc văn phòng." },
+
+                        new Product { ProductName = "Switch mạng Tenda SG108 8 cổng Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 399000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Switch mạng Tenda SG108 8 cổng Gigabit giúp kết nối nhanh chóng, ổn định giữa các thiết bị mạng." },
+
+                        new Product { ProductName = "Switch mạng Tenda S105 5 cổng 10/100Mbps", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 199000m, UnitsInStock = 120,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Switch mạng Tenda S105 với 5 cổng 10/100Mbps, thiết kế nhỏ gọn, tiết kiệm điện năng." },
+
+                        new Product { ProductName = "Switch mạng Tenda S108 8 cổng 10/100Mbps", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 259000m, UnitsInStock = 90,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "Switch mạng Tenda S108 với 8 cổng 10/100Mbps, giúp mở rộng mạng LAN dễ dàng." },
+
+                        new Product { ProductName = "Switch mạng TP-Link TL-SG1005D 5 cổng Gigabit", CategoryID = 3, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 319000m, UnitsInStock = 80,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "TP-Link TL-SG1005D là switch 5 cổng Gigabit, hỗ trợ kết nối tốc độ cao, tiết kiệm điện năng." },
+
+                        new Product { ProductName = "Switch mạng TP-Link TL-SG1008D 8 cổng Gigabit", CategoryID = 3, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 449000m, UnitsInStock = 70,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "TP-Link TL-SG1008D với 8 cổng Gigabit giúp mở rộng mạng LAN dễ dàng, hỗ trợ Plug and Play." },
+
+                        new Product { ProductName = "Switch mạng TP-Link TL-SF1005D 5 cổng 10/100Mbps", CategoryID = 3, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 159000m, UnitsInStock = 110,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Switch mạng TP-Link TL-SF1005D với 5 cổng tốc độ 10/100Mbps, thiết kế nhỏ gọn, dễ sử dụng." },
+
+                        new Product { ProductName = "Switch mạng TP-Link TL-SF1008D 8 cổng 10/100Mbps", CategoryID = 3, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 219000m, UnitsInStock = 100,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Switch mạng TP-Link TL-SF1008D với 8 cổng 10/100Mbps, thích hợp cho mạng gia đình và văn phòng nhỏ." },
+
+                        new Product { ProductName = "Switch mạng D-Link DGS-1005A 5 cổng Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 329000m, UnitsInStock = 60,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "D-Link DGS-1005A là switch 5 cổng Gigabit, hỗ trợ kết nối tốc độ cao với công nghệ tiết kiệm điện năng." },
+
+                        new Product { ProductName = "Switch mạng D-Link DGS-1008A 8 cổng Gigabit", CategoryID = 3, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 479000m, UnitsInStock = 50,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "D-Link DGS-1008A với 8 cổng Gigabit, phù hợp cho gia đình và doanh nghiệp nhỏ, hỗ trợ kết nối ổn định." },
+                // thiết bị ngoại vi
+                // Bàn phím 130 - 140
+                        new Product { ProductName = "Bàn phím cơ Logitech G Pro X", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 2490000m, UnitsInStock = 50,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Bàn phím cơ Logitech G Pro X với công tắc có thể thay đổi, đèn LED RGB và thiết kế gọn nhẹ, phù hợp cho game thủ chuyên nghiệp." },
+
+                        new Product { ProductName = "Bàn phím cơ Razer BlackWidow V3", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 2590000m, UnitsInStock = 70,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Razer BlackWidow V3 mang lại cảm giác gõ êm ái và phản hồi nhanh chóng. Được trang bị đèn LED RGB, switch Green, lý tưởng cho game thủ yêu thích chơi game ban đêm." },
+
+                        new Product { ProductName = "Bàn phím cơ Corsair K95 RGB Platinum", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3890000m, UnitsInStock = 30,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "Corsair K95 RGB Platinum với switch Cherry MX và đèn LED RGB có thể tùy chỉnh. Sản phẩm lý tưởng cho game thủ, hỗ trợ macro phím, giúp cải thiện hiệu suất chơi game." },
+
+                        new Product { ProductName = "Bàn phím không dây Logitech K780", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 799000m, UnitsInStock = 80,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bàn phím không dây Logitech K780 với thiết kế thông minh, hỗ trợ kết nối với nhiều thiết bị cùng lúc. Chất liệu cao cấp và trải nghiệm gõ mượt mà." },
+
+                        new Product { ProductName = "Bàn phím cơ SteelSeries Apex Pro", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 4590000m, UnitsInStock = 40,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Bàn phím cơ SteelSeries Apex Pro sử dụng công tắc OmniPoint cho cảm giác gõ tùy chỉnh và tốc độ phản hồi cực nhanh. Đèn LED RGB, thiết kế cao cấp." },
+
+                        new Product { ProductName = "Bàn phím không dây Logitech MX Keys", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1490000m, UnitsInStock = 50,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Logitech MX Keys là bàn phím không dây mang đến trải nghiệm gõ êm ái, có thể kết nối với nhiều thiết bị, phù hợp cho công việc và giải trí." },
+
+                        new Product { ProductName = "Bàn phím gaming MSI Vigor GK50", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1390000m, UnitsInStock = 60,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "MSI Vigor GK50 là bàn phím cơ gaming với switch Cherry MX, thiết kế đèn LED RGB có thể tùy chỉnh. Đảm bảo phản hồi nhanh, hỗ trợ chơi game mượt mà." },
+
+                        new Product { ProductName = "Bàn phím không dây Logitech G915", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 4990000m, UnitsInStock = 40,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "Logitech G915 là bàn phím gaming không dây với switch GL có thể thay đổi, đèn LED RGB sáng tạo và thiết kế mỏng, sang trọng." },
+
+                        new Product { ProductName = "Bàn phím cơ HyperX Alloy FPS Pro", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1590000m, UnitsInStock = 70,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "HyperX Alloy FPS Pro là bàn phím cơ compact, thiết kế cho game thủ FPS với khả năng phản hồi nhanh, switch Cherry MX, đèn LED đỏ." },
+
+                        new Product { ProductName = "Bàn phím cơ Aukey KM-G9", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 799000m, UnitsInStock = 90,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Aukey KM-G9 là bàn phím cơ giá phải chăng với đèn LED RGB, switch Blue, cung cấp phản hồi tuyệt vời, lý tưởng cho những game thủ yêu thích hiệu suất và kiểu dáng." },
+                // chuột 141 - 150
+                        new Product { ProductName = "Chuột gaming Logitech G502 HERO", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1490000m, UnitsInStock = 50,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Chuột gaming Logitech G502 HERO được trang bị cảm biến HERO 16K, mang lại độ chính xác cao và tốc độ phản hồi nhanh. Thiết kế công thái học, đèn LED RGB có thể tùy chỉnh." },
+
+                        new Product { ProductName = "Chuột không dây Logitech MX Master 3", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2490000m, UnitsInStock = 60,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Logitech MX Master 3 là chuột không dây cao cấp, thiết kế công thái học, cảm biến 4000 DPI, kết nối với nhiều thiết bị cùng lúc, thích hợp cho công việc và giải trí." },
+
+                        new Product { ProductName = "Chuột gaming Razer DeathAdder V2", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1190000m, UnitsInStock = 70,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Razer DeathAdder V2 với cảm biến Focus+ 20K DPI, công nghệ HyperSpeed Wireless giúp game thủ có trải nghiệm chơi game mượt mà, phản hồi cực nhanh." },
+
+                        new Product { ProductName = "Chuột có dây SteelSeries Rival 600", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1590000m, UnitsInStock = 40,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "SteelSeries Rival 600 có cảm biến TrueMove3+ với độ chính xác cực cao, thiết kế 2 cảm biến cho khả năng tracking tuyệt vời, thích hợp cho game thủ chuyên nghiệp." },
+
+                        new Product { ProductName = "Chuột không dây Logitech G Pro X Superlight", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3490000m, UnitsInStock = 50,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Logitech G Pro X Superlight là chuột gaming không dây siêu nhẹ, cảm biến HERO 25K, giúp game thủ có độ chính xác cao và tốc độ phản hồi nhanh nhất trong các trận đấu căng thẳng." },
+
+                        new Product { ProductName = "Chuột gaming Corsair Dark Core RGB/SE", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2190000m, UnitsInStock = 30,
+                            UnitsOnOrder = 4, Discontinued = false, ProductDescription = "Corsair Dark Core RGB/SE với cảm biến 16K DPI, thiết kế tiện lợi, kết nối không dây hoặc có dây, đèn LED RGB tùy chỉnh cho game thủ muốn một trải nghiệm chơi game tuyệt vời." },
+
+                        new Product { ProductName = "Chuột có dây Razer Naga Trinity", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 2490000m, UnitsInStock = 60,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Razer Naga Trinity với cảm biến 16K DPI, 3 panel nút có thể thay đổi, lý tưởng cho các game thủ MMO, giúp bạn tùy chỉnh dễ dàng các phím tắt trong game." },
+
+                        new Product { ProductName = "Chuột không dây Microsoft Surface Arc", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 799000m, UnitsInStock = 100,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Microsoft Surface Arc là chuột không dây thiết kế mỏng, gọn nhẹ, dễ dàng mang theo, phù hợp với nhu cầu sử dụng văn phòng và di động, cảm giác gõ tốt." },
+
+                        new Product { ProductName = "Chuột gaming HyperX Pulsefire FPS Pro", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1190000m, UnitsInStock = 80,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "HyperX Pulsefire FPS Pro với cảm biến Pixart 16000 DPI, đèn LED RGB, thiết kế công thái học giúp game thủ có trải nghiệm chơi game mượt mà và chính xác." },
+
+                        new Product { ProductName = "Chuột không dây Logitech G703 LIGHTSPEED", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1590000m, UnitsInStock = 50,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Logitech G703 LIGHTSPEED là chuột không dây gaming với cảm biến HERO 16K DPI, đèn LED RGB, giúp game thủ có tốc độ phản hồi cực nhanh và độ chính xác cao." },
+                // loa 151 - 160 
+                        new Product { ProductName = "Loa Bluetooth JBL Charge 5", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2990000m, UnitsInStock = 50,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Loa Bluetooth JBL Charge 5 với âm thanh mạnh mẽ, thời lượng pin lên đến 20 giờ, thiết kế chống nước IP67, hoàn hảo cho việc nghe nhạc ngoài trời và các buổi tiệc." },
+
+                        new Product { ProductName = "Loa không dây Bose SoundLink Revolve+", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 5990000m, UnitsInStock = 30,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Bose SoundLink Revolve+ cung cấp âm thanh 360 độ tuyệt vời, thiết kế nhỏ gọn, chống nước, thời gian phát nhạc lên đến 16 giờ, phù hợp với cả trong nhà và ngoài trời." },
+
+                        new Product { ProductName = "Loa Bluetooth Sony SRS-XB43", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3590000m, UnitsInStock = 70,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Sony SRS-XB43 với âm thanh Extra Bass mạnh mẽ, thiết kế chống nước IP67, đèn LED nhấp nháy tạo không gian âm nhạc sôi động, thích hợp cho các buổi party." },
+
+                        new Product { ProductName = "Loa máy tính Creative Pebble 2.0", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 599000m, UnitsInStock = 100,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Creative Pebble 2.0 là loa máy tính với âm thanh rõ ràng, bass mạnh mẽ, thiết kế gọn gàng, dễ dàng kết nối qua cổng USB, phù hợp cho không gian văn phòng hoặc phòng ngủ." },
+
+                        new Product { ProductName = "Loa Bluetooth Anker Soundcore Flare 2", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1290000m, UnitsInStock = 90,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "Anker Soundcore Flare 2 cung cấp âm thanh 360 độ sống động, đèn LED chớp sáng tạo không gian giải trí tuyệt vời, chống nước IPX7, thời gian sử dụng lên đến 12 giờ." },
+
+                        new Product { ProductName = "Loa Bluetooth Marshall Emberton", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 4990000m, UnitsInStock = 40,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Marshall Emberton là loa Bluetooth với âm thanh mạnh mẽ và rõ ràng, thiết kế cổ điển, kết nối dễ dàng với các thiết bị, thời gian sử dụng lên đến 20 giờ." },
+
+                        new Product { ProductName = "Loa ngoài trời Bose SoundLink Micro", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1990000m, UnitsInStock = 80,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Bose SoundLink Micro là loa Bluetooth ngoài trời nhỏ gọn, âm thanh mạnh mẽ, khả năng chống nước IPX7, phù hợp cho các hoạt động ngoài trời và đi du lịch." },
+
+                        new Product { ProductName = "Loa Bluetooth Xiaomi Mi Outdoor", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 799000m, UnitsInStock = 120,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Xiaomi Mi Outdoor với âm thanh mạnh mẽ và bass sâu, thiết kế chống nước, dễ dàng kết nối qua Bluetooth, là sự lựa chọn tuyệt vời cho các chuyến đi dã ngoại và tiệc ngoài trời." },
+
+                        new Product { ProductName = "Loa máy tính Logitech Z313 Speaker System", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 899000m, UnitsInStock = 90,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Logitech Z313 Speaker System với loa siêu trầm, âm thanh rõ ràng, mạnh mẽ, thiết kế nhỏ gọn, dễ dàng kết nối với máy tính hoặc thiết bị di động." },
+
+                        new Product { ProductName = "Loa Bluetooth JBL Flip 5", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1990000m, UnitsInStock = 110,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "JBL Flip 5 là loa Bluetooth với âm thanh stereo sống động, khả năng chống nước IPX7, thời gian sử dụng lên đến 12 giờ, hoàn hảo cho các hoạt động ngoài trời và tiệc tùng." },
+                // màn hình 161-170
+                        new Product { ProductName = "Màn hình gaming LG 27GN950-B 27 inch 4K UHD", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 11990000m, UnitsInStock = 30,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Màn hình gaming LG 27GN950-B với độ phân giải 4K UHD, tần số quét 144Hz, thời gian phản hồi 1ms, hỗ trợ công nghệ G-Sync giúp mang đến trải nghiệm chơi game mượt mà và sắc nét." },
+
+                        new Product { ProductName = "Màn hình Dell UltraSharp U2720Q 27 inch 4K", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 10490000m, UnitsInStock = 40,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "Màn hình Dell UltraSharp U2720Q với độ phân giải 4K, màu sắc chính xác, hỗ trợ USB-C, phù hợp cho các công việc thiết kế đồ họa và làm việc chuyên nghiệp." },
+
+                        new Product { ProductName = "Màn hình Samsung Odyssey G7 27 inch QHD", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 9990000m, UnitsInStock = 50,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Màn hình Samsung Odyssey G7 27 inch với độ phân giải QHD, tần số quét 240Hz, thời gian phản hồi 1ms, thiết kế cong, mang đến trải nghiệm gaming tuyệt vời và hình ảnh sắc nét." },
+
+                        new Product { ProductName = "Màn hình ASUS ProArt PA278QV 27 inch QHD", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 8990000m, UnitsInStock = 70,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "ASUS ProArt PA278QV 27 inch với độ phân giải QHD, màu sắc chuẩn xác cho công việc sáng tạo, tần số quét 75Hz, công nghệ Flicker-Free và Blue Light Filtering bảo vệ mắt." },
+
+                        new Product { ProductName = "Màn hình MSI Optix MAG272C 27 inch Full HD", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 4590000m, UnitsInStock = 80,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Màn hình MSI Optix MAG272C với độ phân giải Full HD, tần số quét 165Hz, thời gian phản hồi 1ms, thiết kế cong 1500R, phù hợp cho game thủ yêu thích độ chính xác và tốc độ." },
+
+                        new Product { ProductName = "Màn hình AOC CQ32G1 31.5 inch QHD Curved", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 6690000m, UnitsInStock = 60,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Màn hình AOC CQ32G1 31.5 inch với độ phân giải QHD, tần số quét 165Hz, cong 1800R, mang lại trải nghiệm chơi game và xem phim cực kỳ mượt mà và sinh động." },
+
+                        new Product { ProductName = "Màn hình BenQ PD2700U 27 inch 4K", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 13990000m, UnitsInStock = 20,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Màn hình BenQ PD2700U 27 inch với độ phân giải 4K, chuẩn màu chính xác, hỗ trợ HDR10, là lựa chọn lý tưởng cho các chuyên gia thiết kế đồ họa và người sáng tạo nội dung." },
+
+                        new Product { ProductName = "Màn hình LG 34WN80C-B 34 inch UltraWide", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 6990000m, UnitsInStock = 45,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Màn hình LG 34WN80C-B 34 inch UltraWide với độ phân giải 2560x1080, thiết kế cong, phù hợp cho công việc đa nhiệm và giải trí, giúp tối ưu hóa không gian làm việc." },
+
+                        new Product { ProductName = "Màn hình ViewSonic VX2458-MHD 24 inch Full HD", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3690000m, UnitsInStock = 100,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Màn hình ViewSonic VX2458-MHD 24 inch Full HD với tần số quét 75Hz, độ phân giải 1080p, thiết kế mỏng nhẹ, dễ dàng lắp đặt cho không gian làm việc hoặc chơi game." },
+
+                        new Product { ProductName = "Màn hình HP 27f 27 inch Full HD", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 4890000m, UnitsInStock = 90,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "HP 27f 27 inch Full HD với thiết kế siêu mỏng, tấm nền IPS mang đến hình ảnh sắc nét và màu sắc sống động, lý tưởng cho công việc văn phòng và giải trí." },
+                 // micro 171 - 180
+                        new Product { ProductName = "Micro thu âm USB Blue Yeti", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2490000m, UnitsInStock = 30,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Micro thu âm USB Blue Yeti với chất lượng âm thanh tuyệt vời, tích hợp 4 chế độ thu âm, dễ dàng kết nối với máy tính, phù hợp cho streamer, podcaster và người làm nội dung." },
+
+                        new Product { ProductName = "Micro thu âm Audio-Technica AT2020", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2390000m, UnitsInStock = 50,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Micro thu âm Audio-Technica AT2020 mang đến chất lượng âm thanh rõ ràng, độ nhạy cao, lý tưởng cho thu âm podcast, nhạc và các buổi livestream." },
+
+                        new Product { ProductName = "Micro không dây Samson XPD2", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3190000m, UnitsInStock = 40,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Micro không dây Samson XPD2 dễ dàng kết nối với thiết bị di động, mang lại âm thanh chất lượng cao, thiết kế nhỏ gọn, phù hợp cho thu âm trực tiếp hoặc trên sân khấu." },
+
+                        new Product { ProductName = "Micro thu âm Razer Seiren X", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1790000m, UnitsInStock = 60,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Micro thu âm Razer Seiren X với khả năng thu âm tinh tế, thiết kế nhỏ gọn và dễ sử dụng, lý tưởng cho các streamer, podcaster và người làm nội dung trực tuyến." },
+
+                        new Product { ProductName = "Micro thu âm Shure SM7B", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 6990000m, UnitsInStock = 20,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Micro thu âm Shure SM7B nổi bật với chất lượng âm thanh tuyệt vời, được ưa chuộng trong phòng thu và các buổi ghi âm podcast chuyên nghiệp." },
+
+                        new Product { ProductName = "Micro thu âm Sony ECM-77B", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 2490000m, UnitsInStock = 50,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Micro thu âm Sony ECM-77B với thiết kế nhỏ gọn, chất lượng thu âm cao, lý tưởng cho thu âm nhạc, phỏng vấn và các ứng dụng video." },
+
+                        new Product { ProductName = "Micro không dây Rode Wireless GO", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 5890000m, UnitsInStock = 35,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "Micro không dây Rode Wireless GO nhỏ gọn, chất lượng âm thanh rõ ràng, lý tưởng cho vlog, livestream và phỏng vấn di động." },
+
+                        new Product { ProductName = "Micro thu âm AKG P120", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1490000m, UnitsInStock = 80,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "Micro thu âm AKG P120 với chất lượng âm thanh trong trẻo, thích hợp cho thu âm podcast, nhạc và các buổi ghi âm tại nhà." },
+
+                        new Product { ProductName = "Micro thu âm Samson Q2U", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1590000m, UnitsInStock = 70,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Micro thu âm Samson Q2U kết hợp USB và XLR, mang đến chất lượng thu âm tuyệt vời cho podcast, stream và các buổi ghi âm chuyên nghiệp." },
+
+                        new Product { ProductName = "Micro thu âm Blue Snowball iCE", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 1090000m, UnitsInStock = 100,
+                            UnitsOnOrder = 15, Discontinued = false, ProductDescription = "Micro thu âm Blue Snowball iCE dễ dàng sử dụng với kết nối USB, mang lại âm thanh rõ ràng, phù hợp cho podcast, livestream và thu âm tại nhà." },
+                // tai nghe 181-190
+                        new Product { ProductName = "Tai nghe Bluetooth Sony WH-1000XM4", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 7990000m, UnitsInStock = 30,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Tai nghe Bluetooth Sony WH-1000XM4 với công nghệ chống ồn chủ động, chất lượng âm thanh tuyệt vời, pin sử dụng lên đến 30 giờ, mang lại trải nghiệm nghe nhạc tuyệt hảo." },
+
+                        new Product { ProductName = "Tai nghe không dây Apple AirPods Pro", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 6590000m, UnitsInStock = 40,
+                            UnitsOnOrder = 6, Discontinued = false, ProductDescription = "Tai nghe không dây Apple AirPods Pro với tính năng chống ồn chủ động, thiết kế nhỏ gọn và thoải mái, âm thanh chất lượng cao, phù hợp cho nghe nhạc và gọi điện." },
+
+                        new Product { ProductName = "Tai nghe có dây JBL Quantum 800", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 3990000m, UnitsInStock = 50,
+                            UnitsOnOrder = 8, Discontinued = false, ProductDescription = "Tai nghe JBL Quantum 800 có dây với âm thanh vòm 3D, micrô khử tiếng ồn, tần số quét cao và thiết kế thoải mái, lý tưởng cho game thủ." },
+
+                        new Product { ProductName = "Tai nghe Bluetooth Bose QuietComfort 35 II", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 7490000m, UnitsInStock = 30,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Bose QuietComfort 35 II là tai nghe Bluetooth với khả năng chống ồn chủ động, chất lượng âm thanh hoàn hảo, và thiết kế cực kỳ thoải mái cho việc nghe lâu dài." },
+
+                        new Product { ProductName = "Tai nghe có dây Sennheiser HD 600", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 4790000m, UnitsInStock = 25,
+                            UnitsOnOrder = 5, Discontinued = false, ProductDescription = "Tai nghe Sennheiser HD 600 với chất lượng âm thanh cực kỳ chi tiết, thiết kế mở giúp tái tạo âm thanh tự nhiên, phù hợp cho những tín đồ audiophile." },
+
+                        new Product { ProductName = "Tai nghe không dây Samsung Galaxy Buds Pro", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 3990000m, UnitsInStock = 70,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Samsung Galaxy Buds Pro với chất lượng âm thanh sống động, chống ồn chủ động, thiết kế nhỏ gọn và tiện dụng, phù hợp cho mọi hoạt động và phong cách sống." },
+
+                        new Product { ProductName = "Tai nghe có dây Razer Kraken X", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 1290000m, UnitsInStock = 60,
+                            UnitsOnOrder = 12, Discontinued = false, ProductDescription = "Tai nghe Razer Kraken X có dây với âm thanh 7.1 surround, micrô khử tiếng ồn, thiết kế nhẹ và thoải mái, hoàn hảo cho các game thủ yêu thích sự sống động trong âm thanh." },
+
+                        new Product { ProductName = "Tai nghe Bluetooth Sony WF-1000XM4", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 4490000m, UnitsInStock = 40,
+                            UnitsOnOrder = 7, Discontinued = false, ProductDescription = "Sony WF-1000XM4 là tai nghe không dây với khả năng chống ồn chủ động, âm thanh chất lượng cao, và thời gian sử dụng lên đến 8 giờ, mang lại trải nghiệm âm nhạc tuyệt vời." },
+
+                        new Product { ProductName = "Tai nghe không dây Jabra Elite 75t", CategoryID = 4, SupplierID = 1, QuantityPerUnit = "1 kg", UnitPrice = 3590000m, UnitsInStock = 55,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "Tai nghe Jabra Elite 75t không dây với chất lượng âm thanh sắc nét, khả năng chống nước IP55, thời gian sử dụng lên đến 7 giờ, lý tưởng cho tập luyện thể thao và di chuyển." },
+
+                        new Product { ProductName = "Tai nghe có dây SteelSeries Arctis 7", CategoryID = 4, SupplierID = 2, QuantityPerUnit = "1 kg", UnitPrice = 4590000m, UnitsInStock = 50,
+                            UnitsOnOrder = 10, Discontinued = false, ProductDescription = "SteelSeries Arctis 7 có dây với âm thanh vòm 7.1, micrô khử tiếng ồn, thiết kế thoải mái, là lựa chọn tuyệt vời cho game thủ và người dùng muốn có trải nghiệm âm thanh chất lượng cao." },
 
             };
             context.Products.AddRange(products);
             context.SaveChanges();
             var images = new List<Image>();
-            for (int i = 1; i <= 98; i++)
+            for (int i = 1; i <= 190; i++)
             {
                 images.Add(new Image
                 {
