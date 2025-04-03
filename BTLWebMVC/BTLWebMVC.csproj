@@ -2522,6 +2522,8 @@
     <Content Include="Views\UserCartItems\HistoryProduct.cshtml" />
     <Content Include="Views\Login\ResetPassword.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Home\GetProducts.cshtml" />
+    <Content Include="Views\Home\_CategoryProductList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

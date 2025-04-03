@@ -1,0 +1,80 @@
+﻿@model PagedList.IPagedList<BTLWebMVC.Models.Product>
+
+<div class="pagination-top" style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+    <div class="pages d-flex flex-row align-items-center">
+        <div id="prev_page_top" class="page_next me-4">
+            @if (Model.HasPreviousPage)
+            {
+                <a href="#" data-page="@(Model.PageNumber - 1)"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+            }
+        </div>
+        <div class="page_current">
+            <span>@Model.PageNumber</span>
+            <ul class="page_selection">
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="@(i == Model.PageNumber ? "active" : "")">
+                        <a href="#" data-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="page_total"><span>-</span> @Model.PageCount</div>
+        <div id="next_page_top" class="page_next">
+            @if (Model.HasNextPage)
+            {
+                <a href="#" data-page="@(Model.PageNumber + 1)"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="product-grid row">
+    @foreach (var product in Model)
+    {
+        <div class="product-item category-@product.Category.CategoryID" style="padding-left: 0px !important; padding-right:0px !important;">
+            <div class="product discount product_filter">
+                <div class="product_image">
+                    <a href="@Url.Action("Details", "Home", new { id = product.ProductID })">
+                        <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
+                    </a>
+                </div>
+                <div class="product_info">
+                    <h6 class="product_name"><a href="@Url.Action("Details", "Home", new { id = product.ProductID })">@product.ProductName</a></h6>
+                    <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
+                </div>
+            </div>
+            <div class="red_button add_to_cart_button"><a href="@Url.Action("Details", "Home", new { id = product.ProductID })">Mua Ngay</a></div>
+        </div>
+    }
+</div>
+
+<div class="product_sorting_container product_sorting_container_bottom clearfix">
+    <span class="showing_results">Hiển thị @(Model.PageNumber * Model.PageSize - Model.PageSize + 1)–@(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)) trong @Model.TotalItemCount kết quả</span>
+    <div class="pages d-flex flex-row align-items-center">
+        <div id="prev_page" class="page_next me-4">
+            @if (Model.HasPreviousPage)
+            {
+                <a href="#" data-page="@(Model.PageNumber - 1)"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+            }
+        </div>
+        <div class="page_current">
+            <span>@Model.PageNumber</span>
+            <ul class="page_selection">
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="@(i == Model.PageNumber ? "active" : "")">
+                        <a href="#" data-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="page_total"><span>-</span> @Model.PageCount</div>
+        <div id="next_page" class="page_next">
+            @if (Model.HasNextPage)
+            {
+                <a href="#" data-page="@(Model.PageNumber + 1)"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+            }
+        </div>
+    </div>
+</div>
