@@ -16,6 +16,7 @@ namespace BTLWebMVC.Models
         public int UnitsInStock { get; set; }
         public int UnitsOnOrder { get; set; }
         public bool Discontinued { get; set; }
+
         public string ProductDescription { get; set; }
 
         public virtual Category Category { get; set; }
