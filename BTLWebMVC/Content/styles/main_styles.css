@@ -975,91 +975,98 @@ auth-modal
 5.2 New Arrivals Products Grid
 *********************************/
 
-.product-grid
-{
+.product-grid {
 	width: 100%;
 	margin-top: 57px;
 }
-.product-item
-{
+
+.product-item {
 	width: 20%;
 	height: 380px;
 	cursor: pointer;
+	overflow: hidden; /* Ẩn nội dung vượt quá */
 }
-.product-item::after
-{
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -1px;
-	width: calc(100% + 1px);
-	height: 100%;
-	pointer-events: none;
-	content: '';
-	border: solid 2px rgba(235,235,235,0);
-	border-radius: 3px;
-	-webkit-transition: all 0.3s ease;
-	-moz-transition: all 0.3s ease;
-	-ms-transition: all 0.3s ease;
-	-o-transition: all 0.3s ease;
-	transition: all 0.3s ease;
-}
-.product-item:hover::after
-{
-	box-shadow: 0 25px 29px rgba(63, 78, 100, 0.15);
-	border: solid 2px rgba(235,235,235,1);
-}
-.product
-{
+
+	.product-item::after {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: -1px;
+		width: calc(100% + 1px);
+		height: 100%;
+		pointer-events: none;
+		content: '';
+		border: solid 2px rgba(235,235,235,0);
+		border-radius: 3px;
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		-ms-transition: all 0.3s ease;
+		-o-transition: all 0.3s ease;
+		transition: all 0.3s ease;
+	}
+
+	.product-item:hover::after {
+		box-shadow: 0 25px 29px rgba(63, 78, 100, 0.15);
+		border: solid 2px rgba(235,235,235,1);
+	}
+
+.product {
 	width: 100%;
 	height: 340px;
 	border-right: solid 1px #e9e9e9;
 }
-.product_image
-{
+
+.product_image {
 	width: 100%;
+	overflow: hidden; /* Ẩn hình ảnh vượt quá */
 }
-.product_image img
-{
-	height:250px;
-	width:100%;
-}
-.product_info
-{
+
+	.product_image img {
+		height: 250px;
+		width: 100%;
+		object-fit: cover; /* Đảm bảo hình ảnh vừa khung */
+	}
+
+.product_info {
 	text-align: center;
 	padding-left: 10px;
 	padding-right: 10px;
+	overflow: hidden; /* Ẩn nội dung vượt quá */
 }
-.product_name
-{
+
+.product_name {
 	margin-top: 27px;
+	white-space: nowrap; /* Ngăn xuống dòng */
+	overflow: hidden; /* Ẩn phần vượt quá */
+	text-overflow: ellipsis; /* Thêm dấu "..." */
+	max-width: 100%; /* Giới hạn chiều rộng */
 }
-.product_name a
-{
-	color: #1e1e27;
-	line-height: 20px;
-}
-.product_name:hover a
-{
-	color: #b5aec4;
-}
-.discount .product_info .product_price
-{
+
+	.product_name a {
+		color: #1e1e27;
+		line-height: 20px;
+	}
+
+	.product_name:hover a {
+		color: #b5aec4;
+	}
+
+.discount .product_info .product_price {
 	font-size: 14px;
 }
-.product_price
-{
-	font-size: 16px;
+
+.product_price {
+	font: size 16px;
 	color: #fe4c50;
 	font-weight: 600;
 }
-.product_price span
-{
-	font-size: 12px;
-	margin-left: 10px;
-	color: #b5aec4;
-	text-decoration: line-through;
-}
+
+	.product_price span {
+		font-size: 12px;
+		margin-left: 10px;
+		color: #b5aec4;
+		text-decoration: line-through;
+	}
 .product_bubble
 {
 	position: absolute;
