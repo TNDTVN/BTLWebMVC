@@ -2524,6 +2524,7 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Home\GetProducts.cshtml" />
     <Content Include="Views\Home\_CategoryProductList.cshtml" />
+    <Content Include="Views\UserCartItems\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -6,18 +6,163 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using PagedList;
+using BTLWebMVC.Models;
 
 namespace BTLWebMVC.Controllers.User
 {
     public class UserCartItemsController : Controller
     {
         Context db = new Context();
-        // GET: UserCartItems
+
+        // GET: Hiển thị giỏ hàng
         public ActionResult Index()
         {
-            return View();
+            if (Session["AccountId"] == null)
+            {
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để xem giỏ hàng!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            int accountId = (int)Session["AccountId"];
+            var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId);
+            if (customer == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var cartItems = db.CartItems
+                .Where(c => c.CustomerID == customer.CustomerID)
+                .Include(c => c.Product)
+                .Include(c => c.Product.Images)
+                .ToList();
+
+            ViewBag.Customer = customer;
+            return View(cartItems);
         }
 
+        // POST: Xóa một sản phẩm khỏi giỏ hàng
+        [HttpPost]
+        public JsonResult RemoveItem(int cartItemId)
+        {
+            var cartItem = db.CartItems.Find(cartItemId);
+            if (cartItem == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng!" });
+            }
+
+            db.CartItems.Remove(cartItem);
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Đã xóa sản phẩm khỏi giỏ hàng!" });
+        }
+
+        // POST: Xóa tất cả sản phẩm trong giỏ hàng
+        [HttpPost]
+        public JsonResult ClearCart()
+        {
+            if (Session["AccountId"] == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập!" });
+            }
+
+            int accountId = (int)Session["AccountId"];
+            var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId);
+            if (customer == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy thông tin khách hàng!" });
+            }
+
+            var cartItems = db.CartItems.Where(c => c.CustomerID == customer.CustomerID).ToList();
+            db.CartItems.RemoveRange(cartItems);
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Đã xóa tất cả sản phẩm trong giỏ hàng!" });
+        }
+
+        // POST: Cập nhật số lượng sản phẩm
+        [HttpPost]
+        public JsonResult UpdateQuantity(int cartItemId, int quantity)
+        {
+            if (quantity < 1)
+            {
+                return Json(new { success = false, message = "Số lượng phải lớn hơn 0!" });
+            }
+
+            var cartItem = db.CartItems.Find(cartItemId);
+            if (cartItem == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng!" });
+            }
+
+            cartItem.Quantity = quantity;
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Cập nhật số lượng thành công!" });
+        }
+
+        // POST: Chuyển giỏ hàng thành đơn hàng
+        [HttpPost]
+        public JsonResult CreateOrder(string shipAddress, string shipCity, string shipPostalCode, string shipCountry, string notes)
+        {
+            if (Session["AccountId"] == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập!" });
+            }
+
+            int accountId = (int)Session["AccountId"];
+            var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId);
+            if (customer == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy thông tin khách hàng!" });
+            }
+
+            if (string.IsNullOrEmpty(shipAddress) || string.IsNullOrEmpty(shipCity) ||
+                string.IsNullOrEmpty(shipPostalCode) || string.IsNullOrEmpty(shipCountry))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập đầy đủ thông tin giao hàng!" });
+            }
+
+            var cartItems = db.CartItems
+                .Where(c => c.CustomerID == customer.CustomerID)
+                .Include(c => c.Product)
+                .ToList();
+
+            if (!cartItems.Any())
+            {
+                return Json(new { success = false, message = "Giỏ hàng trống!" });
+            }
+
+            var order = new Order
+            {
+                CustomerID = customer.CustomerID,
+                OrderDate = DateTime.Now,
+                EmployeeID = null,
+                ShippedDate = null,
+                ShipAddress = shipAddress,
+                ShipCity = shipCity,
+                ShipPostalCode = shipPostalCode,
+                ShipCountry = shipCountry,
+                Notes = notes,
+                Freight = 0
+            };
+
+            order.OrderDetails = cartItems.Select(c => new OrderDetail
+            {
+                ProductID = c.ProductID,
+                UnitPrice = c.UnitPrice,
+                Quantity = c.Quantity,
+                Discount = 0
+            }).ToList();
+
+            db.Orders.Add(order);
+            db.CartItems.RemoveRange(cartItems);
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "Đơn hàng đã được tạo thành công, đang chờ nhân viên duyệt!" });
+        }
+
+        // Lịch sử mua hàng (giữ nguyên)
         public ActionResult HistoryProduct(int? page, int? accountid, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
             int pageSizeValue = 12;
@@ -33,7 +178,7 @@ namespace BTLWebMVC.Controllers.User
             if (customer == null)
             {
                 TempData["ErrorMessage"] = "Không tìm thấy khách hàng vui lòng đăng nhập!";
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var purchasedProductIds = db.OrderDetails
