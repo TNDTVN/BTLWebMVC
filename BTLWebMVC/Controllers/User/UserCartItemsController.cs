@@ -89,10 +89,22 @@ namespace BTLWebMVC.Controllers.User
                 return Json(new { success = false, message = "Số lượng phải lớn hơn 0!" });
             }
 
-            var cartItem = db.CartItems.Find(cartItemId);
+            var cartItem = db.CartItems.Include(c => c.Product).FirstOrDefault(c => c.CartItemID == cartItemId);
             if (cartItem == null)
             {
                 return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng!" });
+            }
+
+            int quantityDifference = quantity - cartItem.Quantity;
+
+            if (quantityDifference != 0)
+            {
+                var product = cartItem.Product;
+                if (product.UnitsInStock < quantityDifference)
+                {
+                    return Json(new { success = false, message = "Số lượng trong kho không đủ!" });
+                }
+                product.UnitsInStock -= quantityDifference;
             }
 
             cartItem.Quantity = quantity;
@@ -227,6 +239,42 @@ namespace BTLWebMVC.Controllers.User
                                 .ToPagedList(pageNumber, pageSizeValue);
 
             return View(pagedProducts);
+        }
+
+        public ActionResult PurchaseHistory(int? page)
+        {
+            if (Session["AccountId"] == null)
+            {
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để xem lịch sử mua hàng!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            int accountId = (int)Session["AccountId"];
+            var customer = db.Customers.FirstOrDefault(c => c.AccountID == accountId);
+            if (customer == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
+
+            db.Configuration.ProxyCreationEnabled = false;
+
+            var orders = db.Orders
+                .Where(o => o.CustomerID == customer.CustomerID)
+                .Include(o => o.OrderDetails)
+                .Include(o => o.OrderDetails.Select(od => od.Product))
+                .Include(o => o.OrderDetails.Select(od => od.Product.Images))
+                .OrderByDescending(o => o.OrderDate)
+                .AsNoTracking();
+
+            var pagedOrders = orders.ToPagedList(pageNumber, pageSize);
+
+            db.Configuration.ProxyCreationEnabled = true;
+
+            return View(pagedOrders);
         }
     }
 }

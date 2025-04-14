@@ -78,7 +78,7 @@
                                     @if (accountId != null)
                                     {
                                         <li><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
-                                        <li><a href="#">lịch sử mua hàng</a></li>
+                                        <li><a href="@Url.Action("PurchaseHistory","UserCartItems")">lịch sử mua hàng</a></li>
                                         <li><a href="@Url.Action("Index", "UserCartItems")">Giỏ hàng</a></li>
                                     }
                                     <li><a href="@Url.Action("Index","Contact")">Liên hệ</a></li>
@@ -148,7 +148,7 @@
                     @if (accountId != null)
                     {
                         <li class="menu_item"><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
-                        <li class="menu_item"><a href="#">Lịch sử mua hàng</a></li>
+                        <li class="menu_item"><a href="@Url.Action("PurchaseHistory","UserCartItems")">Lịch sử mua hàng</a></li>
                         <li class="menu_item"><a href="@Url.Action("Index", "UserCartItems")">Giỏ hàng</a></li>
                     }
                     <li class="menu_item has-children">

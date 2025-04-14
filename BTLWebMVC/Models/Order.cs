@@ -18,6 +18,7 @@ namespace BTLWebMVC.Models
         public string ShipCountry { get; set; }
         public string Notes { get; set; }
         public decimal Freight { get; set; }
+        public bool IsCancelled { get; set; } = false;
 
         public virtual Customer Customer { get; set; }
         public virtual Employee Employee { get; set; }

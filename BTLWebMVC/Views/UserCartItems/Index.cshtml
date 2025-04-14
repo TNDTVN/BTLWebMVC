@@ -189,7 +189,6 @@
                 "timeOut": "3000"
             };
 
-            // Hàm tính lại tổng tiền
             function updateTotal() {
                 let subtotal = 0;
                 $("#cart-items tr").each(function () {
@@ -204,7 +203,6 @@
                 $("#item-count").text($("#cart-items tr").length);
             }
 
-            // Xóa một sản phẩm
             $(".btn-remove").click(function () {
                 const cartItemId = $(this).data("id");
                 const $row = $(this).closest("tr");
@@ -228,15 +226,14 @@
                     }
                 });
             });
-
-            // Xóa tất cả sản phẩm
+            
             $("#btn-clear-cart").click(function () {
                 if (confirm("Bạn có chắc muốn xóa tất cả sản phẩm trong giỏ hàng?")) {
                     $.post("@Url.Action("ClearCart")", function (response) {
                         if (response.success) {
                             toastr.success(response.message);
-                            $("#cart-items").empty(); // Xóa toàn bộ tbody
-                            updateTotal(); // Cập nhật tổng tiền (sẽ về 0)
+                            $("#cart-items").empty();
+                            updateTotal();
                             $(".container-fluid").html(`
                                 <div class="card text-center p-5 min-vh-75">
                                     <div class="card-body">
@@ -252,21 +249,18 @@
                 }
             });
 
-            // Cập nhật số lượng
             $(".btn-update-quantity").change(function () {
                 const cartItemId = $(this).data("id");
                 const quantity = $(this).val();
                 $.post("@Url.Action("UpdateQuantity")", { cartItemId: cartItemId, quantity: quantity }, function (response) {
                     if (response.success) {
                         toastr.success(response.message);
-                        updateTotal(); // Cập nhật tổng tiền mà không reload
+                        updateTotal();
                     } else {
                         toastr.error(response.message);
                     }
                 });
             });
-
-            // Tạo đơn hàng
             $("#btn-create-order").click(function () {
                 $("#order-form").addClass("was-validated");
                 if ($("#order-form")[0].checkValidity()) {
@@ -274,7 +268,17 @@
                     $.post("@Url.Action("CreateOrder")", formData, function (response) {
                         if (response.success) {
                             toastr.success(response.message);
-                            window.location.href = "@Url.Action("Index", "Home")"; 
+                            setTimeout(function () {
+                                $(".container-fluid").html(`
+                                    <div class="card text-center p-5 min-vh-75">
+                                        <div class="card-body">
+                                            <p class="text-muted mb-4">Giỏ hàng trống</p>
+                                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">Tiếp tục mua sắm</a>
+                                        </div>
+                                    </div>
+                                `);
+                                window.location.reload()
+                            }, 3000);
                         } else {
                             toastr.error(response.message);
                         }
