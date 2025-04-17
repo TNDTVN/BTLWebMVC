@@ -4,18 +4,17 @@
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
-
 <div class="content-wrapper">
     <div class="container py-4">
         <h2 class="mb-4">Chi tiết đơn hàng số @Model.OrderID</h2>
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <p><strong>Tên khách hàng:</strong> @Model.Customer.CustomerName</p>
-                <p><strong>Nhân viên phụ trách:</strong> @Model.Employee.FirstName @Model.Employee.LastName</p>
-                <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy")</p>
-                <p><strong>Ngày giao hàng:</strong> @Model.ShippedDate.ToString("dd/MM/yyyy")</p>
-                <p><strong>Địa chỉ giao hàng:</strong> @Model.ShipAddress</p>
+                <p><strong>Tên khách hàng:</strong> @(Model.Customer != null ? Model.Customer.CustomerName : "Không có khách hàng")</p>
+                <p><strong>Nhân viên phụ trách:</strong> @(Model.Employee != null ? Model.Employee.FirstName + " " + Model.Employee.LastName : "Không có nhân viên")</p>
+                <p><strong>Ngày đặt hàng:</strong> @(Model.OrderDate.ToString("dd/MM/yyyy"))</p>
+                <p><strong>Ngày giao hàng:</strong> @(Model.ShippedDate.HasValue ? Model.ShippedDate.Value.ToString("dd/MM/yyyy") : "Chưa xác định")</p>
+                <p><strong>Địa chỉ giao hàng:</strong> @(Model.ShipAddress ?? "Không có địa chỉ")</p>
             </div>
         </div>
 
@@ -36,14 +35,16 @@
                         @foreach (var detail in Model.OrderDetails)
                         {
                             <tr>
-                                <td>@detail.Product.ProductID</td>
-                                <td>@detail.Product.ProductName</td>
+                                <td>@(detail.Product.ProductID)</td>
+                                <td>@(detail.Product != null ? detail.Product.ProductName : "Không có sản phẩm")</td>
                                 <td>@detail.Quantity</td>
                                 <td>@detail.UnitPrice.ToString("N0") VND</td>
-                                @{ var thanhtien = detail.UnitPrice * detail.Quantity;}
+                                @{
+                                    var thanhtien = detail.UnitPrice * detail.Quantity;
+                                }
                                 <td>@thanhtien.ToString("N0") VND</td>
                             </tr>
-}
+                        }
                     </tbody>
                 </table>
             </div>
