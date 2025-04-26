@@ -42,10 +42,11 @@
     <div class="wrapper">
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake"
-                 src="dist/img/AdminLTELogo.png"
+                 src="~/Content/dist/img/AdminLTELogo.png"
                  alt="AdminLTELogo"
                  height="60"
-                 width="60" />
+                 width="60"
+                 style="border-radius: 50%;" />
         </div>
 
         <!-- Navbar -->
@@ -225,12 +226,12 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="~/Content/dist/img/avatar.jpg"
+                        <img src="@Url.Action("Index", "About", new { area = "About" })"
                              class="img-circle elevation-2"
                              alt="User Image" />
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Trần Phước Hưỡng</a>
+                        <a href="#" class="d-block" id="user-fullname">Loading...</a>
                     </div>
                 </div>
 
@@ -374,6 +375,27 @@
     <script src="~/Content/dist/js/adminlte.js"></script>
     AdminLTE dashboard demo (This is only for demo purposes)
     <script src="~/Content/dist/js/adminlte.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("Name", "About", new { area = "About" })',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        $('#user-fullname').text(response.message);
+                    } else {
+                        console.error(response.message);
+                        $('#user-fullname').text('Unknown User');
+                    }
+                },
+                error: function () {
+                    console.error('Lỗi khi lấy tên nhân viên');
+                    $('#user-fullname').text('Unknown User');
+                }
+            });
+        });
+    </script>
     @if (TempData["SuccessMessage"] != null)
     {
         <script>

@@ -142,6 +142,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\About\ContactController.cs" />
+    <Compile Include="Controllers\About\AboutController.cs" />
     <Compile Include="Controllers\Manager\CustomersController.cs" />
     <Compile Include="Controllers\Manager\EmployeesController.cs" />
     <Compile Include="Controllers\Manager\OrdersController.cs" />
@@ -2459,6 +2460,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Image\" />
     <Folder Include="Views\UserAcount\" />
   </ItemGroup>
   <ItemGroup>
@@ -2524,6 +2526,8 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Home\GetProducts.cshtml" />
     <Content Include="Views\Home\_CategoryProductList.cshtml" />
+    <Content Include="Views\UserCartItems\Index.cshtml" />
+    <Content Include="Views\UserCartItems\PurchaseHistory.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

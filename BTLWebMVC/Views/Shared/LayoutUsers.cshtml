@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    @RenderSection("styles", required: false)
 </head>
 <body>
     @{
@@ -64,7 +65,7 @@
     <div class="super_container">
         <header class="header trans_300">
             <div class="main_nav_container">
-                <div class="container">
+                <div class="container_nav ps-5 pe-5">
                     <div class="row">
                         <div class="col-lg-12 text-right">
                             <div class="logo_container">
@@ -77,8 +78,8 @@
                                     @if (accountId != null)
                                     {
                                         <li><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
-                                        <li><a href="#">lịch sử mua hàng</a></li>
-                                        <li><a href="#">Giỏ hàng</a></li>
+                                        <li><a href="@Url.Action("PurchaseHistory","UserCartItems")">lịch sử mua hàng</a></li>
+                                        <li><a href="@Url.Action("Index", "UserCartItems")">Giỏ hàng</a></li>
                                     }
                                     <li><a href="@Url.Action("Index","Contact")">Liên hệ</a></li>
                                     <li class="account">
@@ -121,7 +122,7 @@
                                 <ul class="navbar_user">
                                     <li><a href="#"><img src="~/Content/accountImages/@ViewBag.images" alt="Profile" class="user-icon" /></a></li>
                                     <li class="checkout">
-                                        <a href="#">
+                                        <a href="@Url.Action("Index", "UserCartItems")">
                                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                             <span id="checkout_items" class="checkout_items">@ViewBag.cartItem</span>
                                         </a>
@@ -147,8 +148,8 @@
                     @if (accountId != null)
                     {
                         <li class="menu_item"><a href="@Url.Action("HistoryProduct", "UserCartItems", new {accountid = ViewBag.accountId})">Sản phẩm đã mua</a></li>
-                        <li class="menu_item"><a href="#">Lịch sử mua hàng</a></li>
-                        <li class="menu_item"><a href="#">Giỏ hàng</a></li>
+                        <li class="menu_item"><a href="@Url.Action("PurchaseHistory","UserCartItems")">Lịch sử mua hàng</a></li>
+                        <li class="menu_item"><a href="@Url.Action("Index", "UserCartItems")">Giỏ hàng</a></li>
                     }
                     <li class="menu_item has-children">
                         <a href="#">

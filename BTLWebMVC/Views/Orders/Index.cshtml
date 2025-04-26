@@ -38,14 +38,14 @@
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
-                                <td>@(item.Employee.FirstName + " " + item.Employee.LastName)</td>
+                                <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
                                 <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
 
                                 <td>
-                                    <a href="@Url.Action("Details", "Orders", new { id = item.CustomerID })" class="btn btn-primary btn-sm">Chi tiết</a>
-                                    <a href="@Url.Action("Edit", "Orders", new { id = item.CustomerID })" class="btn btn-info btn-sm">Cập nhập</a>
+                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">Chi tiết</a>
+                                    <a href="@Url.Action("Edit", "Orders", new { id = item.OrderID })" class="btn btn-info btn-sm">Cập nhập</a>
                                     @if (item.EmployeeID != null)
                                     {
                                         <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning">In</a>
