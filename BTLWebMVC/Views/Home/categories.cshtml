@@ -4,11 +4,14 @@
     ViewBag.Title = "categories";
     Layout = "~/Views/Shared/LayoutUsers.cshtml";
 }
+
 <link rel="stylesheet" href="~/Content/styles/categories_styles.css" />
 <link rel="stylesheet" href="~/Content/styles/categories_responsive.css" />
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 <style>
+    /* Giữ nguyên style của bạn */
     .ui-slider-handle {
         width: 20px !important;
         height: 20px !important;
@@ -78,14 +81,14 @@
             color: #555;
         }
 </style>
+
 <div class="container product_section_container">
     <div class="row">
         <div class="col product_section clearfix">
-
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
-                    <li><a href="@Url.Action("Index","Home")">Nhà</a></li>
-                    <li class="active"><a href="@Url.Action("categories","Home")"><i class="fa fa-angle-right" aria-hidden="true"></i>Cửa Hàng</a></li>
+                    <li><a href="@Url.Action("Index", "Home")">Nhà</a></li>
+                    <li class="active"><a href="@Url.Action("Categories", "Home")"><i class="fa fa-angle-right" aria-hidden="true"></i>Cửa Hàng</a></li>
                 </ul>
             </div>
 
@@ -95,12 +98,12 @@
                         <h5>Loại Sản Phẩm</h5>
                     </div>
                     <ul class="sidebar_categories">
-                        <li><a href="@Url.Action("categories")">Tất Cả</a></li>
+                        <li><a href="#" data-category-id="">Tất Cả</a></li>
                         @if (ViewBag.Categories != null)
                         {
                             foreach (var category in ViewBag.Categories)
                             {
-                                <li><a href="@Url.Action("categories", new { categoryId = category.CategoryID })">@category.CategoryName</a></li>
+                                <li><a href="#" data-category-id="@category.CategoryID">@category.CategoryName</a></li>
                             }
                         }
                     </ul>
@@ -110,135 +113,37 @@
                     <div class="sidebar_title">
                         <h5>Lọc Theo Giá</h5>
                     </div>
-                    <p>
-                        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                    </p>
+                    <p><input type="text" id="amount" readonly></p>
                     <div id="slider-range"></div>
                     <button class="filter_button text-white">Lọc</button>
                 </div>
-
             </div>
-            <div class="main_content">
 
+            <div class="main_content">
                 <div class="products_iso">
                     <div class="row">
                         <div class="col">
                             <div class="product_sorting_container product_sorting_container_top">
-                                <div class="product_sorting_container product_sorting_container_top">
-                                    <ul class="product_sorting">
-                                        <li>
-                                            <span class="type_sorting_text">Không sắp xếp</span>
-                                            <i class="fa fa-angle-down"></i>
-                                            <ul class="sorting_type">
-                                                <li class="type_sorting_btn" data-sort="original-order"><span>Không sắp xếp</span></li>
-                                                <li class="type_sorting_btn" data-sort="price"><span>Theo giá</span></li>
-                                                <li class="type_sorting_btn" data-sort="name"><span>Theo tên</span></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                    <div class="search-container mb-2 mb-sm-0">
-                                        <input type="text" id="searchString" placeholder="Tìm kiếm sản phẩm">
-                                        <button id="searchButton" class="search-button">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="pages d-flex flex-row align-items-center">
-                                    <div id="prev_page" class="page_next me-4">
-                                        @if (Model.HasPreviousPage)
-                                        {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber - 1 })">
-                                                <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
-
-                                    <div class="page_current">
-                                        <span>@Model.PageNumber</span>
-                                        <ul class="page_selection">
-                                            @for (int i = 1; i <= Model.PageCount; i++)
-                                            {
-                                                <li class="@(i == Model.PageNumber ? "active" : "")">
-                                                    <a href="@Url.Action("categories", new { page = i })">@i</a>
-                                                </li>
-                                            }
+                                <ul class="product_sorting">
+                                    <li>
+                                        <span class="type_sorting_text">Không sắp xếp</span>
+                                        <i class="fa fa-angle-down"></i>
+                                        <ul class="sorting_type">
+                                            <li class="type_sorting_btn" data-sort="original-order"><span>Không sắp xếp</span></li>
+                                            <li class="type_sorting_btn" data-sort="price"><span>Theo giá</span></li>
+                                            <li class="type_sorting_btn" data-sort="name"><span>Theo tên</span></li>
                                         </ul>
-                                    </div>
-
-                                    <div class="page_total"><span>-</span> @Model.PageCount</div>
-
-                                    <div id="next_page" class="page_next">
-                                        @if (Model.HasNextPage)
-                                        {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber + 1 })">
-                                                <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
+                                    </li>
+                                </ul>
+                                <div class="search-container mb-2 mb-sm-0">
+                                    <input type="text" id="searchString" placeholder="Tìm kiếm sản phẩm">
+                                    <button id="searchButton" class="search-button"><i class="fa fa-search"></i></button>
                                 </div>
-
                             </div>
 
-                            <div class="product-grid row">
-                                @foreach (var product in Model)
-                                {
-                                    <div class="product-item category-@product.Category.CategoryID" style="padding-left: 0px !important; padding-right:0px !important;">
-                                        <div class="product discount product_filter">
-                                            <div class="product_image">
-                                                <a href="@Url.Action("Details","Home", new {id = product.ProductID})">
-                                                    <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
-                                                </a>
-                                            </div>
-                                            @*<div class="favorite favorite_left"></div>*@
-                                            @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
-                                            <div class="product_info">
-                                                <h6 class="product_name"><a href="@Url.Action("Details","Home", new {id = product.ProductID})">@product.ProductName</a></h6>
-                                                <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
-                                            </div>
-                                        </div>
-                                        <div class="red_button add_to_cart_button"><a href="@Url.Action("Details","Home", new {id = product.ProductID})">Mua Ngay</a></div>
-                                    </div>
-                                }
+                            <div id="product-list-container">
+                                @Html.Partial("_CategoryProductList", Model)
                             </div>
-                            <div class="product_sorting_container product_sorting_container_bottom clearfix">
-
-                                <span class="showing_results">Hiển thị @(Model.PageNumber * Model.PageSize - Model.PageSize + 1)–@(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)) trong @Model.TotalItemCount kết quả</span>
-                                <div class="pages d-flex flex-row align-items-center">
-                                    <div id="prev_page" class="page_next me-4">
-                                        @if (Model.HasPreviousPage)
-                                        {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber - 1 })">
-                                                <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
-
-                                    <div class="page_current">
-                                        <span>@Model.PageNumber</span>
-                                        <ul class="page_selection">
-                                            @for (int i = 1; i <= Model.PageCount; i++)
-                                            {
-                                                <li class="@(i == Model.PageNumber ? "active" : "")">
-                                                    <a href="@Url.Action("categories", new { page = i })">@i</a>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </div>
-
-                                    <div class="page_total"><span>-</span> @Model.PageCount</div>
-
-                                    <div id="next_page" class="page_next">
-                                        @if (Model.HasNextPage)
-                                        {
-                                            <a href="@Url.Action("categories", new { page = Model.PageNumber + 1 })">
-                                                <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
-                                </div>
-                                
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -246,12 +151,17 @@
         </div>
     </div>
 </div>
+
 <script>
     var $j = jQuery.noConflict();
     $j(document).ready(function () {
         var urlParams = new URLSearchParams(window.location.search);
         var minPrice = urlParams.get('minPrice') || @ViewBag.PriceMin;
         var maxPrice = urlParams.get('maxPrice') || @ViewBag.PriceMax;
+        var sortOrder = urlParams.get('sortOrder') || '';
+        var searchString = urlParams.get('searchString') || '';
+        var page = urlParams.get('page') || 1;
+        var categoryId = urlParams.get('categoryId') || '';
 
         $j("#slider-range").slider({
             range: true,
@@ -262,7 +172,6 @@
                 var formattedMinPrice = ui.values[0].toLocaleString();
                 var formattedMaxPrice = ui.values[1].toLocaleString();
                 $j("#amount").val(formattedMinPrice + " VND - " + formattedMaxPrice + " VND");
-                $j(".ui-slider-range").css("background-color", "black");
             }
         });
 
@@ -270,91 +179,88 @@
         var initialMaxPrice = $j("#slider-range").slider("values", 1).toLocaleString();
         $j("#amount").val(initialMinPrice + " VND - " + initialMaxPrice + " VND");
 
-        $j('.filter_button').on('click', function () {
-            var priceRange = $j("#amount").val().split(' - ');
-            var minPrice = parseFloat(priceRange[0].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
-            var maxPrice = parseFloat(priceRange[1].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
-            updateUrlParam('minPrice', minPrice);
-            updateUrlParam('maxPrice', maxPrice);
-        });
-
-        function updateUrlParam(param, value) {
-            var url = new URL(window.location.href);
-            url.searchParams.set(param, value);
-            var newUrl = url.toString();
-            window.location.href = newUrl;
-        }
-    });
-
-    $j(document).ready(function () {
-        var urlParams = new URLSearchParams(window.location.search);
-
-        var minPrice = urlParams.get('minPrice');
-        var maxPrice = urlParams.get('maxPrice');
-        var sortOrder = urlParams.get('sortOrder');
-        var searchString = urlParams.get('searchString');
-
         if (sortOrder) {
             $j('.type_sorting_text').text(
                 sortOrder === 'price' ? 'Theo Giá' :
-                    sortOrder === 'name' ? 'Theo Tên' :
-                        'Không Sắp Xếp'
+                sortOrder === 'name' ? 'Theo Tên' : 'Không Sắp Xếp'
             );
         }
 
-        $j('.type_sorting_btn').on('click', function () {
-            updateUrlParam('sortOrder', $(this).data('sort'));
-        });
-
-        $j('#searchString').on('change', function () {
-            updateUrlParam('searchString', $(this).val());
-        });
-
-        $j('.filter_button').on('click', function () {
-            var priceRange = $('#amount').val().split(' - ');
-            var minPrice = parseFloat(priceRange[0].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
-            var maxPrice = parseFloat(priceRange[1].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
-
-            updateUrlParam('minPrice', minPrice);
-            updateUrlParam('maxPrice', maxPrice);
-        });
-
-        function updateUrlParam(param, value) {
-            var url = new URL(window.location.href);
-            url.searchParams.set(param, value);
-            window.location.href = url.toString();
+        function updateProducts() {
+            $j.ajax({
+                url: '@Url.Action("GetCategoryProducts", "Home")',
+                type: 'GET',
+                data: {
+                    page: page,
+                    sortOrder: sortOrder,
+                    searchString: searchString,
+                    minPrice: minPrice,
+                    maxPrice: maxPrice,
+                    categoryId: categoryId
+                },
+                success: function (data) {
+                    $j('#product-list-container').html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
         }
-    });
-    $j(document).ready(function () {
+
+        $j('.sidebar_categories a').on('click', function (e) {
+            e.preventDefault();
+            categoryId = $j(this).data('category-id') || '';
+            updateUrlParam('categoryId', categoryId);
+            updateProducts();
+        });
+
+        $j('#product-list-container').on('click', '.page_next a, .page_selection a', function (e) {
+            e.preventDefault();
+            page = $j(this).data('page');
+            updateUrlParam('page', page);
+            updateProducts();
+        });
+
+        $j('.type_sorting_btn').on('click', function () {
+            sortOrder = $j(this).data('sort');
+            $j('.type_sorting_text').text(
+                sortOrder === 'price' ? 'Theo Giá' :
+                sortOrder === 'name' ? 'Theo Tên' : 'Không Sắp Xếp'
+            );
+            updateUrlParam('sortOrder', sortOrder);
+            updateProducts();
+        });
+
         $j('#searchButton').on('click', function () {
-            var searchString = $j('#searchString').val();
-            if (searchString.trim() === '') {
-                updateUrlParam('searchString', '');
-            } else {
+            searchString = $j('#searchString').val();
+            updateUrlParam('searchString', searchString);
+            updateProducts();
+        });
+        $j('#searchString').on('keypress', function (e) {
+            if (e.which === 13) {
+                searchString = $j(this).val();
                 updateUrlParam('searchString', searchString);
+                updateProducts();
             }
         });
 
+        $j('.filter_button').on('click', function () {
+            var priceRange = $j('#amount').val().split(' - ');
+            minPrice = parseFloat(priceRange[0].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
+            maxPrice = parseFloat(priceRange[1].replace(/[^0-9.-]+/g, '').replace(/,/g, ''));
+            updateUrlParam('minPrice', minPrice);
+            updateUrlParam('maxPrice', maxPrice);
+            updateProducts();
+        });
+
         function updateUrlParam(param, value) {
             var url = new URL(window.location.href);
-            if (value === '') {
+            if (value === '' || value === null) {
                 url.searchParams.delete(param);
             } else {
                 url.searchParams.set(param, value);
             }
-            window.location.href = url.toString();
+            window.history.pushState({}, document.title, url.toString());
         }
-    });
-    $j(document).ready(function () {
-        $j('#searchString').on('keypress', function (e) {
-            if (e.which === 13) {
-                var searchString = $j('#searchString').val();
-                if (searchString.trim() === '') {
-                    updateUrlParam('searchString', '');
-                } else {
-                    updateUrlParam('searchString', searchString);
-                }
-            }
-        });
     });
 </script>

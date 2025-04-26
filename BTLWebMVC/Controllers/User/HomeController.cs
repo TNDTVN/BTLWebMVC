@@ -19,19 +19,74 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Index()
         {
-            var products = db.Products.Include(p => p.Images)
-                                      .Include(p => p.Category)
-                                      .OrderByDescending(x => x.ProductID)
-                                      .Take(20) 
-                                      .ToList();
+            List<Product> products = new List<Product>();
+            var categories = db.Categories.Take(4).ToList();
 
-            var categories = db.Categories.ToList();
+            foreach (var category in categories)
+            {
+                var categoryProducts = db.Products
+                    .Include(p => p.Images)
+                    .Include(p => p.Category)
+                    .Where(p => p.CategoryID == category.CategoryID)
+                    .OrderByDescending(x => x.ProductID)
+                    .Take(5)
+                    .ToList();
+
+                products.AddRange(categoryProducts);
+            }
+
             ViewBag.Categories = categories;
+            ViewBag.SelectedCategory = null;
 
-            return View(products); 
+            return View(products);
         }
 
-        public ActionResult categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
+        [HttpGet]
+        public ActionResult GetProducts(int? categoryId = null)
+        {
+            try
+            {
+                List<Product> products;
+
+                if (categoryId == null) 
+                {
+                    products = new List<Product>();
+                    var categories = db.Categories.Take(4).ToList();
+
+                    foreach (var category in categories)
+                    {
+                        var categoryProducts = db.Products
+                            .Include(p => p.Images)
+                            .Include(p => p.Category)
+                            .Where(p => p.CategoryID == category.CategoryID)
+                            .OrderByDescending(x => x.ProductID)
+                            .Take(5)
+                            .ToList();
+
+                        products.AddRange(categoryProducts);
+                    }
+                }
+                else 
+                {
+                    products = db.Products
+                        .Include(p => p.Images)
+                        .Include(p => p.Category)
+                        .Where(p => p.CategoryID == categoryId)
+                        .OrderByDescending(x => x.ProductID)
+                        .Take(20) 
+                        .ToList();
+                }
+
+                return PartialView("GetProducts", products); 
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error in GetProducts: " + ex.Message);
+                return new HttpStatusCodeResult(500, "Internal Server Error: " + ex.Message);
+            }
+        }
+
+        public ActionResult Categories(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
             int pageSizeValue = 12;
             int pageNumber = page ?? 1;
@@ -83,6 +138,62 @@ namespace BTLWebMVC.Controllers
                                 .ToPagedList(pageNumber, pageSizeValue);
 
             return View(pagedProducts);
+        }
+        [HttpGet]
+        public ActionResult GetCategoryProducts(int? page, string sortOrder, string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
+        {
+            try
+            {
+                int pageSizeValue = 12;
+                int pageNumber = page ?? 1;
+
+                var products = db.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    products = products.Where(p => p.ProductName.Contains(searchString));
+                }
+
+                if (minPrice.HasValue)
+                {
+                    products = products.Where(p => p.UnitPrice >= minPrice.Value);
+                }
+                if (maxPrice.HasValue)
+                {
+                    products = products.Where(p => p.UnitPrice <= maxPrice.Value);
+                }
+
+                if (categoryId.HasValue)
+                {
+                    products = products.Where(p => p.CategoryID == categoryId.Value);
+                }
+
+                switch (sortOrder)
+                {
+                    case "price":
+                        products = products.OrderBy(p => p.UnitPrice);
+                        break;
+                    case "name":
+                        products = products.OrderBy(p => p.ProductName);
+                        break;
+                    default:
+                        products = products.OrderBy(p => p.ProductID);
+                        break;
+                }
+
+                var pagedProducts = products
+                                    .Include(p => p.Images)
+                                    .Include(p => p.Category)
+                                    .AsNoTracking()
+                                    .ToPagedList(pageNumber, pageSizeValue);
+
+                return PartialView("_CategoryProductList", pagedProducts);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error in GetCategoryProducts: " + ex.Message);
+                return new HttpStatusCodeResult(500, "Internal Server Error: " + ex.Message);
+            }
         }
         public ActionResult Details(int id) 
         {

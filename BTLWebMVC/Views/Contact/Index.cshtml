@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Liên Hệ";
+    Layout = "~/Views/Shared/LayoutUsers.cshtml";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/styles/contact_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/styles/contact_responsive.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<style>
+    .success-message {
+        display: none;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+</style>
+<div class="container contact_container">
+    <div class="row">
+        <div class="col">
+            <div class="breadcrumbs d-flex flex-row align-items-center">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                    <li class="active"><a href="@Url.Action("Index","Contact")"><i class="fa fa-angle-right" aria-hidden="true"></i>Liên Hệ</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div id="google_map">
+                <div class="map_container">
+                    <div id="map" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liên Hệ -->
+    <div class="row">
+        <div class="col-lg-6 contact_col">
+            <div class="contact_contents">
+                <h1>Liên Hệ Với Chúng Tôi</h1>
+                <p>Có nhiều cách để liên hệ với chúng tôi. Bạn có thể gửi email, gọi điện hoặc điền form, chọn cách phù hợp nhất với bạn.</p>
+                <div>
+                    <p>0898 543 919</p>
+                    <p>dhao30167@gmail.com</p>
+                </div>
+                <div>
+                    <p>Phạm Hữu Lầu, Phường 6, Cao Lãnh, Đồng Tháp</p>
+                </div>
+                <div>
+                    <p>Giờ làm việc: 8:00 - 18:00, Thứ Hai - Thứ Sáu</p>
+                    <p>Chủ Nhật: Đóng cửa</p>
+                </div>
+            </div>
+            <div class="follow_us_contents">
+                <h1>Theo Dõi Chúng Tôi</h1>
+                <ul class="social d-flex flex-row">
+                    <li><a href="#" style="background-color: #3a61c9"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="#" style="background-color: #41a1f6"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="#" style="background-color: #fb4343"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                    <li><a href="#" style="background-color: #8f6247"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6 get_in_touch_col">
+            <div class="get_in_touch_contents">
+                <h1>Gửi Tin Nhắn Cho Chúng Tôi!</h1>
+                <p>Điền vào form dưới đây để nhận phản hồi miễn phí và bảo mật.</p>
+                <form id="contact_form" onsubmit="return false;">
+                    <div>
+                        <input id="input_name" class="form_input input_name input_ph" type="text" name="name" placeholder="Họ Tên" required="required" data-error="Họ tên là bắt buộc.">
+                        <input id="input_email" class="form_input input_email input_ph" type="email" name="email" placeholder="Email" required="required" data-error="Email hợp lệ là bắt buộc.">
+                        <input id="input_website" class="form_input input_website input_ph" type="url" name="website" placeholder="Website" required="required" data-error="Website là bắt buộc.">
+                        <textarea id="input_message" class="input_ph input_message" name="message" placeholder="Tin Nhắn" rows="3" required data-error="Vui lòng viết tin nhắn."></textarea>
+                    </div>
+                    <div>
+                        <button id="review_submit" type="button" class="red_button message_submit_btn trans_300" onclick="showSuccessMessage()">Gửi Tin Nhắn</button>
+                    </div>
+                </form>
+
+                <div id="success_message_contact" class="success-message" style="display: none;">🎉 Tin nhắn đã được gửi! Cảm ơn bạn.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="newsletter">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="newsletter_text d-flex flex-column justify-content-center align-items-lg-start align-items-md-center text-center">
+                    <h4>Đăng Ký Nhận Tin</h4>
+                    <p>Đăng ký để nhận bản tin và được giảm 20% cho lần mua đầu tiên</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <form id="newsletter_form" onsubmit="return false;">
+                    <div class="newsletter_form d-flex flex-md-row flex-column flex-xs-column align-items-center justify-content-lg-end justify-content-center">
+                        <input id="newsletter_email" type="email" placeholder="Email của bạn" required="required" data-error="Email hợp lệ là bắt buộc.">
+                        <button id="newsletter_submit" type="submit" class="newsletter_submit_btn trans_300" value="Submit">Đăng Ký</button>
+                    </div>
+                </form>
+
+                <div id="success_message" class="success-message mb-2" style="display: none;">🎉 Đăng ký thành công! Cảm ơn bạn đã đăng ký nhận tin.</div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        function showSuccessMessage(event) {
+            event.preventDefault();
+
+            var button = event.target;
+            var form = button.closest('form');
+            var successMessage;
+
+            if (form.id === "contact_form") {
+                successMessage = document.getElementById("success_message_contact");
+            } else if (form.id === "newsletter_form") {
+                successMessage = document.getElementById("success_message");
+            }
+
+            if (successMessage) {
+                successMessage.style.display = "block";
+                setTimeout(function () {
+                    successMessage.style.display = "none";
+                }, 5000);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            var contactButton = document.getElementById("review_submit");
+            if (contactButton) {
+                contactButton.addEventListener("click", showSuccessMessage);
+            }
+
+            var newsletterButton = document.getElementById("newsletter_submit");
+            if (newsletterButton) {
+                newsletterButton.addEventListener("click", showSuccessMessage);
+            }
+        });
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="~/Scripts/contact_custom.js"></script>
+    <script type="text/javascript">
+        var mapData = {
+            latitude: @Html.Raw(ViewBag.Latitude),
+            longitude: @Html.Raw(ViewBag.Longitude),
+            locationName: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.LocationName))
+        };
+    </script>
+}

@@ -32,11 +32,20 @@
             <div class="col text-center">
                 <div class="new_arrivals_sorting">
                     <ul class="arrivals_grid_sorting clearfix button-group filters-button-group">
-                        <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center active is-checked" data-filter="*">all</li>
+                        <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center active is-checked"
+                            data-category-id=""
+                            data-filter="*">all</li>
                         @foreach (var category in ViewBag.Categories)
                         {
-                            <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter=".category-@category.CategoryID">@category.CategoryName</li>
+                            <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center @(ViewBag.SelectedCategory == category.CategoryID ? "active is-checked" : "")"
+                                data-category-id="@category.CategoryID"
+                                data-filter=".category-@category.CategoryID">
+                                @category.CategoryName
+                            </li>
                         }
+                        <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center view-more">
+                            <a href="@Url.Action("Categories", "Home")" style="text-decoration: none; color: inherit;">Xem thêm</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -44,30 +53,64 @@
 
         <div class="row">
             <div class="col">
-                <div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
-
-                    @foreach (var product in Model)
-                    {
-                        <div class="product-item category-@product.Category.CategoryID">
-                            <div class="product discount product_filter">
-                                <div class="product_image">
-                                    <a href="@Url.Action("Details","Home", new {id = product.ProductID})">
-                                        <img src="~/Content/Images/@(product.Images.FirstOrDefault()?.ImageName ?? "default.jpg")" alt="">
-                                    </a>
-                                </div>
-                                @*<div class="favorite favorite_left"></div>*@
-                                @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"></div>*@
-                                <div class="product_info">
-                                    <h6 class="product_name"><a href="@Url.Action("Details","Home", new {id = product.ProductID})">@product.ProductName</a></h6>
-                                    <div class="product_price">@product.UnitPrice.ToString("N0") VND</div>
-                                </div>
-                            </div>
-                            <div class="red_button add_to_cart_button"><a href="@Url.Action("Details","Home", new {id = product.ProductID})">Mua Ngay</a></div>
-                        </div>
-                    }
+                <div id="product-container">
+                    @Html.Partial("GetProducts", Model)
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+<style>
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+</style>
+
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $grid = $('.product-grid').isotope({
+                itemSelector: '.product-item',
+                layoutMode: 'fitRows'
+            });
+
+            $('.grid_sorting_button:not(.view-more)').click(function (e) {
+                e.preventDefault();
+                $('.grid_sorting_button').removeClass('active is-checked');
+                $(this).addClass('active is-checked');
+
+                var categoryId = $(this).data('category-id');
+
+                $('#product-container').addClass('product-container-loading');
+
+                $.ajax({
+                    url: '@Url.Action("GetProducts", "Home")',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function (data) {
+                        $('#product-container').html(data).removeClass('product-container-loading');
+
+                        if ($grid.length) {
+                            $grid.isotope('reloadItems').isotope();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                        console.log("Status: " + status);
+                        console.log("Response: " + xhr.responseText);
+                        $('#product-container').removeClass('product-container-loading');
+                    }
+                });
+            });
+
+            $('.view-more a').click(function (e) {
+                e.stopPropagation();
+                window.location.href = $(this).attr('href');
+            });
+        });
+    </script>
+}
