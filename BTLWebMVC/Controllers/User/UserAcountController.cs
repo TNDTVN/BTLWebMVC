@@ -8,7 +8,6 @@ namespace BTLWebMVC.Controllers.User
 {
     public class UserAcountController : Controller
     {
-        // GET: UserAcount
         public ActionResult Index()
         {
             return View();
