@@ -15,9 +15,33 @@ namespace BTLWebMVC.Controllers.Manager
     {
         private Context db = new Context();
 
+
+        [HttpGet]
         // GET: Employees
         public ActionResult Index()
         {
+
+            // lấy accountDID từ session L
+            var accountId = Session["AccountId"]?.ToString();
+            if (string.IsNullOrEmpty(accountId))
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            int id = Convert.ToInt32(accountId);
+            var account = db.Accounts.FirstOrDefault(a => a.AccountID == id);
+            if(account == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            // lưu vào viewbag để sd torng view
+            ViewBag.UserRole = account.Role;
+
+            // ko phải admin hay employee thì chuyễn trang
+            if( account.Role != "Admin" && account.Role != "Employee")
+            {
+                return RedirectToAction("AccessDenied", "Home");
+            }
+
             var employees = db.Employees.Include(e => e.Account).ToList();
             return View(employees);
         }
