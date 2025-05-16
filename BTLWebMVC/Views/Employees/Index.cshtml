@@ -11,9 +11,8 @@
     <div style="margin:0.3cm;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Danh Sách Nhân Viên</h2>
-            @if (ViewBag.UserRole == "Admin")
-            {
-                <a href="@Url.Action("Create")" class="btn btn-primary">Thêm Mới</a>}
+
+            <a href="@Url.Action("Create")" class="btn btn-primary">Thêm Mới</a>
         </div>
 
         <div class="table-responsive">

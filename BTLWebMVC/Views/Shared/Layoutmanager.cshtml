@@ -281,16 +281,30 @@
                                 <p>Order</p>
                             </a>
                         </li>
+                        @if (Session["Role"]?.ToString() == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Employees")" class="nav-link">
+                                    <i class="nav-icon fas fa-edit"></i>
+                                    <p>Employee</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Session["Role"]?.ToString() == "Admin")
+                        {
 
-                        <li class="nav-item">
-                            <a href="@Url.Action("Index", "Employees")" class="nav-link">
-                                <i class="nav-icon fas fa-edit"></i>
-                                <p>
-                                    Employee
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Accounts")" class="nav-link">
+                                    <i class="nav-icon fas fa-edit"></i>
+                                    <p>
+                                        Account
+                                    </p>
+                                </a>
+                            </li>
 
-                                </p>
-                            </a>
-                        </li>
+
+                        }
+
 
                         <li class="nav-item">
                             <a href="@Url.Action("Logout", "Login")" class="nav-link">
@@ -300,15 +314,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    ...
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                        </li>
+                        
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

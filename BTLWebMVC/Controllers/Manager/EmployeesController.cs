@@ -21,32 +21,32 @@ namespace BTLWebMVC.Controllers.Manager
         public ActionResult Index()
         {
 
-            // lấy accountDID từ session L
-            var accountId = Session["AccountId"]?.ToString();
-            if (string.IsNullOrEmpty(accountId))
-            {
-                return RedirectToAction("Login", "Login");
-            }
-            int id = Convert.ToInt32(accountId);
-            var account = db.Accounts.FirstOrDefault(a => a.AccountID == id);
-            if(account == null)
-            {
-                return RedirectToAction("Login", "Login");
-            }
-            // lưu vào viewbag để sd torng view
-            ViewBag.UserRole = account.Role;
+            //// lấy accountDID từ session L
+            //var accountId = Session["AccountId"]?.ToString();
+            //if (string.IsNullOrEmpty(accountId))
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+            //int id = Convert.ToInt32(accountId);
+            //var account = db.Accounts.FirstOrDefault(a => a.AccountID == id);
+            //if(account == null)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+            //// lưu vào viewbag để sd torng view
+            //ViewBag.UserRole = account.Role;
 
-            // ko phải admin hay employee thì chuyễn trang
-            if( account.Role != "Admin" && account.Role != "Employee")
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
+            //// ko phải admin hay employee thì chuyễn trang
+            //if( account.Role != "Admin" && account.Role != "Employee")
+            //{
+            //    return RedirectToAction("AccessDenied", "Home");
+            //}
 
             var employees = db.Employees.Include(e => e.Account).ToList();
             return View(employees);
         }
 
-        [CustomAuthorize("Admin")]
+      
         public ActionResult Create()
         {
             ViewBag.AccountID = new SelectList(db.Accounts, "AccountID", "Username");
@@ -55,7 +55,7 @@ namespace BTLWebMVC.Controllers.Manager
 
   
         [HttpPost]
-        [CustomAuthorize("Admin")]
+ 
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "EmployeeID,FirstName,LastName,BirthDate,HireDate,Address,City,PostalCode,Country,Phone,Email,AccountID")] Employee employee)
         {
@@ -71,7 +71,7 @@ namespace BTLWebMVC.Controllers.Manager
         }
 
 
-        [CustomAuthorize("Admin")]
+       
         // GET: Employees/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -91,7 +91,7 @@ namespace BTLWebMVC.Controllers.Manager
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize("Admin")]
+ 
         public ActionResult Edit([Bind(Include = "EmployeeID,FirstName,LastName,BirthDate,HireDate,Address,City,PostalCode,Country,Phone,Email,AccountID")] Employee employee)
         {
             if (ModelState.IsValid)
@@ -123,7 +123,7 @@ namespace BTLWebMVC.Controllers.Manager
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize("Admin")]
+
         public ActionResult Delete(int id)
         {
             Employee employee = db.Employees.Find(id);
@@ -132,8 +132,7 @@ namespace BTLWebMVC.Controllers.Manager
             return RedirectToAction("Index");
         }
 
-        // khoa tai khoan nhan vien
-        [CustomAuthorize("Admin")]
+      
         public ActionResult Lock(int? id)
         {
             if(id == null)
