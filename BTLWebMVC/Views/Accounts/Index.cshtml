@@ -89,14 +89,14 @@
                                 alert('Lỗi: ' + response.message);
                               
                                 $(this).prop('checked', isLock === 0);
-                                label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
+                                label.text(isLock === 0 ? 'Hoạt động' : 'Khóa');
                             }
                         }.bind(this),
                         error: function () {
                             alert('Có lỗi xảy ra khi cập nhật trạng thái!');
                           
                             $(this).prop('checked', isLock === 0);
-                            label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
+                            label.text(isLock === 0 ? 'Hoạt động' : 'Khóa');
                         }.bind(this)
                     });
                 });
