@@ -71,13 +71,13 @@
             $(document).ready(function () {
                 $('.lock-switch').on('change', function () {
                     var accountId = $(this).data('account-id');
-                    var isLock = $(this).is(':checked') ? 1 : 0; // Chuyển thành 1 hoặc 0
+                    var isLock = $(this).is(':checked') ? 1 : 0; 
                     var label = $(this).next('label');
 
-                    // Cập nhật nhãn ngay lập tức
+              
                     label.text(isLock === 1 ? 'Khóa' : 'Hoạt động');
 
-                    // Gửi yêu cầu AJAX để cập nhật trạng thái
+                  
                     $.ajax({
                         url: '@Url.Action("ToggleLock", "Accounts")',
                         type: 'POST',
@@ -87,14 +87,14 @@
                                 alert('Cập nhật trạng thái thành công!');
                             } else {
                                 alert('Lỗi: ' + response.message);
-                                // Nếu lỗi, đảo ngược trạng thái switch và nhãn
+                              
                                 $(this).prop('checked', isLock === 0);
                                 label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
                             }
                         }.bind(this),
                         error: function () {
                             alert('Có lỗi xảy ra khi cập nhật trạng thái!');
-                            // Nếu lỗi, đảo ngược trạng thái switch và nhãn
+                          
                             $(this).prop('checked', isLock === 0);
                             label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
                         }.bind(this)

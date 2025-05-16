@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
+using System.IO;
 using BTLWebMVC.Models;
 
 namespace BTLWebMVC.Controllers.Manager
@@ -73,14 +74,44 @@ namespace BTLWebMVC.Controllers.Manager
             return View(account);
         }
 
-        // POST: Accounts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AccountID,Username,Password,Email,ProfileImage,CreatedDate,Role,IsLock")] Account account)
+        public ActionResult Edit([Bind(Include = "AccountID,Username,Password,Email,ProfileImage,CreatedDate,Role,IsLock")] Account account, HttpPostedFileBase FileAnh)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(account).State = EntityState.Modified;
+                var existingAccount = db.Accounts.Find(account.AccountID);
+                if (existingAccount == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cập nhật thông tin tài khoản
+                existingAccount.Username = account.Username;
+                existingAccount.Password = account.Password;
+                existingAccount.Email = account.Email;
+                existingAccount.Role = account.Role;
+                existingAccount.IsLock = account.IsLock;
+
+           
+                if (FileAnh != null && FileAnh.ContentLength > 0)
+                {
+                  
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(FileAnh.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/Images"), fileName);
+
+                    FileAnh.SaveAs(path);
+
+                    existingAccount.ProfileImage = "/Content/Images/" + fileName;
+
+                  
+                    if (!string.IsNullOrEmpty(existingAccount.ProfileImage) && System.IO.File.Exists(Server.MapPath(existingAccount.ProfileImage)))
+                    {
+                        System.IO.File.Delete(Server.MapPath(existingAccount.ProfileImage));
+                    }
+                }
+
+                db.Entry(existingAccount).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -95,7 +126,6 @@ namespace BTLWebMVC.Controllers.Manager
 
             return View(account);
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
