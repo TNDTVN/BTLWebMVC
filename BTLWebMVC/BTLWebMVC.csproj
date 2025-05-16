@@ -2623,6 +2623,7 @@
     <Content Include="Views\UserCartItems\Index.cshtml" />
     <Content Include="Views\UserCartItems\PurchaseHistory.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
+    <Content Include="Views\Accounts\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

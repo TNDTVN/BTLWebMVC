@@ -1,67 +1,106 @@
 ﻿@model IEnumerable<BTLWebMVC.Models.Account>
-@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+    @{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/Layoutmanager.cshtml";
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    }
 
 
-<div class="content-wrapper">
-    <div style="margin:0.3cm;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Danh Sách Tài Khoản</h2>
+    <div class="content-wrapper">
+        <div style="margin:0.3cm;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Danh Sách Tài Khoản</h2>
 
-        </div>
+            </div>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead class="thead-light" style="white-space: nowrap;">
-                    <tr>
-
-                        <th>Tài khoản</th>
-                        <th>Mật khẩu</th>
-                        <th>Email</th>
-                        <th>Vai trò</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-light" style="white-space: nowrap;">
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.Username)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Password)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Role)</td>
-                            <td>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox"
-                                           class="custom-control-input lock-switch"
-                                           id="lockSwitch_@item.AccountID"
-                                           @(item.IsLock ? "checked" : "")
-                                           data-account-id="@item.AccountID" />
-                                    <label class="custom-control-label"
-                                           for="lockSwitch_@item.AccountID">
-                                     
-                                    </label>
-                                </div>
-                            </td>
-                            <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
 
-                            <td>
-                                <a href="@Url.Action("Edit", "Accounts", new { id = item.AccountID })"
-                                   class="btn btn-primary btn-sm" title="Sửa">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            </td>
-
+                            <th>Tài khoản</th>
+                            <th>Mật khẩu</th>
+                            <th>Email</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Role)</td>
+                                <td>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                               class="custom-control-input lock-switch"
+                                               id="lockSwitch_@item.AccountID"
+                                               @(item.IsLock ? "checked" : "")
+                                               data-account-id="@item.AccountID" />
+                                        <label class="custom-control-label"
+                                               for="lockSwitch_@item.AccountID">
+
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+
+                                <td>
+                                    <a href="@Url.Action("Edit", "Accounts", new { id = item.AccountID })"
+                                       class="btn btn-primary btn-sm" title="Sửa">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('.lock-switch').on('change', function () {
+                    var accountId = $(this).data('account-id');
+                    var isLock = $(this).is(':checked') ? 1 : 0; // Chuyển thành 1 hoặc 0
+                    var label = $(this).next('label');
+
+                    // Cập nhật nhãn ngay lập tức
+                    label.text(isLock === 1 ? 'Khóa' : 'Hoạt động');
+
+                    // Gửi yêu cầu AJAX để cập nhật trạng thái
+                    $.ajax({
+                        url: '@Url.Action("ToggleLock", "Accounts")',
+                        type: 'POST',
+                        data: { id: accountId, isLock: isLock },
+                        success: function (response) {
+                            if (response.success) {
+                                alert('Cập nhật trạng thái thành công!');
+                            } else {
+                                alert('Lỗi: ' + response.message);
+                                // Nếu lỗi, đảo ngược trạng thái switch và nhãn
+                                $(this).prop('checked', isLock === 0);
+                                label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
+                            }
+                        }.bind(this),
+                        error: function () {
+                            alert('Có lỗi xảy ra khi cập nhật trạng thái!');
+                            // Nếu lỗi, đảo ngược trạng thái switch và nhãn
+                            $(this).prop('checked', isLock === 0);
+                            label.text(isLock === 0 ? 'Khóa' : 'Hoạt động');
+                        }.bind(this)
+                    });
+                });
+            });
+        </script>
+    }
+

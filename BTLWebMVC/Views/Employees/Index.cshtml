@@ -49,21 +49,19 @@
                             <td>@Html.DisplayFor(modelItem => item.Phone)</td>
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
                             <td>
-                                @if (ViewBag.UserRole == "Admin")
-                                {
-                                    <a href="@Url.Action("Edit", "Employees", new { id = item.EmployeeID })"
-                                       class="btn btn-primary btn-sm" title="Sửa">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>}
+
+                                <a href="@Url.Action("Edit", "Employees", new { id = item.EmployeeID })"
+                                   class="btn btn-primary btn-sm" title="Sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
                             </td>
-                            <td>
-                                @if (ViewBag.UserRole == "Admin")
-                                {
-                                    <a href="@Url.Action("Delete", "Employees", new { id = item.EmployeeID })"
-                                       class="btn btn-primary btn-sm" title="Sửa">
-                                        <i class="bi bi-trash"></i>
-                                    </a>}
-                            </td>
+                            @*<td>
+                                   
+                                        <a href="@Url.Action("Delete", "Employees", new { id = item.EmployeeID })"
+                                           class="btn btn-primary btn-sm" title="Sửa">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                </td>*@
                         </tr>
                     }
                 </tbody>
