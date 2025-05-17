@@ -15,7 +15,9 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Borders;
 using iText.IO.Font;
-
+using iText.Kernel.Pdf.Canvas.Draw; // Cho SolidLine
+using iText.Kernel.Colors;          // Cho DeviceRgb
+using iText.Kernel.Geom;            // Cho PageSize
 
 using PagedList;
 
@@ -241,132 +243,192 @@ namespace BTLWebMVC.Controllers.Manager
 
 
 
+
         public ActionResult PrintInvoice(int id)
         {
+        
+            var order = db.Orders.Include(o => o.OrderDetails.Select(od => od.Product))
+                                .Include(o => o.Customer)
+                                .Include(o => o.Employee)
+                                .FirstOrDefault(o => o.OrderID == id);
 
-            // lấy thông tin đơn hàng từ csdl
-            var order = db.Orders.Include(o => o.OrderDetails.Select(od => od.Product)).Include(o => o.Customer).Include(o => o.Employee).FirstOrDefault(o => o.OrderID == id);
-
-
-            // kiem tra don hang co ton tai 
             if (order == null)
             {
                 return HttpNotFound();
             }
 
-
             string fontPath = Server.MapPath("~/Content/Fonts/arial-unicode-ms-regular.ttf");
             PdfFont regularFont = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
             PdfFont boldFont = PdfFontFactory.CreateFont(Server.MapPath("~/Content/Fonts/arial-unicode-ms-bold.ttf"), PdfEncodings.IDENTITY_H);
-
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 PdfWriter writer = new PdfWriter(memoryStream);
                 PdfDocument pdf = new PdfDocument(writer);
-                Document document = new Document(pdf);
+                Document document = new Document(pdf, PageSize.A4);
+                document.SetMargins(50, 50, 50, 50);
 
-                document.Add(new Paragraph("Địa chỉ: 783 Phạm Hữu Lầu, Phường 6, Cao Lãnh, Đồng Tháp")
-                            .SetFont(regularFont)
-                            .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+          
+                DeviceRgb tealColor = new DeviceRgb(0, 128, 128);
 
-                document.Add(new Paragraph("SĐT: 0898543919 | Email: dhao3017@gmail.com")
+                Paragraph title = new Paragraph("HÓA ĐƠN")
+                    .SetFont(boldFont)
+                    .SetFontSize(32)
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetFontColor(tealColor)
+                    .SetMarginBottom(10);
+                document.Add(title);
+
+        
+                Paragraph date = new Paragraph($"Ngày lập: {order.OrderDate:dd/MM/yyyy}")
                     .SetFont(regularFont)
-                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                    .SetFontSize(12)
+                    .SetTextAlignment(TextAlignment.LEFT)
+                    .SetMarginBottom(15);
+                document.Add(date);
 
+                Table infoTable = new Table(2).UseAllAvailableWidth()
+                    .SetMarginBottom(20);
+                infoTable.AddCell(new Cell().Add(new Paragraph("Hóa đơn cho:")
+                    .SetFont(regularFont)
+                    .SetFontSize(12))
+                    .SetBorder(Border.NO_BORDER));
+                infoTable.AddCell(new Cell().Add(new Paragraph("Thanh toán cho:")
+                    .SetFont(regularFont)
+                    .SetFontSize(12))
+                    .SetBorder(Border.NO_BORDER));
+                infoTable.AddCell(new Cell().Add(new Paragraph($"{order.Customer.ContactName}\n{order.Customer.Address}, {order.Customer.City}")
+                    .SetFont(regularFont)
+                    .SetFontSize(12))
+                    .SetBorder(Border.NO_BORDER));
+                infoTable.AddCell(new Cell().Add(new Paragraph($"CÔNG TY HPH FASHION\nSĐT: 03786679\nEmail: tphuong2000@gmail.com")
+                    .SetFont(regularFont)
+                    .SetFontSize(12))
+                    .SetBorder(Border.NO_BORDER));
+                document.Add(infoTable);
 
-                Paragraph separator = new Paragraph().SetBorderBottom(new SolidBorder(1));
+              
+                LineSeparator separator = new LineSeparator(new SolidLine(1f))
+                    .SetMarginTop(5)
+                    .SetMarginBottom(15);
                 document.Add(separator);
 
-                // tieu de cho hoa don\
-                document.Add(new Paragraph("HÓA ĐƠN BÁN HÀNG")).SetFont(boldFont).SetFontSize(18).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+              
+                Paragraph orderInfo = new Paragraph(
+                    $"Mã đơn hàng: {order.OrderID}\n" +
+                    (order.ShippedDate.HasValue ? $"Ngày giao hàng: {order.ShippedDate:dd/MM/yyyy}\n" : "") +
+                    $"Địa chỉ giao: {order.ShipAddress}\n" +
+                    (order.Employee != null ? $"Nhân viên: {order.Employee.FirstName} {order.Employee.LastName}\n" : ""))
+                    .SetFont(regularFont)
+                    .SetFontSize(12)
+                    .SetMarginBottom(20);
+                document.Add(orderInfo);
 
-
-
+           
                 document.Add(separator);
 
-                // thong tin don hang
-                document.Add(new Paragraph($"Mã đơn hàng: {order.OrderID}").SetFont(regularFont));
-                document.Add(new Paragraph($"Khách hàng: {order.Customer.ContactName}")
-               .SetFont(regularFont));
-                document.Add(new Paragraph($"Địa chỉ: {order.Customer.Address}, {order.Customer.City}")
-                    .SetFont(regularFont));
-                document.Add(new Paragraph($"Ngày đặt hàng: {order.OrderDate:dd/MM/yyyy}")
-                    .SetFont(regularFont));
-                if (order.ShippedDate.HasValue)
-                {
-                    document.Add(new Paragraph($"Ngày giao hàng: {order.ShippedDate:dd/MM/yyyy}")
-                        .SetFont(regularFont));
-                }
-                document.Add(new Paragraph($"Địa chỉ giao: {order.ShipAddress}")
-                    .SetFont(regularFont));
-                if (order.Employee != null)
-                {
-                    document.Add(new Paragraph($"Nhân viên: {order.Employee.FirstName} {order.Employee.LastName}")
-                        .SetFont(regularFont));
-                }
-
-
-                document.Add(separator);
-
-
-                // Tạo bảng chi tiết đơn hàng
-                iText.Layout.Element.Table table = new iText.Layout.Element.Table(5).UseAllAvailableWidth();
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Mã SP").SetFont(boldFont)));
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Tên sản phẩm").SetFont(boldFont)));
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Số lượng").SetFont(boldFont)));
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Đơn giá").SetFont(boldFont)));
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Thành tiền").SetFont(boldFont)));
-
+        
+                Table table = new Table(new float[] { 1, 4, 1, 2, 2 }).UseAllAvailableWidth()
+                    .SetMarginTop(10)
+                    .SetMarginBottom(20);
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Mã SP")
+                    .SetFont(boldFont)
+                    .SetTextAlignment(TextAlignment.CENTER))
+                    .SetBackgroundColor(tealColor)
+                    .SetFontColor(DeviceRgb.WHITE));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Tên sản phẩm")
+                    .SetFont(boldFont)
+                    .SetTextAlignment(TextAlignment.CENTER))
+                    .SetBackgroundColor(tealColor)
+                    .SetFontColor(DeviceRgb.WHITE));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Số lượng")
+                    .SetFont(boldFont)
+                    .SetTextAlignment(TextAlignment.CENTER))
+                    .SetBackgroundColor(tealColor)
+                    .SetFontColor(DeviceRgb.WHITE));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Đơn giá")
+                    .SetFont(boldFont)
+                    .SetTextAlignment(TextAlignment.CENTER))
+                    .SetBackgroundColor(tealColor)
+                    .SetFontColor(DeviceRgb.WHITE));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Thành tiền")
+                    .SetFont(boldFont)
+                    .SetTextAlignment(TextAlignment.CENTER))
+                    .SetBackgroundColor(tealColor)
+                    .SetFontColor(DeviceRgb.WHITE));
 
                 foreach (var detail in order.OrderDetails)
                 {
                     int quantity = detail.Quantity;
                     decimal unitPrice = detail.UnitPrice;
+                    decimal totalPrice = quantity * unitPrice;
 
-                    table.AddCell(new Cell().Add(new Paragraph(detail.Product.ProductID.ToString()).SetFont(regularFont)));
-                    table.AddCell(new Cell().Add(new Paragraph(detail.Product.ProductName).SetFont(regularFont)));
-                    table.AddCell(new Cell().Add(new Paragraph(quantity.ToString()).SetFont(regularFont)));
-                    table.AddCell(new Cell().Add(new Paragraph($"{unitPrice:#,0 ₫}").SetFont(regularFont)));
-                    table.AddCell(new Cell().Add(new Paragraph($"{(quantity * unitPrice):#,0 ₫}").SetFont(regularFont)));
+                    table.AddCell(new Cell().Add(new Paragraph(detail.Product.ProductID.ToString())
+                        .SetFont(regularFont)
+                        .SetTextAlignment(TextAlignment.CENTER)));
+                    table.AddCell(new Cell().Add(new Paragraph(detail.Product.ProductName)
+                        .SetFont(regularFont)
+                        .SetTextAlignment(TextAlignment.CENTER)));
+                    table.AddCell(new Cell().Add(new Paragraph(quantity.ToString())
+                        .SetFont(regularFont)
+                        .SetTextAlignment(TextAlignment.CENTER)));
+                    table.AddCell(new Cell().Add(new Paragraph($"{unitPrice:#,0} ₫")
+                        .SetFont(regularFont)
+                        .SetTextAlignment(TextAlignment.RIGHT)));
+                    table.AddCell(new Cell().Add(new Paragraph($"{totalPrice:#,0} ₫")
+                        .SetFont(regularFont)
+                        .SetTextAlignment(TextAlignment.RIGHT)));
                 }
 
                 document.Add(table);
 
-
-                decimal total = order.OrderDetails.Sum(d => (d.Quantity) * (d.UnitPrice));
-                document.Add(new Paragraph($"Tổng cộng: {total:#,0 ₫}")
+             
+                decimal total = order.OrderDetails.Sum(d => d.Quantity * d.UnitPrice);
+                Paragraph totalParagraph = new Paragraph($"Tổng cộng: {total:#,0} ₫")
                     .SetFont(boldFont)
-                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+                    .SetFontSize(14)
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetFontColor(tealColor)
+                    .SetMarginTop(10);
+                document.Add(totalParagraph);
 
-                //document.Add(new LineSeparator(new SolidLine()));
-
+                
+                document.Add(separator);
 
                 if (!string.IsNullOrEmpty(order.Notes))
                 {
-                    document.Add(new Paragraph($"Ghi chú: {order.Notes}")
-                        .SetFont(regularFont));
+                    Paragraph notes = new Paragraph($"Ghi chú: {order.Notes}")
+                        .SetFont(regularFont)
+                        .SetFontSize(12)
+                        .SetMarginTop(10)
+                        .SetMarginBottom(20);
+                    document.Add(notes);
                 }
 
-
-                document.Add(new Paragraph("Cảm ơn quý khách đã mua hàng!")
-                    .SetFont(boldFont)
-                    .SetFontSize(14)
-                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-
+     
+                Paragraph footer = new Paragraph()
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetMarginTop(20);
+                footer.Add(new Text("⨀ CÔNG TY HPH Fashion\n").SetFont(boldFont).SetFontSize(14).SetFontColor(tealColor));
+                footer.Add(new Text("CẢM ƠN QUÝ KHÁCH ĐÃ MUA HÀNG!\n")
+                    .SetFont(regularFont)
+                    .SetFontSize(12));
+                footer.Add(new Text("CÔNG TY HPH FASHION\n")
+                    .SetFont(regularFont)
+                    .SetFontSize(12));
+                footer.Add(new Text("783 Phạm Hữu Lầu, Phường 6, Cao Lãnh, Đồng Tháp\n")
+                    .SetFont(regularFont)
+                    .SetFontSize(12));
+                footer.Add(new Text("SĐT: 0372698856, Email: tphuong2000@gmail.com")
+                    .SetFont(regularFont)
+                    .SetFontSize(12));
+                document.Add(footer);
 
                 document.Close();
-
 
                 byte[] bytes = memoryStream.ToArray();
                 return File(bytes, "application/pdf", $"HoaDon_{order.OrderID}.pdf");
             }
-
-
-
-
-
-
         }
 
 
@@ -378,3 +440,4 @@ namespace BTLWebMVC.Controllers.Manager
 
 
 }
+
