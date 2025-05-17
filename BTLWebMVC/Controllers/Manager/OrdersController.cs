@@ -28,13 +28,12 @@ namespace BTLWebMVC.Controllers.Manager
         // danh sách đơn hàng
         public ActionResult Index(int? page)
         {
-            //int pageSize = 5;
-            //int pageNumber = (page ?? 1);
-            //var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer).OrderBy(o => o.OrderID).ToPagedList(pageNumber, pageSize);
+          
+
             int pageSize = 5;
             int pageNumber = (page ?? 1);
 
-            // Lấy thông tin AccountID từ Session
+         
             var accountId = Session["AccountId"]?.ToString();
             Console.WriteLine("giá trị acocunt từ phien: ", accountId);
             var ordersQuery = db.Orders
@@ -44,7 +43,7 @@ namespace BTLWebMVC.Controllers.Manager
 
             if (!string.IsNullOrEmpty(accountId) && int.TryParse(accountId, out int parsedAccountId))
             {
-                // Tìm tài khoản dựa trên AccountID
+        
                 var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
                 if (account != null)
                 {
@@ -59,19 +58,19 @@ namespace BTLWebMVC.Controllers.Manager
                     }
                     else
                     {
-                        // Nếu không tìm thấy nhân viên, trả về danh sách rỗng
+                        // ko tim thay don hang nhan vien thi tra ce danh sach rong
                         return View(new List<Order>().ToPagedList(pageNumber, pageSize));
                     }
                 }
                 else
                 {
-                    // Nếu không tìm thấy tài khoản, chuyển hướng đến trang đăng nhập
+              
                     return RedirectToAction("Login", "Login");
                 }
             }
             else
             {
-                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+            // -> chuyen ve trang dnag nhap
                 return RedirectToAction("Login", "Login");
             }
 
@@ -82,6 +81,88 @@ namespace BTLWebMVC.Controllers.Manager
 
             return View(orders);
 
+
+        }
+
+        // sua don hang
+        public ActionResult Edit(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Order order = db.Orders.Find(id);
+            if (order == null || order.EmployeeID != null)
+            {
+                return HttpNotFound();
+            }
+            return View(order);
+        }
+
+       [HttpPost]
+       [ValidateAntiForgeryToken]
+        public ActionResult Edit(Order order)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingOrder = db.Orders.Find(order.OrderID);
+                if (existingOrder == null || existingOrder.EmployeeID != null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cập nhật các trường được phép chỉnh sửa
+                existingOrder.ShipAddress = order.ShipAddress;
+                existingOrder.ShipCity = order.ShipCity;
+                existingOrder.ShipPostalCode = order.ShipPostalCode;
+                existingOrder.ShipCountry = order.ShipCountry;
+                existingOrder.ShippedDate = order.ShippedDate;
+                existingOrder.Notes = order.Notes;
+
+                db.Entry(existingOrder).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(order);
+        }
+
+
+        public ActionResult duyetDonHang(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Order order = db.Orders.Find(id);
+            if (order == null || order.EmployeeID != null)
+            {
+                return HttpNotFound();
+            }
+            // lay thong tin account ti session
+            var accountId = Session["AccountID"]?.ToString();
+            if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
+            {
+                return RedirectToAction("Index", "Account");
+            }
+            var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
+            if (account == null)
+            {
+                return HttpNotFound();
+            }
+            var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
+            if (employee == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Gán EmployeeID để đánh dấu đơn hàng đã duyệt
+            order.EmployeeID = employee.EmployeeID;
+            db.Entry(order).State = EntityState.Modified;
+            db.SaveChanges();
+
+             return RedirectToAction("Index");
 
         }
         public ActionResult Details(int? id)
@@ -101,66 +182,7 @@ namespace BTLWebMVC.Controllers.Manager
         }
 
 
-        // hamf xuat hoa don -> dinh dang pdf
-        //public ActionResult PrintInvoice(int id)
-        //{
-        //    var order = db.Orders.Include("OrderDetails.Product").FirstOrDefault(o => o.OrderID == id);
-        //    if (order == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    MemoryStream memoryStream = new MemoryStream();
-        //    Document document = new Document();
-        //    PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
-
-        //    document.Open();
-
-
-        //    // tieu de cho noi dung
-        //    var fontTieuDe = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18);
-
-        //    Paragraph tieuDe = new Paragraph("HÓA ĐƠN KHÁCH HÀNG", fontTieuDe);
-        //    tieuDe.Alignment = Element.ALIGN_CENTER;
-        //    document.Add(tieuDe);
-        //    document.Add(new Paragraph("\n"));
-
-        //    // thong tin don hang can xuat
-        //    document.Add(new Paragraph($"Mã đơn hàng: {order.OrderID}"));
-        //    document.Add(new Paragraph($"Khách hàng: {order.Customer.ContactName}"));
-        //    document.Add(new Paragraph($"Nhân viên: {order.Employee.FirstName} {order.Employee.LastName}"));
-        //    document.Add(new Paragraph($"Ngày đặt hàng: {order.OrderDate:dd/MM/yyyy}"));
-        //    document.Add(new Paragraph($"Ngày giao hàng: {order.ShippedDate:dd/MM/yyyy}"));
-        //    document.Add(new Paragraph($"Địa chỉ giao: {order.ShipAddress}"));
-        //    document.Add(new Paragraph("\n"));
-        //    // bang thong tin don hang
-        //    PdfPTable table = new PdfPTable(5);
-        //    table.WidthPercentage = 100;
-        //    table.SetWidths(new float[] { 20, 40, 15, 15, 15 });
-
-        //    table.AddCell("Mã SP");
-        //    table.AddCell("Tên sản phẩm");
-        //    table.AddCell("Số lượng");
-        //    table.AddCell("Đơn giá");
-        //    table.AddCell("Thành tiền");
-        //    // duyet data cho bang nay
-        //    foreach(var chitiet in order.OrderDetails)
-        //    {
-        //        table.AddCell(chitiet.Product.ProductID.ToString());
-        //        table.AddCell(chitiet.Product.ProductName);
-        //        table.AddCell(chitiet.Quantity.ToString());
-        //        table.AddCell(chitiet.UnitPrice.ToString("N0") + " VND");
-        //        table.AddCell((chitiet.Quantity * chitiet.UnitPrice).ToString("N0") + " VND");
-
-        //    }
-        //    document.Add(table);
-        //    document.Close();
-        //    byte[] bytes = memoryStream.ToArray();
-        //    memoryStream.Close();
-
-        //    return File(bytes, "application/pdf", $"HoaDon_{order.OrderID}.pdf");
-
-        //}
-
+       
         public ActionResult PrintInvoice(int id)
         {
 
@@ -253,7 +275,7 @@ namespace BTLWebMVC.Controllers.Manager
 
                 document.Add(table);
 
-                // Tính và hiển thị tổng cộng
+                
                 decimal total = order.OrderDetails.Sum(d => (d.Quantity) * (d.UnitPrice));
                 document.Add(new Paragraph($"Tổng cộng: {total:#,0 ₫}")
                     .SetFont(boldFont)
