@@ -28,11 +28,61 @@ namespace BTLWebMVC.Controllers.Manager
         // danh sách đơn hàng
         public ActionResult Index(int? page)
         {
+            //int pageSize = 5;
+            //int pageNumber = (page ?? 1);
+            //var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer).OrderBy(o => o.OrderID).ToPagedList(pageNumber, pageSize);
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            var orders = db.Orders.Include(o => o.OrderDetails).Include(o => o.Employee).Include(o => o.Customer).OrderBy(o => o.OrderID).ToPagedList(pageNumber, pageSize);
+
+            // Lấy thông tin AccountID từ Session
+            var accountId = Session["AccountId"]?.ToString();
+            Console.WriteLine("giá trị acocunt từ phien: ", accountId);
+            var ordersQuery = db.Orders
+                .Include(o => o.OrderDetails)
+                .Include(o => o.Employee)
+                .Include(o => o.Customer);
+
+            if (!string.IsNullOrEmpty(accountId) && int.TryParse(accountId, out int parsedAccountId))
+            {
+                // Tìm tài khoản dựa trên AccountID
+                var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
+                if (account != null)
+                {
+                    var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
+                    if (employee != null)
+                    {
+                        // Lọc đơn hàng:
+                        // - Tất cả đơn hàng chưa duyệt (EmployeeID == null)
+                        // - Các đơn hàng đã duyệt của nhân viên đăng nhập (EmployeeID == employee.EmployeeID)
+                        ordersQuery = ordersQuery
+                            .Where(o => o.EmployeeID == null || o.EmployeeID == employee.EmployeeID);
+                    }
+                    else
+                    {
+                        // Nếu không tìm thấy nhân viên, trả về danh sách rỗng
+                        return View(new List<Order>().ToPagedList(pageNumber, pageSize));
+                    }
+                }
+                else
+                {
+                    // Nếu không tìm thấy tài khoản, chuyển hướng đến trang đăng nhập
+                    return RedirectToAction("Login", "Login");
+                }
+            }
+            else
+            {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                return RedirectToAction("Login", "Login");
+            }
+
+            // Sắp xếp và phân trang
+            var orders = ordersQuery
+                .OrderBy(o => o.OrderID)
+                .ToPagedList(pageNumber, pageSize);
 
             return View(orders);
+
+
         }
         public ActionResult Details(int? id)
         {
