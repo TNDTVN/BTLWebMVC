@@ -25,6 +25,33 @@
     <link rel="stylesheet" href="~/Content/plugins/summernote/summernote-bs4.min.css">
     <link rel="stylesheet" type="text/css" href="~/Content/styles/spinner.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .main-sidebar {
+            height: 100vh !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .main-sidebar .sidebar {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                height: 100%;
+            }
+
+        .nav-sidebar {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .nav-item.logout-item {
+            margin-top: auto !important;
+            padding-bottom: 15px !important;
+        }
+    </style>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div id="loading-spinner">
@@ -265,28 +292,28 @@
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Index", "Products")" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>Products</p>
+                                <i class="nav-icon fas fa-box"></i>
+                                <p>Sản phẩm</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Index","Customers")" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>Customers</p>
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Khách hàng</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Index", "Orders")" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>Order</p>
+                                <i class="nav-icon fas fa-file-invoice"></i>
+                                <p>Đơn hàng</p>
                             </a>
                         </li>
                         @if (Session["Role"]?.ToString() == "Admin")
                         {
                             <li class="nav-item">
                                 <a href="@Url.Action("Index", "Employees")" class="nav-link">
-                                    <i class="nav-icon fas fa-edit"></i>
-                                    <p>Employee</p>
+                                    <i class="nav-icon fas fa-user-tie"></i>
+                                    <p>Nhân viên</p>
                                 </a>
                             </li>
                         }
@@ -295,9 +322,9 @@
 
                             <li class="nav-item">
                                 <a href="@Url.Action("Index", "Accounts")" class="nav-link">
-                                    <i class="nav-icon fas fa-edit"></i>
+                                    <i class="nav-icon fas fa-user-cog"></i>
                                     <p>
-                                        Account
+                                        Tài khoản
                                     </p>
                                 </a>
                             </li>
@@ -305,13 +332,10 @@
 
                         }
 
-
-                        <li class="nav-item">
+                        <li class="nav-item logout-item">
                             <a href="@Url.Action("Logout", "Login")" class="nav-link">
                                 <i class="nav-icon fa-solid fa-right-from-bracket"></i>
-                                <p>
-                                    Thoát
-                                </p>
+                                <p>Đăng xuất</p>
                             </a>
                         </li>
 

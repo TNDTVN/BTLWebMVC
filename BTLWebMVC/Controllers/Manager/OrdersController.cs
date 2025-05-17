@@ -25,15 +25,15 @@ namespace BTLWebMVC.Controllers.Manager
     {
         // GET: Orders
         private Context db = new Context();
-        // danh sách đơn hàng
+
         public ActionResult Index(int? page)
         {
-          
+
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);
 
-         
+
             var accountId = Session["AccountId"]?.ToString();
             Console.WriteLine("giá trị acocunt từ phien: ", accountId);
             var ordersQuery = db.Orders
@@ -43,7 +43,7 @@ namespace BTLWebMVC.Controllers.Manager
 
             if (!string.IsNullOrEmpty(accountId) && int.TryParse(accountId, out int parsedAccountId))
             {
-        
+
                 var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
                 if (account != null)
                 {
@@ -64,14 +64,14 @@ namespace BTLWebMVC.Controllers.Manager
                 }
                 else
                 {
-              
-                    return RedirectToAction("Login", "Login");
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else
             {
-            // -> chuyen ve trang dnag nhap
-                return RedirectToAction("Login", "Login");
+                // -> chuyen ve trang dnag nhap
+                return RedirectToAction("Index", "Home");
             }
 
             // Sắp xếp và phân trang
@@ -85,47 +85,105 @@ namespace BTLWebMVC.Controllers.Manager
         }
 
         // sua don hang
+
+        //[HttpGet]
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Order order = db.Orders.Find(id);
+        //    if (order == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    // Truyền danh sách khách hàng và nhân viên cho dropdown
+        //    ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
+        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
+
+        //    return View(order);
+        //}
+
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
+            var accountId = Session["AccountId"]?.ToString();
+            if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
+            if (account == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
+            if (employee == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.Orders.Find(id);
-            if (order == null || order.EmployeeID != null)
+            Order order = db.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Employee)
+                .FirstOrDefault(o => o.OrderID == id);
+            if (order == null)
             {
                 return HttpNotFound();
             }
+
+            // Đảm bảo ViewBag chứa dữ liệu hợp lệ
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
+
+            // Debug: Kiểm tra dữ liệu
+            if (order.OrderDate == null || order.ShippedDate == null)
+            {
+                Console.WriteLine("OrderDate or ShippedDate is null for OrderID: " + id);
+            }
+
             return View(order);
         }
 
-       [HttpPost]
-       [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(Order order)
         {
             if (ModelState.IsValid)
             {
                 var existingOrder = db.Orders.Find(order.OrderID);
-                if (existingOrder == null || existingOrder.EmployeeID != null)
+                if (existingOrder == null)
                 {
                     return HttpNotFound();
                 }
 
-                // Cập nhật các trường được phép chỉnh sửa
                 existingOrder.ShipAddress = order.ShipAddress;
                 existingOrder.ShipCity = order.ShipCity;
                 existingOrder.ShipPostalCode = order.ShipPostalCode;
                 existingOrder.ShipCountry = order.ShipCountry;
                 existingOrder.ShippedDate = order.ShippedDate;
                 existingOrder.Notes = order.Notes;
+                existingOrder.CustomerID = order.CustomerID; // Cập nhật CustomerID từ dropdown
+                existingOrder.EmployeeID = order.EmployeeID; // Cập nhật EmployeeID từ dropdown
 
                 db.Entry(existingOrder).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            // Nếu có lỗi, trả lại form với dữ liệu đã nhập
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
+            ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
             return View(order);
         }
+
+
 
 
         public ActionResult duyetDonHang(int? id)
@@ -136,7 +194,7 @@ namespace BTLWebMVC.Controllers.Manager
             }
 
             Order order = db.Orders.Find(id);
-            if (order == null || order.EmployeeID != null)
+            if (order == null)
             {
                 return HttpNotFound();
             }
@@ -162,7 +220,7 @@ namespace BTLWebMVC.Controllers.Manager
             db.Entry(order).State = EntityState.Modified;
             db.SaveChanges();
 
-             return RedirectToAction("Index");
+            return RedirectToAction("Index");
 
         }
         public ActionResult Details(int? id)
@@ -182,7 +240,7 @@ namespace BTLWebMVC.Controllers.Manager
         }
 
 
-       
+
         public ActionResult PrintInvoice(int id)
         {
 
@@ -224,7 +282,7 @@ namespace BTLWebMVC.Controllers.Manager
                 document.Add(new Paragraph("HÓA ĐƠN BÁN HÀNG")).SetFont(boldFont).SetFontSize(18).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
 
 
-        
+
                 document.Add(separator);
 
                 // thong tin don hang
@@ -248,7 +306,7 @@ namespace BTLWebMVC.Controllers.Manager
                         .SetFont(regularFont));
                 }
 
-             
+
                 document.Add(separator);
 
 
@@ -275,7 +333,7 @@ namespace BTLWebMVC.Controllers.Manager
 
                 document.Add(table);
 
-                
+
                 decimal total = order.OrderDetails.Sum(d => (d.Quantity) * (d.UnitPrice));
                 document.Add(new Paragraph($"Tổng cộng: {total:#,0 ₫}")
                     .SetFont(boldFont)
@@ -306,12 +364,10 @@ namespace BTLWebMVC.Controllers.Manager
 
 
 
-    
+
 
 
         }
-
-
 
 
 

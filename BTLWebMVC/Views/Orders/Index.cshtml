@@ -12,6 +12,7 @@
 
 
 
+
 <div class="content-wrapper">
     <div style="margin:0.4cm;">
 
@@ -29,6 +30,7 @@
                             <th>Ngày giao</th>
                             <th>Địa chỉ giao</th>
                             <th>Trạng thái</th>
+
                             <th>Công cụ</th>
 
 
@@ -38,46 +40,50 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
-                            <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
-                            <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
-                            <td>
-                                @if (item.EmployeeID != null)
-                                {
-                                <span class="badge badge-success">Đã duyệt</span>
-                                }
-                                else
-                                {
-                            <span class="badge badge-danger">Chưa duyệt</span>
-                                }
-                            </td>
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
+                                <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
+                                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
+                                <td>
+                                    @if (item.EmployeeID != null)
+                                    {
+                                        <span class="badge badge-success">Đã duyệt</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">Chưa duyệt</span>
+                                    }
+                                </td>
 
 
-                            <td>
-                                <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
-                                    <i class="bi bi-eye"></i>
+                                <td>
+                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-eye"></i>
 
-                                </a>
-                                @if (item.EmployeeID == null)
-                                {
-                                    <a href="@Url.Action("Edit", "Orders", new { id = item.OrderID })" class="btn btn-info btn-sm">    <i class="bi bi-pencil-square"></i></a>
-                                    <a href="@Url.Action("duyetDonHang", new { id = item.OrderID })" class="btn btn-success btn-sm">Duyệt</a>
-                                }
-
-                                @if (item.EmployeeID != null)
-                                {
-                                    <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning">
-                                        In
                                     </a>
 
-                                }
+                                    @if (item.EmployeeID == null)
+                                    {
 
-                            </td>
-                        </tr>
+                                        <a href="@Url.Action("duyetDonHang", new { id = item.OrderID })" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle"></i>
+                                        </a>
+                                    
+                                    }
+
+                                    @if (item.EmployeeID != null)
+                                    {
+                                        <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+
+                                    }
+
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
