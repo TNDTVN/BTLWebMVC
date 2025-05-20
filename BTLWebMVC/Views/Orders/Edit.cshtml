@@ -1,0 +1,81 @@
+﻿@model BTLWebMVC.Models.Order
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+}
+
+<div class="content-wrapper">
+    <div class="container py-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white ">
+                <h2 class="mb-0">Sửa hóa đơn</h2>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        @using (Html.BeginForm("Edit", "Orders", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+                            @Html.HiddenFor(model => model.OrderID)
+
+                        <fieldset>
+                            <div class="form-group mb-3">
+                                <label for="tf1">Tên khách hàng</label>
+                                @Html.DropDownList("CustomerID", null, "Chọn khách hàng", new { @class = "form-control", id = "tf1", required = "" })
+                                @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="tf2">Nhân viên phụ trách</label>
+                                @Html.DropDownList("EmployeeID", null, "Chọn nhân viên", new { @class = "form-control", id = "tf2" })
+                                @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="tf3">Ngày đặt hàng</label>
+                                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control", id = "tf3", type = "date" } })
+                                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="tf4">Ngày giao hàng</label>
+                                @Html.EditorFor(model => model.ShippedDate, new { htmlAttributes = new { @class = "form-control", id = "tf4", type = "date" } })
+                                @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="tf5">Địa chỉ giao hàng</label>
+                                @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control", id = "tf5" } })
+                                @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="tf6">Trạng thái duyệt</label>
+                                <div class="custom-control custom-switch">
+                                    @Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @class = "custom-control-input", id = "tf6", type = "checkbox", @checked = Model.EmployeeID != null ? "checked" : null } })
+                                    <label class="custom-control-label" for="tf6">Đã duyệt</label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-9 offset-sm-3">
+                                    <input type="submit" value="Lưu" class="btn btn-outline-primary" />
+                                    <a href="@Url.Action("Index", "Orders")" class="btn btn-secondary ms-2">Quay lại danh sách</a>
+                                </div>
+                            </div>
+
+                         
+
+
+                        </fieldset>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

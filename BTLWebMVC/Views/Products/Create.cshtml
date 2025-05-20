@@ -4,7 +4,6 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
-
 <div class="content-wrapper">
     <div class="container mt-4">
         <h2 class="mb-4">Tạo sản phẩm</h2>
@@ -16,78 +15,81 @@
             @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
             <div class="row">
-                <!-- Cột trái: Thông tin sản phẩm -->
+
                 <div class="col-md-6">
-                    <div class="mb-3 row align-items-center">
-                
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Tên sản phẩm</div>
-                        <div class="col-sm-9">
-                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                    <fieldset>
+
+
+                        <div class="form-group">
+                            <label for="ProductID">Tên sản phẩm</label>
+                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", id = "ProductID" } })
+                            <small id="tf1Help" class="form-text text-muted">Nhập tên sản phẩm của bạn.</small>
                             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
                         </div>
-                    </div>
 
-                    <div class="mb-3 row align-items-center">
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mã loại sản phẩm</div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-select" })
-                            @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label for="CategoryID">Danh mục sản phẩm</label>
+                            <div>
+                                @Html.DropDownList("CategoryID", null, "Loại sản phẩm", new { @class = "custom-select", id = "CategoryID", required = "" })
+                                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3 row align-items-center">
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mã nhà cung cấp</div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SupplierID", null, htmlAttributes: new { @class = "form-select" })
-                            @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "text-danger" })
+                        <div class="mb-3 form-group">
+                            <label for="SuppilerID">Nhà cung cấp</label>
+                            @Html.DropDownList("SupplierID", null, "Chọn nhà cung cấp", new { @class = "custom-select", required = "" })
+                            @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "invalid-feedback" })
                         </div>
-                    </div>
 
-                    <div class="mb-3 row align-items-center">
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Khối lượng</div>
-                        <div class="col-sm-9">
-                            @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control" } })
+
+                        <!-- Khối lượng (Number input) -->
+                        <div class="form-group">
+                            <label for="QuantityPerUnit">Khối lượng</label>
+                            <div class="custom-number">
+                                @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control", id = "QuantityPerUnit", type = "number", min = "0", max = "1000", step = "1", value = "0" } })
+                            </div>
                             @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "text-danger" })
                         </div>
-                    </div>
 
-                    <div class="mb-3 row align-items-center">
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Giá</div>
-                        <div class="col-sm-9">
-                            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                        <!-- Giá (Number input) -->
+                        <div class="form-group">
+                            <label for="UnitPrice">Giá</label>
+                            <div class="custom-number">
+                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "0.01", value = "0" } })
+                            </div>
                             @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                         </div>
-                    </div>
 
-                    <div class="mb-3 row align-items-center">
-                        <div class="col-sm-3 col-form-label" style="font-weight: bold;">Mô tả</div>
-                        <div class="col-sm-9">
-                            @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = "3" })
+
+                        <div class="form-group">
+                            <label for="Description">Mô tả</label>
+                            <textarea class="form-control" id="Description" name="ProductDescription" rows="3">@Model?.ProductDescription</textarea>
                             @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "text-danger" })
                         </div>
-                    </div>
+                    </fieldset>
                 </div>
 
-                <!-- Cột phải: Hình ảnh sản phẩm -->
+
+                <!-- Tải lên hình ảnh -->
                 <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh sản phẩm</label>
-                    </div>
-                    <div class="preview-container text-center">
-                        <img id="previewImage" src="~/Content/Images/default-product.jpg" alt="Xem trước ảnh" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" />
-                        <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
-                    </div>
-                    <div>
-                        <div class="input-group">
-                            <input type="file" name="ImageFile" id="imageUpload" class="form-control" accept="image/*" onchange="previewImage(event)">
-                            <label class="input-group-text" for="imageUpload">
-                                <i class="fas fa-upload"></i> Chọn ảnh
-                            </label>
+                    <fieldset>
+                        <legend>Hình ảnh sản phẩm</legend>
+                        <div class="text-center mb-3">
+                            <img id="previewImage" src="@Url.Content("~/Content/Images/default-product.jpg")" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" onerror="this.src='https://via.placeholder.com/300x300?text=Default+Image';" />
+                            <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
                         </div>
-                        @Html.ValidationMessageFor(model => model.Images, "", new { @class = "text-danger" })
-                    </div>
+                        <div class="input-group has-clearable">
+                            <label class="input-group-prepend" for="ImageFile">
+                                <span class="input-group-text"><i class="fa fa-upload"></i></span>
+                            </label>
+                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" onchange="previewImage(event)">
+                            <button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true"><i class="fa fa-times-circle"></i></span>
+                            </button>
+                        </div>
+                    </fieldset>
                 </div>
-            </div> <!-- Nút hành động -->
+            </div>
             <div class="row mt-4">
                 <div class="col-12 text-center">
                     <button type="submit" class="btn btn-primary px-5 fw-semibold shadow">Tạo sản phẩm</button>
@@ -100,14 +102,35 @@
 <script>
     function previewImage(event) {
         var output = document.getElementById('previewImage');
+        if (!output) {
+            console.error("Không tìm thấy phần tử previewImage.");
+            return;
+        }
         if (event.target.files && event.target.files[0]) {
             var reader = new FileReader();
             reader.onload = function () {
                 output.src = reader.result;
+                console.log("Đã cập nhật hình ảnh xem trước:", reader.result);
+            };
+            reader.onerror = function () {
+                console.error("Lỗi khi đọc tệp hình ảnh.");
             };
             reader.readAsDataURL(event.target.files[0]);
         } else {
-            output.src = "/Content/Images/default-product.jpg";
+            console.log("Không có tệp nào được chọn, giữ nguyên hình ảnh mặc định.");
         }
     }
+
+    document.querySelectorAll('.has-clearable .close').forEach(button => {
+        button.addEventListener('click', () => {
+            const input = button.parentElement.querySelector('input, textarea');
+            if (input) {
+                input.value = '';
+                var output = document.getElementById('previewImage');
+                if (output) {
+                    output.src = "@Url.Content("~/Content/Images/default-product.jpg")";
+                }
+            }
+        });
+    });
 </script>

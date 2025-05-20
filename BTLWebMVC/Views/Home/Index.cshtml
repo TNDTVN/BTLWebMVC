@@ -5,7 +5,103 @@
     Layout = "~/Views/Shared/LayoutUsers.cshtml";
     ViewBag.Title = "Home Page";
 }
+<style>
+    .product-grid {
+        width: 100%;
+        margin-top: 57px;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+    }
 
+    .product-item {
+        width: 20%; /* 5 cột, chính xác 20% */
+        height: 380px;
+        cursor: pointer;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        opacity: 1;
+        transform: translateY(0); /* Thay scale bằng translateY */
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+        .product-item::after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: -1px;
+            width: calc(100% + 1px);
+            height: 100%;
+            pointer-events: none;
+            content: '';
+            border: solid 2px rgba(235,235,235,0);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .product-item:hover::after {
+            box-shadow: 0 25px 29px rgba(63, 78, 100, 0.15);
+            border: solid 2px rgba(235,235,235,1);
+        }
+
+        .product-item.isotope-hidden {
+            opacity: 0;
+            transform: translateY(-20px); /* Thay scale bằng translateY */
+            pointer-events: none;
+        }
+
+    .product {
+        width: 100%;
+        height: 340px;
+        border-right: none;
+        box-sizing: border-box;
+    }
+
+    .product_image {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+    }
+
+        .product_image img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+    .product_info {
+        text-align: center;
+        padding: 0;
+        overflow: hidden;
+        margin-top: 27px;
+    }
+
+    .product_name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .product-container-loading {
+        opacity: 0.5;
+        position: relative;
+        transition: opacity 0.3s ease;
+    }
+
+        .product-container-loading::after {
+            content: 'Đang tải...';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: #000;
+        }
+</style>
 <div class="main_slider" style="background-image: url('@Url.Content("~/Content/Images/slider.jpg")');">
     <div class="container fill_height">
         <div class="row align-items-center fill_height">
@@ -64,48 +160,91 @@
 @section scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <!-- Thêm thư viện imagesLoaded -->
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+
     <script>
-        $(document).ready(function () {
-            var $grid = $('.product-grid').isotope({
-                itemSelector: '.product-item',
-                layoutMode: 'fitRows'
-            });
-
-            $('.grid_sorting_button:not(.view-more)').click(function (e) {
-                e.preventDefault();
-                $('.grid_sorting_button').removeClass('active is-checked');
-                $(this).addClass('active is-checked');
-
-                var categoryId = $(this).data('category-id');
-
-                $('#product-container').addClass('product-container-loading');
-
-                $.ajax({
-                    url: '@Url.Action("GetProducts", "Home")',
-                    type: 'GET',
-                    data: { categoryId: categoryId },
-                    success: function (data) {
-                        $('#product-container').html(data).removeClass('product-container-loading');
-
-                        if ($grid.length) {
-                            $grid.isotope('reloadItems').isotope();
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                        console.log("Status: " + status);
-                        console.log("Response: " + xhr.responseText);
-                        $('#product-container').removeClass('product-container-loading');
-                    }
-                });
-            });
-
-            $('.view-more a').click(function (e) {
-                e.stopPropagation();
-                window.location.href = $(this).attr('href');
-            });
-
-
+    $(document).ready(function () {
+        // Khởi tạo Isotope
+        var $grid = $('.product-grid').isotope({
+            itemSelector: '.product-item',
+            layoutMode: 'fitRows',
+            transitionDuration: '0.3s',
+            hiddenStyle: {
+                opacity: 0,
+                transform: 'translateY(-20px)' // Đồng bộ với CSS
+            },
+            visibleStyle: {
+                opacity: 1,
+                transform: 'translateY(0)' // Đồng bộ với CSS
+            },
+            percentPosition: true,
+            masonry: {
+                columnWidth: '.product-item'
+            }
         });
+
+        // Xử lý khi chọn danh mục
+        $('.grid_sorting_button:not(.view-more)').click(function (e) {
+            e.preventDefault();
+            $('.grid_sorting_button').removeClass('active is-checked');
+            $(this).addClass('active is-checked');
+
+            var categoryId = $(this).data('category-id');
+
+            $('#product-container').addClass('product-container-loading');
+
+            $.ajax({
+                url: '@Url.Action("GetProducts", "Home")',
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    // Cập nhật nội dung
+                    $('#product-container').html(data).removeClass('product-container-loading');
+
+                    // Khởi tạo lại Isotope
+                    $grid = $('.product-grid').isotope({
+                        itemSelector: '.product-item',
+                        layoutMode: 'fitRows',
+                        transitionDuration: '0.3s',
+                        hiddenStyle: {
+                            opacity: 0,
+                            transform: 'translateY(-20px)'
+                        },
+                        visibleStyle: {
+                            opacity: 1,
+                            transform: 'translateY(0)'
+                        },
+                        percentPosition: true,
+                        masonry: {
+                            columnWidth: '.product-item'
+                        }
+                    });
+
+                    // Đợi ảnh tải xong trước khi làm mới layout
+                    $('#product-container').imagesLoaded(function() {
+                        $grid.isotope('reloadItems').isotope('layout');
+
+                        // Hiệu ứng xuất hiện
+                        $('.product-item').css({ opacity: 0, transform: 'translateY(-20px)' }).animate({
+                            opacity: 1,
+                            transform: 'translateY(0)'
+                        }, 300);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                    console.log("Status: " + status);
+                    console.log("Response: " + xhr.responseText);
+                    $('#product-container').removeClass('product-container-loading');
+                }
+            });
+        });
+
+        $('.view-more a').click(function (e) {
+            e.stopPropagation();
+            window.location.href = $(this).attr('href');
+        });
+    });
     </script>
 }

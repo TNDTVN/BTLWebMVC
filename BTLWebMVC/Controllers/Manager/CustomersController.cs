@@ -21,15 +21,24 @@ namespace BTLWebMVC.Controllers
             var customers = db.Customers.Include(c => c.Account).ToList();
             return View(customers);
         }
+
         public ActionResult Create()
         {
             
             return View();
         }
 
-   
-        
-   
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+
+
 
     }
 }

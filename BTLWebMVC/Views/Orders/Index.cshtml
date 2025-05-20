@@ -5,7 +5,10 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
 }
+
 
 
 
@@ -26,6 +29,8 @@
                             <th>Ngày đặt</th>
                             <th>Ngày giao</th>
                             <th>Địa chỉ giao</th>
+                            <th>Trạng thái</th>
+
                             <th>Công cụ</th>
 
 
@@ -42,13 +47,38 @@
                                 <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
-
                                 <td>
-                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">Chi tiết</a>
-                                    <a href="@Url.Action("Edit", "Orders", new { id = item.OrderID })" class="btn btn-info btn-sm">Cập nhập</a>
                                     @if (item.EmployeeID != null)
                                     {
-                                        <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning">In</a>
+                                        <span class="badge badge-success">Đã duyệt</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">Chưa duyệt</span>
+                                    }
+                                </td>
+
+
+                                <td>
+                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+                                    @if (item.EmployeeID == null)
+                                    {
+
+                                        <a href="@Url.Action("duyetDonHang", new { id = item.OrderID })" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle"></i>
+                                        </a>
+                                    
+                                    }
+
+                                    @if (item.EmployeeID != null)
+                                    {
+                                        <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
 
                                     }
 
