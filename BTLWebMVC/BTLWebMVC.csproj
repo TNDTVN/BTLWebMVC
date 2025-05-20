@@ -2556,7 +2556,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Image\" />
-    <Folder Include="Views\UserAcount\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css.map" />
@@ -2628,6 +2627,7 @@
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Accounts\Edit.cshtml" />
     <Content Include="Views\Orders\Edit.cshtml" />
+    <Content Include="Views\UserAcount\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
