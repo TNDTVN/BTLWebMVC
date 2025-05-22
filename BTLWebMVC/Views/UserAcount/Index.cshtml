@@ -5,92 +5,233 @@
 }
 
 @model BTLWebMVC.Models.Customer
+@* Các phần khai báo model, etc. giữ nguyên *@
 
-
-<div class="container mt-5">
-    <h2>Thông tin tài khoản</h2>
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <img src="~/Content/accountImages/@(Model.Account.ProfileImage ?? "profile.jpg")" class="card-img-top" alt="Profile Image">
-                <div class="card-body">
-                    <h5 class="card-title">@Model.CustomerName</h5>
-                    <p class="card-text">Email: @Model.Account.Email</p>
+<div class="container-fluid mt-5 pt-4">
+    <div class="profile-container p-4 bg-white shadow-sm rounded mx-auto" style="max-width: 700px;">
+        @* Phần hiển thị hình ảnh, thông tin và nút chọn file mới *@
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center">
+                <img src="~/Content/accountImages/@(Model.Account.ProfileImage ?? "profile.jpg")"
+                     id="profileImagePreview"
+                     class="rounded-circle"
+                     style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #e0e0e0; margin-right: 1cm;"
+                     alt="Profile Image">
+                <div>
+                    <h4 class="mb-0">@Model.CustomerName</h4>
+                    <small class="text-muted">e.g. @Model.City, @Model.Country</small>
                 </div>
             </div>
+
+            @* Nút chọn file được thiết kế lại và đặt ở đây *@
+            <div class="form-group mb-0">
+                @* mb-0 để không ảnh hưởng đến căn chỉnh dọc của d-flex cha *@
+                <label for="profileImageInput" class="btn btn-outline-primary btn-sm custom-file-upload">
+                    <i class="fas fa-camera"></i> Tải ảnh mới
+                </label>
+                @* Input file gốc được ẩn đi *@
+            </div>
         </div>
-        <div class="col-md-8">
-            @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <label>Tên khách hàng</label>
-                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        }
+
+        @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @* Input file được di chuyển lên trên, nhưng vẫn cần input ẩn này để form hoạt động *@
+            <input type="file" name="profileImage" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tên</label>
+                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "Ngô Tấn Phúc" })
+                        @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Tên liên hệ</label>
-                    @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.ContactName, "", new { @class = "text-danger" })
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Họ</label>
+                        @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "Phúc" })
+                        @Html.ValidationMessageFor(m => m.ContactName, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Địa chỉ</label>
-                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        @Html.TextBoxFor(m => m.Account.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(m => m.Account.Email, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Thành phố</label>
-                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "0909765432" })
+                        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Mã bưu điện</label>
-                    @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Vị trí</label>
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "456 Đường Nhớ, Quận 2" })
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Quốc gia</label>
-                    @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mã bưu điện</label>
+                        @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "70001" })
+                        @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Số điện thoại</label>
-                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Thành phố</label>
+                        @Html.TextBoxFor(m => m.City, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "TP. Hồ Chí Minh" })
+                        @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Quốc gia</label>
+                        @Html.TextBoxFor(m => m.Country, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "Việt Nam" })
+                        @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+                    </div>
                 </div>
+            </div>
+
+            @* Xóa khối input file cũ ở đây nếu có:
                 <div class="form-group">
                     <label>Ảnh đại diện</label>
                     <input type="file" name="profileImage" class="form-control-file" accept="image/*" />
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
-            }
-        </div>
+            *@
+
+            <button type="submit" class="btn btn-orange btn-sm btn-block mt-4">Save Changes</button>
+        }
     </div>
 </div>
 
 @section styles {
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    @* Thêm link Font Awesome nếu bạn muốn dùng icon (ví dụ: camera) *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        .card-img-top {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+        }
+
+        .container-fluid {
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .profile-container {
+            border-radius: 15px;
+            background: #fff;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        /* Nút chọn file được tùy chỉnh */
+        .custom-file-upload {
+            cursor: pointer;
+            /* Bạn có thể thêm các style khác ở đây để làm nút đẹp hơn */
+            /* Ví dụ: giống với nút .btn-orange */
+            /* background-color: #ff6200; */
+            /* color: #fff; */
+            /* border-color: #ff6200; */
+        }
+
+            .custom-file-upload:hover {
+                /* background-color: #e65c00; */
+                /* border-color: #e65c00; */
+            }
+
+            .custom-file-upload i { /* Style cho icon bên trong nút */
+                margin-right: 0.3rem;
+            }
+
+        .form-control-lg {
+            padding: 15px;
+            font-size: 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #007bff;
+        }
+
+        .btn-orange {
+            background-color: #ff6200;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+            .btn-orange:hover {
+                background-color: #e65c00;
+            }
+
+        /* Điều chỉnh label của form group để không bị ảnh hưởng bởi style của .custom-file-upload nếu nó cũng là label */
+        .form-group > label:not(.custom-file-upload) {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
         }
     </style>
 }
 
+@section scripts {
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('profileImagePreview');
+                output.src = reader.result;
+            };
+            // Kiểm tra xem người dùng có chọn file không
+            if (event.target.files && event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+    </script>
+}
