@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/LayoutUsers.cshtml";
+}
+
+@model BTLWebMVC.Models.Customer
+
+
+<div class="container mt-5">
+    <h2>Thông tin tài khoản</h2>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="~/Content/accountImages/@(Model.Account.ProfileImage ?? "profile.jpg")" class="card-img-top" alt="Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.CustomerName</h5>
+                    <p class="card-text">Email: @Model.Account.Email</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label>Tên khách hàng</label>
+                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Tên liên hệ</label>
+                    @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ContactName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ</label>
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Thành phố</label>
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Mã bưu điện</label>
+                    @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Quốc gia</label>
+                    @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label>Ảnh đại diện</label>
+                    <input type="file" name="profileImage" class="form-control-file" accept="image/*" />
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
+            }
+        </div>
+    </div>
+</div>
+
+@section styles {
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+}
+
