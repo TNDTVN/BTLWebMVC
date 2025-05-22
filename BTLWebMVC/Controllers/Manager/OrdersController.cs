@@ -15,9 +15,9 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Borders;
 using iText.IO.Font;
-using iText.Kernel.Pdf.Canvas.Draw;
-using iText.Kernel.Colors;          
-using iText.Kernel.Geom;            
+using iText.Kernel.Pdf.Canvas.Draw; // Cho SolidLine
+using iText.Kernel.Colors;          // Cho DeviceRgb
+using iText.Kernel.Geom;            // Cho PageSize        
 
 using PagedList;
 
