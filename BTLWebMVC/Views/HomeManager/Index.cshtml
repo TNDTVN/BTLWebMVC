@@ -1,9 +1,7 @@
-﻿
-@{
-    ViewBag.Title = "Admin";
+﻿@{
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
-
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -13,24 +11,37 @@
                 <div class="col-sm-6">
                     <h1 class="m-0">Dashboard</h1>
                 </div>
-
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
+
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            <!-- Dropdown chọn tháng và năm -->
+            <div class="mb-3">
+                <label for="month">Chọn tháng:</label>
+                <select name="month" id="month" class="form-control d-inline-block" style="width: 100px;">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" @(ViewBag.SelectedMonth == i ? "selected" : "")>@i</option>
+                    }
+                </select>
+                <label for="year">Chọn năm:</label>
+                <select name="year" id="year" class="form-control d-inline-block" style="width: 120px;">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year + 5; i++)
+                    {
+                        <option value="@i" @(ViewBag.SelectedYear == i ? "selected" : "")>@i</option>
+                    }
+                </select>
+            </div>
+
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>@((ViewBag.donMoi != null)? ViewBag.donMoi: "Không có dữ liệu" )</h3>
-
+                            <h3 id="donMoi">@((ViewBag.donMoi != null) ? ViewBag.donMoi : "0")</h3>
                             <p>Đơn hàng tháng</p>
                         </div>
                         <div class="icon">
@@ -41,14 +52,10 @@
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-
-                            <h3>@((ViewBag.doanhThu != null) ? String.Format("{0:N0} VND", ViewBag.doanhThu) : "Không có dữ liệu")</h3>
-
+                            <h3 id="doanhThu">@((ViewBag.doanhThu != null) ? String.Format("{0:N0} VND", ViewBag.doanhThu) : "0")</h3>
                             <p>Doanh thu tháng</p>
                         </div>
                         <div class="icon">
@@ -59,13 +66,10 @@
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>44</h3>
-
                             <p>User Registrations</p>
                         </div>
                         <div class="icon">
@@ -76,13 +80,10 @@
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>65</h3>
-
                             <p>Unique Visitors</p>
                         </div>
                         <div class="icon">
@@ -93,22 +94,113 @@
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
             </div>
-            <!-- /.row -->
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <!-- /.Left col -->
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-5 connectedSortable">
-                    <!-- /.card -->
-                </section>
-                <!-- right col -->
+
+            <!-- Biểu đồ -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Doanh thu theo ngày trong tháng <span id="chartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" style="height: 260px; max-height: 260px;"></canvas>
+                </div>
             </div>
-            <!-- /.row (main row) -->
         </div>
-        <!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            let revenueChart;
+
+            // Hàm khởi tạo biểu đồ
+            function initChart(chartData) {
+                if (revenueChart) {
+                    revenueChart.destroy(); // Hủy biểu đồ cũ trước khi tạo mới
+                }
+
+                var labels = chartData.map(function (item) { return item.Day; });
+                var revenueData = chartData.map(function (item) { return item.Revenue; });
+                var orderData = chartData.map(function (item) { return item.OrderCount; });
+
+                var ctx = document.getElementById('revenueChart').getContext('2d');
+                revenueChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Doanh thu (VNĐ)',
+                                data: revenueData,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Số đơn hàng',
+                                data: orderData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Giá trị' },
+                                ticks: { font: { size: 10 } } // Giảm kích thước chữ trục Y
+                            },
+                            x: {
+                                title: { display: true, text: 'Ngày' },
+                                ticks: { font: { size: 10 } } // Giảm kích thước chữ trục X
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { font: { size: 10 } } // Giảm kích thước chữ chú thích
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Khởi tạo biểu đồ ban đầu
+            var initialChartData = @Html.Raw(Json.Encode(ViewBag.ChartData));
+            initChart(initialChartData);
+
+            // Xử lý thay đổi dropdown
+            $('#month, #year').on('change', function () {
+                var month = $('#month').val();
+                var year = $('#year').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDashboardData", "HomeManager")',
+                    type: 'POST',
+                    data: { month: month, year: year },
+                    success: function (response) {
+                        if (response.success) {
+                            // Cập nhật card
+                            $('#donMoi').text(response.donMoi || '0');
+                            $('#doanhThu').text(response.doanhThu ? response.doanhThu.toLocaleString('vi-VN') + ' VND' : '0');
+                            $('#chartTitle').text(month + '/' + year);
+
+                            // Cập nhật biểu đồ
+                            initChart(response.chartData);
+                        } else {
+                            alert('Lỗi khi lấy dữ liệu: ' + (response.message || 'Không xác định'));
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi lấy dữ liệu!');
+                    }
+                });
+            });
+        });
+    </script>
+}

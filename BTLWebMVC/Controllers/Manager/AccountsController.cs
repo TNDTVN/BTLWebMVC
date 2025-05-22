@@ -21,6 +21,7 @@ namespace BTLWebMVC.Controllers.Manager
         // GET: Accounts
         public ActionResult Index()
         {
+            ViewBag.CurrentPage = "Accounts";
             var accounts = db.Accounts.Include(a => a.Employees).Include(a => a.Customers).ToList();
             return View(accounts);
         }
@@ -36,6 +37,14 @@ namespace BTLWebMVC.Controllers.Manager
                 if (account == null)
                 {
                     return Json(new { success = false, message = "Không tìm thấy tài khoản!" });
+                }
+                if (account.Role == "Admin")
+                {
+                    return Json(new { success = false, message = "Không thể thay đổi tài khoản quản lý!" });
+                }
+                if (account.IsLock == (isLock == 1)) // Kiểm tra nếu trạng thái không thay đổi
+                {
+                    return Json(new { success = true, message = "Trạng thái không thay đổi!" });
                 }
 
                 account.IsLock = (isLock == 1);
@@ -53,6 +62,7 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Edit(int? id)
         {
+            ViewBag.CurrentPage = "Accounts";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

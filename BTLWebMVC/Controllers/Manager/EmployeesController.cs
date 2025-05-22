@@ -41,7 +41,7 @@ namespace BTLWebMVC.Controllers.Manager
             //{
             //    return RedirectToAction("AccessDenied", "Home");
             //}
-
+            ViewBag.CurrentPage = "Employees";
             var employees = db.Employees.Include(e => e.Account).ToList();
             return View(employees);
         }
@@ -49,6 +49,7 @@ namespace BTLWebMVC.Controllers.Manager
       
         public ActionResult Create()
         {
+            ViewBag.CurrentPage = "Employees";
             ViewBag.AccountID = new SelectList(db.Accounts, "AccountID", "Username");
             return View();
         }
@@ -75,6 +76,7 @@ namespace BTLWebMVC.Controllers.Manager
         // GET: Employees/Edit/5
         public ActionResult Edit(int? id)
         {
+            ViewBag.CurrentPage = "Employees";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -108,6 +110,7 @@ namespace BTLWebMVC.Controllers.Manager
         [CustomAuthorize("Admin")]
         public ActionResult Delete(int ? id)
         {
+            ViewBag.CurrentPage = "Employees";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -135,7 +138,8 @@ namespace BTLWebMVC.Controllers.Manager
       
         public ActionResult Lock(int? id)
         {
-            if(id == null)
+            ViewBag.CurrentPage = "Employees";
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 

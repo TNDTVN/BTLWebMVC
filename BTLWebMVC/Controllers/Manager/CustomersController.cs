@@ -18,13 +18,14 @@ namespace BTLWebMVC.Controllers
         // GET: Customers
         public ActionResult Index()
         {
+            ViewBag.CurrentPage = "Customers";
             var customers = db.Customers.Include(c => c.Account).ToList();
             return View(customers);
         }
 
         public ActionResult Create()
         {
-            
+            ViewBag.CurrentPage = "Customers";
             return View();
         }
 
