@@ -20,6 +20,7 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Index(int ? page)
         {
+            ViewBag.CurrentPage = "Products";
             int pageSize =6;
             int pageNumber = (page ?? 1);
             //var products = db.Products.Include(p => p.Category).Include(p => p.Supplier);
@@ -30,6 +31,7 @@ namespace BTLWebMVC.Controllers
  
         public ActionResult Details(int? id)
         {
+            ViewBag.CurrentPage = "Products";
             if (id == null)
             {
                 TempData["ErrorMessage"] = "Không có id sản phẩm!";
@@ -47,6 +49,7 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.CurrentPage = "Products";
             Product product = new Product();
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
             ViewBag.SupplierID = new SelectList(db.Suppliers, "SupplierID", "SupplierName");
@@ -99,6 +102,7 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Edit(int? id)
         {
+            ViewBag.CurrentPage = "Products";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -153,6 +157,7 @@ namespace BTLWebMVC.Controllers
 
         public ActionResult Delete(int? id)
         {
+            ViewBag.CurrentPage = "Products";
             if (id == null)
             {
                 TempData["ErrorMessage"] = "Vui lòng truyền id!";

@@ -17,7 +17,7 @@ using iText.Layout.Borders;
 using iText.IO.Font;
 using iText.Kernel.Pdf.Canvas.Draw; // Cho SolidLine
 using iText.Kernel.Colors;          // Cho DeviceRgb
-using iText.Kernel.Geom;            // Cho PageSize
+using iText.Kernel.Geom;            // Cho PageSize        
 
 using PagedList;
 
@@ -30,7 +30,7 @@ namespace BTLWebMVC.Controllers.Manager
 
         public ActionResult Index(int? page)
         {
-
+            ViewBag.CurrentPage = "Orders";
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);
@@ -86,31 +86,10 @@ namespace BTLWebMVC.Controllers.Manager
 
         }
 
-        // sua don hang
-
-        //[HttpGet]
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Order order = db.Orders.Find(id);
-        //    if (order == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    // Truyền danh sách khách hàng và nhân viên cho dropdown
-        //    ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
-        //    ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
-
-        //    return View(order);
-        //}
-
         [HttpGet]
         public ActionResult Edit(int? id)
         {
+            ViewBag.CurrentPage = "Orders";
             var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
             {
@@ -140,7 +119,7 @@ namespace BTLWebMVC.Controllers.Manager
                 return HttpNotFound();
             }
 
-            // Đảm bảo ViewBag chứa dữ liệu hợp lệ
+
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
 
@@ -190,6 +169,7 @@ namespace BTLWebMVC.Controllers.Manager
 
         public ActionResult duyetDonHang(int? id)
         {
+            ViewBag.CurrentPage = "Orders";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -227,6 +207,7 @@ namespace BTLWebMVC.Controllers.Manager
         }
         public ActionResult Details(int? id)
         {
+            ViewBag.CurrentPage = "Orders";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
