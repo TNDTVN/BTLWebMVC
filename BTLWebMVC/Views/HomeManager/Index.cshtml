@@ -1,114 +1,311 @@
-﻿
+﻿@model dynamic
+
 @{
-    ViewBag.Title = "Admin";
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
-
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+    <!-- Content Header -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard</h1>
+                    <h1 class="m-0">Tổng quan</h1>
                 </div>
-
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
+
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
+            <!-- Dropdown chọn tháng và năm -->
+            <div class="mb-3">
+                <label for="month">Tháng:</label>
+                <select name="month" id="month" class="form-control d-inline-block" style="width: 100px;">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" @(ViewBag.SelectedMonth == i ? "selected" : "")>@i</option>
+                    }
+                </select>
+                <label for="year">Năm:</label>
+                <select name="year" id="year" class="form-control d-inline-block" style="width: 120px;">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year + 5; i++)
+                    {
+                        <option value="@i" @(ViewBag.SelectedYear == i ? "selected" : "")>@i</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Cards -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>@((ViewBag.donMoi != null)? ViewBag.donMoi: "Không có dữ liệu" )</h3>
-
+                            <h3 id="orderCount">@((ViewBag.OrderCount != null) ? ViewBag.OrderCount : "0")</h3>
                             <p>Đơn hàng tháng</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fas fa-shopping-cart"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                        <a href="@Url.Action("Index", "Orders")" class="small-box-footer">
+                            Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-
-                            <h3>@((ViewBag.doanhThu != null) ? String.Format("{0:N0} VND", ViewBag.doanhThu) : "Không có dữ liệu")</h3>
-
+                            <h3 id="revenue">@((ViewBag.Revenue != null) ? String.Format("{0:N0} VND", ViewBag.Revenue) : "0")</h3>
                             <p>Doanh thu tháng</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                        <a href="@Url.Action("Index", "Orders")" class="small-box-footer">
+                            Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
+                    <div class="small-box bg-purple">
                         <div class="inner">
-                            <h3>44</h3>
-
-                            <p>User Registrations</p>
+                            <h3 id="newCustomerCount">@((ViewBag.NewCustomerCount != null) ? ViewBag.NewCustomerCount : "0")</h3>
+                            <p>Khách hàng mới</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-person-add"></i>
+                            <i class="fas fa-user-plus"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                        <a href="@Url.Action("Index", "Customers")" class="small-box-footer">
+                            Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
+                    <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3>65</h3>
-
-                            <p>Unique Visitors</p>
+                            <h3 id="productCount">@((ViewBag.ProductCount != null) ? ViewBag.ProductCount : "0")</h3>
+                            <p>Sản phẩm bán ra</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
+                            <i class="fas fa-boxes"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
+                        <a href="@Url.Action("Index", "Products")" class="small-box-footer">
+                            Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
-                <!-- ./col -->
             </div>
-            <!-- /.row -->
-            <!-- Main row -->
+
+            <!-- Charts -->
             <div class="row">
-                <!-- Left col -->
-                <!-- /.Left col -->
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-5 connectedSortable">
-                    <!-- /.card -->
-                </section>
-                <!-- right col -->
+                <div class="col-md-6">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Doanh thu tháng <span id="revenueChartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.ChartData != null && ((IEnumerable<object>)ViewBag.ChartData).Any())
+                            {
+                                <canvas id="revenueOnlyChart" style="height: 220px; max-height: 220px;"></canvas>
+                            }
+                            else
+                            {
+                                <p class="text-center">Không có dữ liệu để hiển thị biểu đồ doanh thu.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Số đơn hàng tháng <span id="orderChartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.ChartData != null && ((IEnumerable<object>)ViewBag.ChartData).Any())
+                            {
+                                <canvas id="orderCountChart" style="height: 220px; max-height: 220px;"></canvas>
+                            }
+                            else
+                            {
+                                <p class="text-center">Không có dữ liệu để hiển thị biểu đồ số đơn hàng.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.row (main row) -->
         </div>
-        <!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
 </div>
+
+<style>
+    .small-box {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .small-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+
+    .bg-teal {
+        background-color: #20c997 !important;
+    }
+
+    .card-outline.card-primary {
+        border-top: 3px solid #007bff;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            let revenueOnlyChart, orderCountChart;
+
+            // Hàm khởi tạo biểu đồ doanh thu
+            function initRevenueChart(chartData) {
+                if (revenueOnlyChart) {
+                    revenueOnlyChart.destroy();
+                }
+
+                var labels = chartData.map(function (item) { return item.Day; });
+                var revenueData = chartData.map(function (item) { return item.Revenue; });
+
+                var ctx = document.getElementById('revenueOnlyChart').getContext('2d');
+                revenueOnlyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: revenueData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Doanh thu (VNĐ)' },
+                                ticks: { font: { size: 10 } }
+                            },
+                            x: {
+                                title: { display: true, text: 'Ngày' },
+                                ticks: { font: { size: 10 } }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Hàm khởi tạo biểu đồ số đơn hàng
+            function initOrderCountChart(chartData) {
+                if (orderCountChart) {
+                    orderCountChart.destroy();
+                }
+
+                var labels = chartData.map(function (item) { return item.Day; });
+                var orderData = chartData.map(function (item) { return item.OrderCount; });
+
+                var ctx = document.getElementById('orderCountChart').getContext('2d');
+                orderCountChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số đơn hàng',
+                            data: orderData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Số đơn hàng' },
+                                ticks: { font: { size: 10 } }
+                            },
+                            x: {
+                                title: { display: true, text: 'Ngày' },
+                                ticks: { font: { size: 10 } }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Khởi tạo biểu đồ ban đầu
+            var initialChartData = @Html.Raw(Json.Encode(ViewBag.ChartData));
+            if (initialChartData && initialChartData.length > 0) {
+                initRevenueChart(initialChartData);
+                initOrderCountChart(initialChartData);
+            }
+
+            // Xử lý thay đổi dropdown
+            $('#month, #year').on('change', function () {
+                var month = $('#month').val();
+                var year = $('#year').val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDashboardData", "HomeManager")',
+                    type: 'POST',
+                    data: { month: month, year: year },
+                    success: function (response) {
+                        if (response.success) {
+                            // Cập nhật card
+                            $('#orderCount').text(response.orderCount || '0');
+                            $('#revenue').text(response.revenue ? response.revenue.toLocaleString('vi-VN') + ' VND' : '0');
+                            $('#newCustomerCount').text(response.newCustomerCount || '0');
+                            $('#productCount').text(response.productCount || '0');
+                            $('#revenueChartTitle, #orderChartTitle').text(month + '/' + year);
+
+                            // Cập nhật biểu đồ
+                            if (response.chartData && response.chartData.length > 0) {
+                                initRevenueChart(response.chartData);
+                                initOrderCountChart(response.chartData);
+                                $('#revenueOnlyChart, #orderCountChart').show();
+                                $('#revenueOnlyChart').parent().find('p').hide();
+                                $('#orderCountChart').parent().find('p').hide();
+                            } else {
+                                if (revenueOnlyChart) revenueOnlyChart.destroy();
+                                if (orderCountChart) orderCountChart.destroy();
+                                $('#revenueOnlyChart, #orderCountChart').hide();
+                                $('#revenueOnlyChart').parent().find('p').show();
+                                $('#orderCountChart').parent().find('p').show();
+                            }
+                        } else {
+                            alert('Lỗi khi lấy dữ liệu: ' + (response.message || 'Không xác định'));
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi lấy dữ liệu!');
+                    }
+                });
+            });
+        });
+    </script>
+}
