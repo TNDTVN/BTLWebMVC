@@ -71,7 +71,7 @@
                         <div class="text-center">
                             @if (!string.IsNullOrEmpty(Model.ProfileImage))
                             {
-                                <img id="previewImage" src="@Url.Content(Model.ProfileImage)" alt="Profile Image" class="img-fluid rounded shadow-sm" style="max-height:300px;" />
+                                <img id="previewImage" src="~/Content/accountImages/@Url.Content(Model.ProfileImage)" alt="Profile Image" class="img-fluid rounded shadow-sm" style="max-height:300px;" />
                             }
                             else
                             {

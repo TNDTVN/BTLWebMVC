@@ -97,12 +97,28 @@
             </div>
 
             <!-- Biểu đồ -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Doanh thu theo ngày trong tháng <span id="chartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+            <div class="row">
+                <!-- Card cho biểu đồ doanh thu -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Doanh thu theo ngày trong tháng <span id="revenueChartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueOnlyChart" style="height: 260px; max-height: 260px;"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <canvas id="revenueChart" style="height: 260px; max-height: 260px;"></canvas>
+                <!-- Card cho biểu đồ số đơn hàng -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Số đơn hàng theo ngày trong tháng <span id="orderChartTitle">@ViewBag.SelectedMonth/@ViewBag.SelectedYear</span></h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="orderCountChart" style="height: 260px; max-height: 260px;"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,39 +129,29 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function () {
-            let revenueChart;
+            let revenueOnlyChart, orderCountChart;
 
-            // Hàm khởi tạo biểu đồ
-            function initChart(chartData) {
-                if (revenueChart) {
-                    revenueChart.destroy(); // Hủy biểu đồ cũ trước khi tạo mới
+            // Hàm khởi tạo biểu đồ doanh thu
+            function initRevenueChart(chartData) {
+                if (revenueOnlyChart) {
+                    revenueOnlyChart.destroy();
                 }
 
                 var labels = chartData.map(function (item) { return item.Day; });
                 var revenueData = chartData.map(function (item) { return item.Revenue; });
-                var orderData = chartData.map(function (item) { return item.OrderCount; });
 
-                var ctx = document.getElementById('revenueChart').getContext('2d');
-                revenueChart = new Chart(ctx, {
+                var ctx = document.getElementById('revenueOnlyChart').getContext('2d');
+                revenueOnlyChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: labels,
-                        datasets: [
-                            {
-                                label: 'Doanh thu (VNĐ)',
-                                data: revenueData,
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
-                            },
-                            {
-                                label: 'Số đơn hàng',
-                                data: orderData,
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1
-                            }
-                        ]
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: revenueData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
                     },
                     options: {
                         responsive: true,
@@ -153,26 +159,72 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                title: { display: true, text: 'Giá trị' },
-                                ticks: { font: { size: 10 } } // Giảm kích thước chữ trục Y
+                                title: { display: true, text: 'Doanh thu (VNĐ)' },
+                                ticks: { font: { size: 10 } }
                             },
                             x: {
                                 title: { display: true, text: 'Ngày' },
-                                ticks: { font: { size: 10 } } // Giảm kích thước chữ trục X
+                                ticks: { font: { size: 10 } }
                             }
                         },
                         plugins: {
                             legend: {
-                                labels: { font: { size: 10 } } // Giảm kích thước chữ chú thích
+                                labels: { font: { size: 10 } }
                             }
                         }
                     }
                 });
             }
 
-            // Khởi tạo biểu đồ ban đầu
+            // Hàm khởi tạo biểu đồ số đơn hàng
+            function initOrderCountChart(chartData) {
+                if (orderCountChart) {
+                    orderCountChart.destroy();
+                }
+
+                var labels = chartData.map(function (item) { return item.Day; });
+                var orderData = chartData.map(function (item) { return item.OrderCount; });
+
+                var ctx = document.getElementById('orderCountChart').getContext('2d');
+                orderCountChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số đơn hàng',
+                            data: orderData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Số đơn hàng' },
+                                ticks: { font: { size: 10 } }
+                            },
+                            x: {
+                                title: { display: true, text: 'Ngày' },
+                                ticks: { font: { size: 10 } }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Khởi tạo cả hai biểu đồ ban đầu
             var initialChartData = @Html.Raw(Json.Encode(ViewBag.ChartData));
-            initChart(initialChartData);
+            initRevenueChart(initialChartData);
+            initOrderCountChart(initialChartData);
 
             // Xử lý thay đổi dropdown
             $('#month, #year').on('change', function () {
@@ -188,10 +240,11 @@
                             // Cập nhật card
                             $('#donMoi').text(response.donMoi || '0');
                             $('#doanhThu').text(response.doanhThu ? response.doanhThu.toLocaleString('vi-VN') + ' VND' : '0');
-                            $('#chartTitle').text(month + '/' + year);
+                            $('#revenueChartTitle, #orderChartTitle').text(month + '/' + year);
 
-                            // Cập nhật biểu đồ
-                            initChart(response.chartData);
+                            // Cập nhật cả hai biểu đồ
+                            initRevenueChart(response.chartData);
+                            initOrderCountChart(response.chartData);
                         } else {
                             alert('Lỗi khi lấy dữ liệu: ' + (response.message || 'Không xác định'));
                         }

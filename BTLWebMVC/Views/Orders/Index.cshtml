@@ -1,125 +1,362 @@
-﻿@*model IEnumerable<BTLWebMVC.Models.Order>*@
-@model PagedList.IPagedList<BTLWebMVC.Models.Order>
+﻿@model PagedList.IPagedList<BTLWebMVC.Models.Order>
 @using PagedList;
-
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
+<style>
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 1.5rem;
+    }
 
+    .modal-title {
+        font-weight: 600;
+        color: #dc3545;
+    }
 
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1rem;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        transition: background-color 0.2s;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .form-group label {
+        font-weight: 500;
+    }
+</style>
 
 <div class="content-wrapper">
     <div style="margin:0.4cm;">
-
         <h2 class="mb-4">Danh sách đơn hàng</h2>
 
-        <div class="card shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-striped mb-0">
-                    <thead class="thead-light" style="white-space: nowrap;">
-                        <tr>
-                            <th>Mã đơn hàng</th>
-                            <th>Tên khách hàng</th>
-                            <th>Nhân viên</th>
-                            <th>Ngày đặt</th>
-                            <th>Ngày giao</th>
-                            <th>Địa chỉ giao</th>
-                            <th>Trạng thái</th>
-
-                            <th>Công cụ</th>
-
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
-                                <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
-                                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                                <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
-                                <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
-                                <td>
-                                    @if (item.EmployeeID != null)
-                                    {
-                                        <span class="badge badge-success">Đã duyệt</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-danger">Chưa duyệt</span>
-                                    }
-                                </td>
-
-
-                                <td>
-                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-eye"></i>
-
-                                    </a>
-
-                                    @if (item.EmployeeID == null)
-                                    {
-
-                                        <a href="@Url.Action("duyetDonHang", new { id = item.OrderID })" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-circle"></i>
-                                        </a>
-                                    
-                                    }
-
-                                    @if (item.EmployeeID != null)
-                                    {
-                                        <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-printer"></i>
-                                        </a>
-
-                                    }
-
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
-    <nav aria-label="Page navigation example" class="mt-3">
-        <ul class="pagination justify-content-center">
-            @* Nút Previous *@
-            <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
-                <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", new { page = Model.PageNumber - 1 }))"
-                   tabindex="@(Model.IsFirstPage ? "-1" : "0")"
-                   aria-disabled="@(Model.IsFirstPage ? "true" : "false")">
-                    <i class="fas fa-chevron-left"></i> Trang trước
-                </a>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="orderTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending" role="tab">Chưa duyệt</a>
             </li>
-
-            @* Các trang số *@
-            @for (int i = 1; i <= Model.PageCount; i++)
-            {
-                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                </li>
-            }
-
-            @* Nút Next *@
-            <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
-                <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", new { page = Model.PageNumber + 1 }))"
-                   tabindex="@(Model.IsLastPage ? "-1" : "0")"
-                   aria-disabled="@(Model.IsLastPage ? "true" : "false")">
-                    Trang sau <i class="fas fa-chevron-right"></i>
-                </a>
+            <li class="nav-item">
+                <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab">Đã duyệt</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cancelled-tab" data-toggle="tab" href="#cancelled" role="tab">Đã hủy</a>
             </li>
         </ul>
-    </nav>
 
+        <!-- Tab content -->
+        <div class="tab-content" id="orderTabsContent">
+            <!-- Chưa duyệt -->
+            <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                <div class="card shadow-sm mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead class="thead-light" style="white-space: nowrap;">
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Địa chỉ giao</th>
+                                    <th>Công cụ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(o => o.EmployeeID == null && !o.IsCancelled))
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("duyetDonHang", new { id = item.OrderID })" class="btn btn-success btn-sm">
+                                                <i class="bi bi-check-circle"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm cancel-order-btn" data-toggle="modal" data-target="#cancelModal"
+                                                    data-order-id="@item.OrderID" data-order-details="@Url.Action("CancelOrderDetails", "Orders", new { id = item.OrderID })">
+                                                <i class="bi bi-x-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Đã duyệt -->
+            <div class="tab-pane fade" id="approved" role="tabpanel">
+                <div class="card shadow-sm mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead class="thead-light" style="white-space: nowrap;">
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Nhân viên</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Ngày giao</th>
+                                    <th>Địa chỉ giao</th>
+                                    <th>Công cụ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(o => o.EmployeeID != null && !o.IsCancelled))
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
+                                        <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("PrintInvoice", "Orders", new { id = item.OrderID })" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Đã hủy -->
+            <div class="tab-pane fade" id="cancelled" role="tabpanel">
+                <div class="card shadow-sm mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead class="thead-light" style="white-space: nowrap;">
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Nhân viên</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Địa chỉ giao</th>
+                                    <th>Lý do hủy</th>
+                                    <th>Công cụ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(o => o.IsCancelled))
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Customer.ContactName)</td>
+                                        <td>@(item.Employee != null ? item.Employee.FirstName + " " + item.Employee.LastName : "Không có nhân viên")</td>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShipAddress)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm cancelled-order-btn" data-toggle="modal" data-target="#cancelledOrderModal"
+                                                    data-order-id="@item.OrderID" data-order-details="@Url.Action("CancelOrderDetails", "Orders", new { id = item.OrderID, isCancelled = true })">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal hủy đơn hàng -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Hủy đơn hàng</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="orderDetailsContent">
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Đang tải...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="cancelReason">Lý do hủy</label>
+                            <textarea class="form-control" id="cancelReason" name="cancelReason" rows="5" placeholder="Nhập lý do hủy đơn hàng"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" id="confirmCancelOrder">Xác nhận hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal chi tiết đơn hàng đã hủy -->
+        <div class="modal fade" id="cancelledOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelledOrderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelledOrderModalLabel">Chi tiết đơn hàng đã hủy</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="cancelledOrderDetailsContent">
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Đang tải...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phân trang -->
+        <nav aria-label="Page navigation example" class="mt-3">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
+                    <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", new { page = Model.PageNumber - 1 }))"
+                       tabindex="@(Model.IsFirstPage ? "-1" : "0")"
+                       aria-disabled="@(Model.IsFirstPage ? "true" : "false")">
+                        <i class="fas fa-chevron-left"></i> Trang trước
+                    </a>
+                </li>
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
+                    <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", new { page = Model.PageNumber + 1 }))"
+                       tabindex="@(Model.IsLastPage ? "-1" : "0")"
+                       aria-disabled="@(Model.IsLastPage ? "true" : "false")">
+                        Trang sau <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Modal hủy đơn hàng
+            $('.cancel-order-btn').click(function () {
+                var orderId = $(this).data('order-id');
+                var detailsUrl = $(this).data('order-details');
+
+                // Hiển thị spinner trong modal
+                $('#orderDetailsContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Đang tải...</span></div></div>');
+
+                // Tải chi tiết đơn hàng
+                $.ajax({
+                    url: detailsUrl,
+                    type: 'GET',
+                    timeout: 5000,
+                    success: function (data) {
+                        $('#orderDetailsContent').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('#orderDetailsContent').html('<p class="text-danger">Lỗi khi tải chi tiết đơn hàng: ' + error + '</p>');
+                    }
+                });
+
+                // Reset textarea lý do hủy
+                $('#cancelReason').val('');
+                $('#confirmCancelOrder').data('order-id', orderId);
+            });
+
+            $('#confirmCancelOrder').click(function () {
+                var orderId = $(this).data('order-id');
+                var reason = $('#cancelReason').val();
+
+                $.ajax({
+                    url: '@Url.Action("CancelOrder", "Orders")',
+                    type: 'POST',
+                    data: { id: orderId, reason: reason },
+                    success: function () {
+                        $('#cancelModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra khi hủy đơn hàng: ' + error);
+                    }
+                });
+            });
+
+            // Modal chi tiết đơn hàng đã hủy
+            $('.cancelled-order-btn').click(function () {
+                var orderId = $(this).data('order-id');
+                var detailsUrl = $(this).data('order-details');
+
+                // Hiển thị spinner trong modal
+                $('#cancelledOrderDetailsContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Đang tải...</span></div></div>');
+
+                // Tải chi tiết đơn hàng
+                $.ajax({
+                    url: detailsUrl,
+                    type: 'GET',
+                    timeout: 5000,
+                    success: function (data) {
+                        $('#cancelledOrderDetailsContent').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('#cancelledOrderDetailsContent').html('<p class="text-danger">Lỗi khi tải chi tiết đơn hàng: ' + error + '</p>');
+                    }
+                });
+            });
+        });
+    </script>
+}

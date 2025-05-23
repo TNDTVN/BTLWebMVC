@@ -31,13 +31,10 @@ namespace BTLWebMVC.Controllers.Manager
         public ActionResult Index(int? page)
         {
             ViewBag.CurrentPage = "Orders";
-
             int pageSize = 5;
             int pageNumber = (page ?? 1);
 
-
             var accountId = Session["AccountId"]?.ToString();
-            Console.WriteLine("giá trị acocunt từ phien: ", accountId);
             var ordersQuery = db.Orders
                 .Include(o => o.OrderDetails)
                 .Include(o => o.Employee)
@@ -45,45 +42,91 @@ namespace BTLWebMVC.Controllers.Manager
 
             if (!string.IsNullOrEmpty(accountId) && int.TryParse(accountId, out int parsedAccountId))
             {
-
                 var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
                 if (account != null)
                 {
                     var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
-                    if (employee != null)
+                    if (account.Role == "Admin")
                     {
-                        // Lọc đơn hàng:
-                        // - Tất cả đơn hàng chưa duyệt (EmployeeID == null)
-                        // - Các đơn hàng đã duyệt của nhân viên đăng nhập (EmployeeID == employee.EmployeeID)
+                        // Admin thấy tất cả đơn hàng
+                    }
+                    else if (employee != null)
+                    {
                         ordersQuery = ordersQuery
                             .Where(o => o.EmployeeID == null || o.EmployeeID == employee.EmployeeID);
                     }
                     else
                     {
-                        // ko tim thay don hang nhan vien thi tra ce danh sach rong
                         return View(new List<Order>().ToPagedList(pageNumber, pageSize));
                     }
                 }
                 else
                 {
-
                     return RedirectToAction("Index", "Home");
                 }
             }
             else
             {
-                // -> chuyen ve trang dnag nhap
                 return RedirectToAction("Index", "Home");
             }
 
-            // Sắp xếp và phân trang
             var orders = ordersQuery
                 .OrderBy(o => o.OrderID)
                 .ToPagedList(pageNumber, pageSize);
 
             return View(orders);
+        }
 
+        [HttpGet]
+        public ActionResult CancelOrderDetails(int? id, bool isCancelled = false)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
+            var order = db.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.OrderDetails.Select(od => od.Product))
+                .FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.IsCancelled = isCancelled;
+            return PartialView("CancelOrderDetails", order);
+        }
+
+        [HttpPost]
+        public ActionResult CancelOrder(int id, string reason)
+        {
+            var order = db.Orders.Find(id);
+            if (order == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            var accountId = Session["AccountId"]?.ToString();
+            if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
+            if (account == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            order.IsCancelled = true;
+            order.Notes = reason;
+            order.EmployeeID = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID)?.EmployeeID;
+            db.Entry(order).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return new JsonResult { Data = new { success = true } };
         }
 
         [HttpGet]
@@ -119,11 +162,9 @@ namespace BTLWebMVC.Controllers.Manager
                 return HttpNotFound();
             }
 
-
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
 
-            // Debug: Kiểm tra dữ liệu
             if (order.OrderDate == null || order.ShippedDate == null)
             {
                 Console.WriteLine("OrderDate or ShippedDate is null for OrderID: " + id);
@@ -150,22 +191,18 @@ namespace BTLWebMVC.Controllers.Manager
                 existingOrder.ShipCountry = order.ShipCountry;
                 existingOrder.ShippedDate = order.ShippedDate;
                 existingOrder.Notes = order.Notes;
-                existingOrder.CustomerID = order.CustomerID; // Cập nhật CustomerID từ dropdown
-                existingOrder.EmployeeID = order.EmployeeID; // Cập nhật EmployeeID từ dropdown
+                existingOrder.CustomerID = order.CustomerID;
+                existingOrder.EmployeeID = order.EmployeeID;
 
                 db.Entry(existingOrder).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            // Nếu có lỗi, trả lại form với dữ liệu đã nhập
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "ContactName", order.CustomerID);
             ViewBag.EmployeeID = new SelectList(db.Employees, "EmployeeID", "FirstName", order.EmployeeID);
             return View(order);
         }
-
-
-
 
         public ActionResult duyetDonHang(int? id)
         {
@@ -180,8 +217,8 @@ namespace BTLWebMVC.Controllers.Manager
             {
                 return HttpNotFound();
             }
-            // lay thong tin account ti session
-            var accountId = Session["AccountID"]?.ToString();
+
+            var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
             {
                 return RedirectToAction("Index", "Account");
@@ -197,37 +234,36 @@ namespace BTLWebMVC.Controllers.Manager
                 return HttpNotFound();
             }
 
-            // Gán EmployeeID để đánh dấu đơn hàng đã duyệt
             order.EmployeeID = employee.EmployeeID;
+            order.ShippedDate = DateTime.Now.AddDays(3);
             db.Entry(order).State = EntityState.Modified;
             db.SaveChanges();
 
             return RedirectToAction("Index");
-
         }
+
         public ActionResult Details(int? id)
         {
             ViewBag.CurrentPage = "Orders";
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
             }
-            Order order = db.Orders.Find(id);
-            if (id == null)
+            Order order = db.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Employee)
+                .Include(o => o.OrderDetails.Select(od => od.Product))
+                .FirstOrDefault(o => o.OrderID == id);
+            if (order == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             }
 
             return View(order);
         }
 
-
-
-
         public ActionResult PrintInvoice(int id)
         {
-        
             var order = db.Orders.Include(o => o.OrderDetails.Select(od => od.Product))
                                 .Include(o => o.Customer)
                                 .Include(o => o.Employee)
@@ -249,7 +285,6 @@ namespace BTLWebMVC.Controllers.Manager
                 Document document = new Document(pdf, PageSize.A4);
                 document.SetMargins(50, 50, 50, 50);
 
-          
                 DeviceRgb tealColor = new DeviceRgb(0, 128, 128);
 
                 Paragraph title = new Paragraph("HÓA ĐƠN")
@@ -260,7 +295,6 @@ namespace BTLWebMVC.Controllers.Manager
                     .SetMarginBottom(10);
                 document.Add(title);
 
-        
                 Paragraph date = new Paragraph($"Ngày lập: {order.OrderDate:dd/MM/yyyy}")
                     .SetFont(regularFont)
                     .SetFontSize(12)
@@ -288,13 +322,11 @@ namespace BTLWebMVC.Controllers.Manager
                     .SetBorder(Border.NO_BORDER));
                 document.Add(infoTable);
 
-              
                 LineSeparator separator = new LineSeparator(new SolidLine(1f))
                     .SetMarginTop(5)
                     .SetMarginBottom(15);
                 document.Add(separator);
 
-              
                 Paragraph orderInfo = new Paragraph(
                     $"Mã đơn hàng: {order.OrderID}\n" +
                     (order.ShippedDate.HasValue ? $"Ngày giao hàng: {order.ShippedDate:dd/MM/yyyy}\n" : "") +
@@ -305,10 +337,8 @@ namespace BTLWebMVC.Controllers.Manager
                     .SetMarginBottom(20);
                 document.Add(orderInfo);
 
-           
                 document.Add(separator);
 
-        
                 Table table = new Table(new float[] { 1, 4, 1, 2, 2 }).UseAllAvailableWidth()
                     .SetMarginTop(10)
                     .SetMarginBottom(20);
@@ -363,7 +393,6 @@ namespace BTLWebMVC.Controllers.Manager
 
                 document.Add(table);
 
-             
                 decimal total = order.OrderDetails.Sum(d => d.Quantity * d.UnitPrice);
                 Paragraph totalParagraph = new Paragraph($"Tổng cộng: {total:#,0} ₫")
                     .SetFont(boldFont)
@@ -373,7 +402,6 @@ namespace BTLWebMVC.Controllers.Manager
                     .SetMarginTop(10);
                 document.Add(totalParagraph);
 
-                
                 document.Add(separator);
 
                 if (!string.IsNullOrEmpty(order.Notes))
@@ -386,7 +414,6 @@ namespace BTLWebMVC.Controllers.Manager
                     document.Add(notes);
                 }
 
-     
                 Paragraph footer = new Paragraph()
                     .SetTextAlignment(TextAlignment.CENTER)
                     .SetMarginTop(20);
@@ -411,14 +438,6 @@ namespace BTLWebMVC.Controllers.Manager
                 return File(bytes, "application/pdf", $"HoaDon_{order.OrderID}.pdf");
             }
         }
-
-
-
-
     }
-
-
-
-
 }
 
