@@ -18,8 +18,10 @@ namespace BTLWebMVC.Controllers
             int selectedYear = year ?? DateTime.Now.Year;
             ViewBag.SelectedMonth = selectedMonth;
             ViewBag.SelectedYear = selectedYear;
-            ViewBag.donMoi = ThongKeDonHangTheoThang(selectedMonth, selectedYear);
-            ViewBag.doanhThu = doanhThuThang(selectedMonth, selectedYear);
+            ViewBag.OrderCount = ThongKeDonHangTheoThang(selectedMonth, selectedYear);
+            ViewBag.Revenue = doanhThuThang(selectedMonth, selectedYear);
+            ViewBag.NewCustomerCount = NewCustomerCount(selectedMonth, selectedYear);
+            ViewBag.ProductCount = ProductCount(selectedMonth, selectedYear);
             ViewBag.ChartData = GetChartData(selectedMonth, selectedYear);
             return View();
         }
@@ -27,24 +29,27 @@ namespace BTLWebMVC.Controllers
         [HttpPost]
         public JsonResult GetDashboardData(int month, int year)
         {
-            var donMoi = ThongKeDonHangTheoThang(month, year);
-            var doanhThu = doanhThuThang(month, year);
+            var orderCount = ThongKeDonHangTheoThang(month, year);
+            var revenue = doanhThuThang(month, year);
+            var newCustomerCount = NewCustomerCount(month, year);
+            var productCount = ProductCount(month, year);
             var chartData = GetChartData(month, year);
             return Json(new
             {
                 success = true,
-                donMoi = donMoi,
-                doanhThu = doanhThu,
+                orderCount = orderCount,
+                revenue = revenue,
+                newCustomerCount = newCustomerCount,
+                productCount = productCount,
                 chartData = chartData
             });
         }
 
         public int ThongKeDonHangTheoThang(int month, int year)
         {
-            int demDonHang = db.Orders
+            return db.Orders
                 .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
                 .Count();
-            return demDonHang;
         }
 
         public decimal doanhThuThang(int month, int year)
@@ -64,6 +69,33 @@ namespace BTLWebMVC.Controllers
                 .Sum(d => (decimal?)(d.Quantity * d.UnitPrice) ?? 0);
 
             return doanhthu;
+        }
+
+        public int NewCustomerCount(int month, int year)
+        {
+            var firstOrderDates = db.Orders
+                .GroupBy(o => o.CustomerID)
+                .Select(g => new { CustomerID = g.Key, FirstOrderDate = g.Min(o => o.OrderDate) })
+                .Where(o => o.FirstOrderDate.Month == month && o.FirstOrderDate.Year == year);
+
+            return firstOrderDates.Count();
+        }
+
+        public int ProductCount(int month, int year)
+        {
+            var ordersInMonth = db.Orders
+                .Include(o => o.OrderDetails)
+                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
+                .ToList();
+
+            if (!ordersInMonth.Any())
+            {
+                return 0;
+            }
+
+            return ordersInMonth
+                .SelectMany(o => o.OrderDetails)
+                .Sum(d => d.Quantity);
         }
 
         public List<object> GetChartData(int month, int year)
