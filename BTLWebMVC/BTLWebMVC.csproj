@@ -242,11 +242,13 @@
     <Compile Include="Controllers\About\ContactController.cs" />
     <Compile Include="Controllers\About\AboutController.cs" />
     <Compile Include="Controllers\Manager\AccountsController.cs" />
+    <Compile Include="Controllers\Manager\CategoryController.cs" />
     <Compile Include="Controllers\Manager\CustomersController.cs" />
     <Compile Include="Controllers\Manager\EmployeesController.cs" />
     <Compile Include="Controllers\Manager\OrdersController.cs" />
     <Compile Include="Controllers\Manager\ProductsController.cs" />
     <Compile Include="Controllers\Manager\StatisticsController.cs" />
+    <Compile Include="Controllers\Manager\SupplierController.cs" />
     <Compile Include="Controllers\User\HomeController.cs" />
     <Compile Include="Controllers\Manager\HomeManagerController.cs" />
     <Compile Include="Controllers\About\LoginController.cs" />
@@ -2639,6 +2641,8 @@
     <Content Include="Views\UserAcount\Index.cshtml" />
     <Content Include="Views\Orders\CancelOrderDetails.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
+    <Content Include="Views\Category\Index.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

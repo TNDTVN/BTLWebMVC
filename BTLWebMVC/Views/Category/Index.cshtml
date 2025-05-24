@@ -1,0 +1,358 @@
+﻿@model List<BTLWebMVC.Models.Category>
+
+@{
+    ViewBag.Title = "Quản lý loại sản phẩm";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+}
+
+<div class="content-wrapper">
+    <div style="margin:0.4cm;">
+        <h2 class="mb-4">Quản lý loại sản phẩm</h2>
+
+        <!-- Nút thêm loại sản phẩm -->
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCategoryModal">
+                <i class="fas fa-plus"></i> Thêm loại sản phẩm
+            </button>
+        </div>
+
+        <!-- Bảng danh sách loại sản phẩm -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách loại sản phẩm</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="categoryTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã loại</th>
+                                <th>Tên loại</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td></td> <!-- STT sẽ được DataTables điền -->
+                                        <td>@Html.DisplayFor(modelItem => item.CategoryID)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
+                                        <td>@(string.IsNullOrEmpty(item.Description) ? "Không có" : item.Description)</td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm view-btn" data-id="@item.CategoryID" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm edit-btn" data-id="@item.CategoryID" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="@item.CategoryID" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center">Không có loại sản phẩm nào.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Phân trang tùy chỉnh -->
+                <nav aria-label="Page navigation example" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(ViewBag.IsFirstPage ? "disabled" : "")">
+                            <a class="page-link" href="@(ViewBag.IsFirstPage ? "#" : Url.Action("Index", new { page = ViewBag.Page - 1 }))"
+                               tabindex="@(ViewBag.IsFirstPage ? "-1" : "0")"
+                               aria-disabled="@(ViewBag.IsFirstPage ? "true" : "false")">
+                                <i class="fas fa-chevron-left"></i> Trang trước
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(ViewBag.IsLastPage ? "disabled" : "")">
+                            <a class="page-link" href="@(ViewBag.IsLastPage ? "#" : Url.Action("Index", new { page = ViewBag.Page + 1 }))"
+                               tabindex="@(ViewBag.IsLastPage ? "-1" : "0")"
+                               aria-disabled="@(ViewBag.IsLastPage ? "true" : "false")">
+                                Trang sau <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Modal Thêm loại sản phẩm -->
+        <div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createCategoryModalLabel">Thêm loại sản phẩm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="createCategoryForm">
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="createCategoryName">Tên loại sản phẩm</label>
+                                <input type="text" class="form-control" id="createCategoryName" name="CategoryName" required maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="createDescription">Mô tả</label>
+                                <textarea class="form-control" id="createDescription" name="Description" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Sửa loại sản phẩm -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editCategoryModalLabel">Sửa loại sản phẩm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="editCategoryForm">
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <input type="hidden" id="editCategoryID" name="CategoryID">
+                            <div class="form-group">
+                                <label for="editCategoryName">Tên loại sản phẩm</label>
+                                <input type="text" class="form-control" id="editCategoryName" name="CategoryName" required maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="editDescription">Mô tả</label>
+                                <textarea class="form-control" id="editDescription" name="Description" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Xem chi tiết -->
+        <div class="modal fade" id="detailsCategoryModal" tabindex="-1" role="dialog" aria-labelledby="detailsCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsCategoryModalLabel">Chi tiết loại sản phẩm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Mã loại:</strong> <span id="detailsCategoryID"></span></p>
+                        <p><strong>Tên loại:</strong> <span id="detailsCategoryName"></span></p>
+                        <p><strong>Mô tả:</strong> <span id="detailsDescription"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast thông báo -->
+        <div class="toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; min-width: 250px;" data-delay="3000">
+            <div class="toast-header">
+                <strong class="mr-auto" id="toastTitle"></strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" />
+    <script>
+        $(document).ready(function () {
+            // Khởi tạo DataTables
+            $('#categoryTable').DataTable({
+                "paging": false, // Tắt phân trang client-side
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false, // Bỏ sắp xếp cột
+                "info": false, // Bỏ thông tin "Hiển thị 1 đến X của Y bản ghi"
+                "autoWidth": false,
+                "language": {
+                    "emptyTable": "Không có loại sản phẩm nào.",
+                    "search": "Tìm kiếm:"
+                },
+                "rowCallback": function (row, data, index) {
+                    // Thêm STT
+                    $('td:eq(0)', row).html(index + 1);
+                }
+            });
+
+            // Kiểm tra sessionStorage để hiển thị toast sau reload
+            var action = sessionStorage.getItem('categoryAction');
+            var message = sessionStorage.getItem('categoryMessage');
+            var success = sessionStorage.getItem('categorySuccess') === 'true';
+            if (action && message) {
+                showToast(success ? 'Thành công' : 'Lỗi', message, success ? 'bg-success' : 'bg-danger');
+                // Xóa sessionStorage sau khi hiển thị
+                sessionStorage.removeItem('categoryAction');
+                sessionStorage.removeItem('categoryMessage');
+                sessionStorage.removeItem('categorySuccess');
+            }
+
+            // Xử lý form Thêm
+            $('#createCategoryForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Create", "Category")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        sessionStorage.setItem('categoryAction', 'create');
+                        sessionStorage.setItem('categoryMessage', response.message);
+                        sessionStorage.setItem('categorySuccess', response.success);
+                        if (response.success) {
+                            $('#createCategoryModal').modal('hide');
+                            $('#createCategoryForm')[0].reset();
+                            location.reload();
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi thêm loại sản phẩm!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý nút Sửa
+            $('.edit-btn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("Edit", "Category")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#editCategoryID').val(response.data.CategoryID);
+                            $('#editCategoryName').val(response.data.CategoryName);
+                            $('#editDescription').val(response.data.Description);
+                            $('#editCategoryModal').modal('show');
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi lấy dữ liệu!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý form Sửa
+            $('#editCategoryForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Edit", "Category")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        sessionStorage.setItem('categoryAction', 'edit');
+                        sessionStorage.setItem('categoryMessage', response.message);
+                        sessionStorage.setItem('categorySuccess', response.success);
+                        if (response.success) {
+                            $('#editCategoryModal').modal('hide');
+                            location.reload();
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi cập nhật loại sản phẩm!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý nút Xóa
+            $('.delete-btn').click(function () {
+                var id = $(this).data('id');
+                if (confirm('Bạn có chắc muốn xóa loại sản phẩm này?')) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Category")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function (response) {
+                            sessionStorage.setItem('categoryAction', 'delete');
+                            sessionStorage.setItem('categoryMessage', response.message);
+                            sessionStorage.setItem('categorySuccess', response.success);
+                            if (response.success) {
+                                location.reload();
+                            } else {
+                                showToast('Lỗi', response.message, 'bg-danger');
+                            }
+                        },
+                        error: function () {
+                            showToast('Lỗi', 'Có lỗi xảy ra khi xóa loại sản phẩm!', 'bg-danger');
+                        }
+                    });
+                }
+            });
+
+            // Xử lý nút Xem chi tiết
+            $('.view-btn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("Details", "Category")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#detailsCategoryID').text(response.data.CategoryID);
+                            $('#detailsCategoryName').text(response.data.CategoryName);
+                            $('#detailsDescription').text(response.data.Description || 'Không có');
+                            $('#detailsCategoryModal').modal('show');
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi lấy chi tiết!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Hàm hiển thị toast
+            function showToast(title, message, bgClass) {
+                $('#toastTitle').text(title);
+                $('#toastMessage').text(message);
+                $('#notificationToast').removeClass('bg-success bg-danger').addClass(bgClass);
+                $('#notificationToast').toast('show');
+            }
+        });
+    </script>
+}

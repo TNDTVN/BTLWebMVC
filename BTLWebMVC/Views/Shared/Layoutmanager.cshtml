@@ -148,6 +148,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="@Url.Action("Index", "Category")" class="nav-link @(ViewBag.CurrentPage == "Category" ? "active" : "")">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>Quản lý loại sản phẩm</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Index", "Supplier")" class="nav-link @(ViewBag.CurrentPage == "Supplier" ? "active" : "")">
+                                <i class="nav-icon fa fa-building"></i>
+                                <p>Quản lý nhà cung cấp</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="@Url.Action("Index", "Products")" class="nav-link @(ViewBag.CurrentPage == "Products" ? "active" : "")">
                                 <i class="nav-icon fas fa-box"></i>
                                 <p>Sản phẩm</p>

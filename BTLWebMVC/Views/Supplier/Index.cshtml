@@ -1,0 +1,459 @@
+﻿@model List<BTLWebMVC.Models.Supplier>
+
+@{
+    ViewBag.Title = "Quản lý nhà cung cấp";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+}
+
+<div class="content-wrapper">
+    <div style="margin:0.4cm;">
+        <h2 class="mb-4">Quản lý nhà cung cấp</h2>
+
+        <!-- Nút thêm nhà cung cấp -->
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSupplierModal">
+                <i class="fas fa-plus"></i> Thêm nhà cung cấp
+            </button>
+        </div>
+
+        <!-- Bảng danh sách nhà cung cấp -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách nhà cung cấp</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="supplierTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên NCC</th>
+                                <th>Người liên hệ</th>
+                                <th>Địa chỉ</th>
+                                <th>Thành phố</th>
+                                <th>Quốc gia</th>
+                                <th>Điện thoại</th>
+                                <th>Email</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td></td> <!-- STT sẽ được DataTables điền -->
+                                        <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                                        <td>@(string.IsNullOrEmpty(item.ContactName) ? "Không có" : item.ContactName)</td>
+                                        <td>@(string.IsNullOrEmpty(item.Address) ? "Không có" : item.Address)</td>
+                                        <td>@(string.IsNullOrEmpty(item.City) ? "Không có" : item.City)</td>
+                                        <td>@(string.IsNullOrEmpty(item.Country) ? "Không có" : item.Country)</td>
+                                        <td>@(string.IsNullOrEmpty(item.Phone) ? "Không có" : item.Phone)</td>
+                                        <td>@(string.IsNullOrEmpty(item.Email) ? "Không có" : item.Email)</td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm view-btn" data-id="@item.SupplierID" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm edit-btn" data-id="@item.SupplierID" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="@item.SupplierID" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center">Không có nhà cung cấp nào.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Phân trang -->
+                <nav aria-label="Page navigation example" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(ViewBag.IsFirstPage ? "disabled" : "")">
+                            <a class="page-link" href="@(ViewBag.IsFirstPage ? "#" : Url.Action("Index", new { page = ViewBag.Page - 1 }))"
+                               tabindex="@(ViewBag.IsFirstPage ? "-1" : "0")"
+                               aria-disabled="@(ViewBag.IsFirstPage ? "true" : "false")">
+                                <i class="fas fa-chevron-left"></i> Trang trước
+                            </a>
+                        </li>
+                        @{
+                            int maxPagesToShow = 5;
+                            int pagesBeforeAfter = maxPagesToShow / 2;
+                            int startPage = Math.Max(1, ViewBag.Page - pagesBeforeAfter);
+                            int endPage = Math.Min(ViewBag.TotalPages, startPage + maxPagesToShow - 1);
+                            if (endPage - startPage + 1 < maxPagesToShow)
+                            {
+                                startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                            }
+                        }
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(ViewBag.IsLastPage ? "disabled" : "")">
+                            <a class="page-link" href="@(ViewBag.IsLastPage ? "#" : Url.Action("Index", new { page = ViewBag.Page + 1 }))"
+                               tabindex="@(ViewBag.IsLastPage ? "-1" : "0")"
+                               aria-disabled="@(ViewBag.IsLastPage ? "true" : "false")">
+                                Trang sau <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Modal Thêm nhà cung cấp -->
+        <div class="modal fade" id="createSupplierModal" tabindex="-1" role="dialog" aria-labelledby="createSupplierModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createSupplierModalLabel">Thêm nhà cung cấp</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="createSupplierForm">
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="createSupplierName">Tên nhà cung cấp</label>
+                                        <input type="text" class="form-control" id="createSupplierName" name="SupplierName" required maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createAddress">Địa chỉ</label>
+                                        <input type="text" class="form-control" id="createAddress" name="Address" maxlength="200">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createCity">Thành phố</label>
+                                        <input type="text" class="form-control" id="createCity" name="City" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createCountry">Quốc gia</label>
+                                        <input type="text" class="form-control" id="createCountry" name="Country" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="createContactName">Người liên hệ</label>
+                                        <input type="text" class="form-control" id="createContactName" name="ContactName" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createPhone">Điện thoại</label>
+                                        <input type="text" class="form-control" id="createPhone" name="Phone" maxlength="20">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createEmail">Email</label>
+                                        <input type="email" class="form-control" id="createEmail" name="Email" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createPostalCode">Mã bưu điện</label>
+                                        <input type="text" class="form-control" id="createPostalCode" name="PostalCode" maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Sửa nhà cung cấp -->
+        <div class="modal fade" id="editSupplierModal" tabindex="-1" role="dialog" aria-labelledby="editSupplierModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSupplierModalLabel">Sửa nhà cung cấp</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="editSupplierForm">
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <input type="hidden" id="editSupplierID" name="SupplierID">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="editSupplierName">Tên nhà cung cấp</label>
+                                        <input type="text" class="form-control" id="editSupplierName" name="SupplierName" required maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editAddress">Địa chỉ</label>
+                                        <input type="text" class="form-control" id="editAddress" name="Address" maxlength="200">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editCity">Thành phố</label>
+                                        <input type="text" class="form-control" id="editCity" name="City" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editCountry">Quốc gia</label>
+                                        <input type="text" class="form-control" id="editCountry" name="Country" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="editContactName">Người liên hệ</label>
+                                        <input type="text" class="form-control" id="editContactName" name="ContactName" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editPhone">Điện thoại</label>
+                                        <input type="text" class="form-control" id="editPhone" name="Phone" maxlength="20">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editEmail">Email</label>
+                                        <input type="email" class="form-control" id="editEmail" name="Email" maxlength="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editPostalCode">Mã bưu điện</label>
+                                        <input type="text" class="form-control" id="editPostalCode" name="PostalCode" maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Xem chi tiết -->
+        <div class="modal fade" id="detailsSupplierModal" tabindex="-1" role="dialog" aria-labelledby="detailsSupplierModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsSupplierModalLabel">Chi tiết nhà cung cấp</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Mã NCC:</strong> <span id="detailsSupplierID"></span></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Tên NCC:</strong> <span id="detailsSupplierName"></span></p>
+                                <p><strong>Địa chỉ:</strong> <span id="detailsAddress"></span></p>
+                                <p><strong>Thành phố:</strong> <span id="detailsCity"></span></p>
+                                <p><strong>Quốc gia:</strong> <span id="detailsCountry"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Người liên hệ:</strong> <span id="detailsContactName"></span></p>
+                                <p><strong>Điện thoại:</strong> <span id="detailsPhone"></span></p>
+                                <p><strong>Email:</strong> <span id="detailsEmail"></span></p>
+                                <p><strong>Mã bưu điện:</strong> <span id="detailsPostalCode"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast thông báo -->
+        <div class="toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; min-width: 250px;" data-delay="3000">
+            <div class="toast-header">
+                <strong class="mr-auto" id="toastTitle"></strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" />
+    <script>
+        $(document).ready(function () {
+            // Khởi tạo DataTables
+            $('#supplierTable').DataTable({
+                "paging": false, // Tắt phân trang client-side
+                "lengthChange": false,
+                "searching": true,
+                "ordering": false, // Bỏ sắp xếp cột
+                "info": false, // Bỏ thông tin phân trang
+                "autoWidth": false,
+                "language": {
+                    "emptyTable": "Không có nhà cung cấp nào.",
+                    "search": "Tìm kiếm:"
+                },
+                "rowCallback": function (row, data, index) {
+                    // Thêm STT
+                    $('td:eq(0)', row).html(index + 1);
+                }
+            });
+
+            // Kiểm tra sessionStorage để hiển thị toast
+            var action = sessionStorage.getItem('supplierAction');
+            var message = sessionStorage.getItem('supplierMessage');
+            var success = sessionStorage.getItem('supplierSuccess') === 'true';
+            if (action && message) {
+                showToast(success ? 'Thành công' : 'Lỗi', message, success ? 'bg-success' : 'bg-danger');
+                sessionStorage.removeItem('supplierAction');
+                sessionStorage.removeItem('supplierMessage');
+                sessionStorage.removeItem('supplierSuccess');
+            }
+
+            // Xử lý form Thêm
+            $('#createSupplierForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Create", "Supplier")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        sessionStorage.setItem('supplierAction', 'create');
+                        sessionStorage.setItem('supplierMessage', response.message);
+                        sessionStorage.setItem('supplierSuccess', response.success);
+                        if (response.success) {
+                            $('#createSupplierModal').modal('hide');
+                            $('#createSupplierForm')[0].reset();
+                            location.reload();
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi thêm nhà cung cấp!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý nút Sửa
+            $('.edit-btn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("Edit", "Supplier")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#editSupplierID').val(response.data.SupplierID);
+                            $('#editSupplierName').val(response.data.SupplierName);
+                            $('#editContactName').val(response.data.ContactName);
+                            $('#editAddress').val(response.data.Address);
+                            $('#editCity').val(response.data.City);
+                            $('#editPostalCode').val(response.data.PostalCode);
+                            $('#editCountry').val(response.data.Country);
+                            $('#editPhone').val(response.data.Phone);
+                            $('#editEmail').val(response.data.Email);
+                            $('#editSupplierModal').modal('show');
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi lấy dữ liệu!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý form Sửa
+            $('#editSupplierForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Edit", "Supplier")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        sessionStorage.setItem('supplierAction', 'edit');
+                        sessionStorage.setItem('supplierMessage', response.message);
+                        sessionStorage.setItem('supplierSuccess', response.success);
+                        if (response.success) {
+                            $('#editSupplierModal').modal('hide');
+                            location.reload();
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi cập nhật nhà cung cấp!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý nút Xóa
+            $('.delete-btn').click(function () {
+                var id = $(this).data('id');
+                if (confirm('Bạn có chắc muốn xóa nhà cung cấp này?')) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Supplier")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function (response) {
+                            sessionStorage.setItem('supplierAction', 'delete');
+                            sessionStorage.setItem('supplierMessage', response.message);
+                            sessionStorage.setItem('supplierSuccess', response.success);
+                            if (response.success) {
+                                location.reload();
+                            } else {
+                                showToast('Lỗi', response.message, 'bg-danger');
+                            }
+                        },
+                        error: function () {
+                            showToast('Lỗi', 'Có lỗi xảy ra khi xóa nhà cung cấp!', 'bg-danger');
+                        }
+                    });
+                }
+            });
+
+            // Xử lý nút Xem chi tiết
+            $('.view-btn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("Details", "Supplier")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#detailsSupplierID').text(response.data.SupplierID);
+                            $('#detailsSupplierName').text(response.data.SupplierName || 'Không có');
+                            $('#detailsContactName').text(response.data.ContactName || 'Không có');
+                            $('#detailsAddress').text(response.data.Address || 'Không có');
+                            $('#detailsCity').text(response.data.City || 'Không có');
+                            $('#detailsPostalCode').text(response.data.PostalCode || 'Không có');
+                            $('#detailsCountry').text(response.data.Country || 'Không có');
+                            $('#detailsPhone').text(response.data.Phone || 'Không có');
+                            $('#detailsEmail').text(response.data.Email || 'Không có');
+                            $('#detailsSupplierModal').modal('show');
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Lỗi', 'Có lỗi xảy ra khi lấy chi tiết!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Hàm hiển thị toast
+            function showToast(title, message, bgClass) {
+                $('#toastTitle').text(title);
+                $('#toastMessage').text(message);
+                $('#notificationToast').removeClass('bg-success bg-danger').addClass(bgClass);
+                $('#notificationToast').toast('show');
+            }
+        });
+    </script>
+}
