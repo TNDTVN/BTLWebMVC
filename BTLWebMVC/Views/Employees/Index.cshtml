@@ -1,71 +1,370 @@
-﻿@model IEnumerable<BTLWebMVC.Models.Employee>
+﻿@model PagedList.IPagedList<BTLWebMVC.Models.Employee>
+@using PagedList.Mvc
 
 @{
-    ViewBag.Title = "Employee List";
+    ViewBag.Title = "Danh Sách Nhân Viên";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .content-wrapper {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table thead th {
+        background: #007bff;
+        color: white;
+        text-align: center;
+    }
+
+    .table tbody tr:hover {
+        background: #e9ecef;
+        transform: scale(1.01);
+        transition: all 0.2s;
+    }
+
+    .btn-sm {
+        padding: 5px 10px;
+        transition: transform 0.2s;
+    }
+
+        .btn-sm:hover {
+            transform: scale(1.1);
+        }
+
+    .pagination .page-link {
+        border-radius: 5px;
+        margin: 0 3px;
+        color: #007bff;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: #007bff;
+        border-color: #007bff;
+    }
+
+    .pagination .page-link:hover {
+        background: #0056b3;
+        color: white;
+    }
+
+    .toast {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .toast.bg-success {
+            background: linear-gradient(45deg, #28a745, #34c759);
+        }
+
+        .toast.bg-danger {
+            background: linear-gradient(45deg, #dc3545, #e4606d);
+        }
+
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: #007bff;
+        color: #ffffff !important;
+        border-radius: 10px 10px 0 0;
+    }
+
+        .modal-header.bg-danger {
+            background: #dc3545;
+            color: #ffffff !important;
+        }
+
+        .modal-title, .modal-header .close, .modal-header .close span {
+            color: #ffffff !important;
+        }
+</style>
 
 <div class="content-wrapper">
-    <div style="margin:0.3cm;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Danh Sách Nhân Viên</h2>
-
-            <a href="@Url.Action("Create")" class="btn btn-primary">Thêm Mới</a>
+    <div class="container-fluid">
+        @Html.AntiForgeryToken() <!-- Thêm token CSRF -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary"><i class="fas fa-users mr-2"></i>Danh Sách Nhân Viên</h2>
+            <a href="@Url.Action("Create", "Employees")" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Thêm Mới</a>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead class="thead-light" style="white-space: nowrap;">
-                    <tr>
-                        <th>Tài khoản</th>
-                        <th>Họ</th>
-                        <th>Tên</th>
-                        <th>Ngày sinh</th>
-                        <th>Ngày thuê</th>
-                        <th>Địa chỉ</th>
-                        <th>Thành phố</th>
-                        <th>Mã bưu điện</th>
-                        <th>Quốc gia</th>
-                        <th>Điện thoại</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => item.Account.Username)</td>
-                            <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.BirthDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.HireDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                            <td>@Html.DisplayFor(modelItem => item.City)</td>
-                            <td>@Html.DisplayFor(modelItem => item.PostalCode)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Country)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Phone)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>
-
-                                <a href="@Url.Action("Edit", "Employees", new { id = item.EmployeeID })"
-                                   class="btn btn-primary btn-sm" title="Sửa">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            </td>
-                            @*<td>
-                                   
-                                        <a href="@Url.Action("Delete", "Employees", new { id = item.EmployeeID })"
-                                           class="btn btn-primary btn-sm" title="Sửa">
-                                            <i class="bi bi-trash"></i>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Tài khoản</th>
+                                <th>Họ và Tên</th>
+                                <th>Thành phố</th>
+                                <th>Mã bưu điện</th>
+                                <th>Quốc gia</th>
+                                <th>Điện thoại</th>
+                                <th>Email</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Account.Username)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>
+                                    <td>@(string.IsNullOrEmpty(item.City) ? "Không có" : item.City)</td>
+                                    <td>@(string.IsNullOrEmpty(item.PostalCode) ? "Không có" : item.PostalCode)</td>
+                                    <td>@(string.IsNullOrEmpty(item.Country) ? "Không có" : item.Country)</td>
+                                    <td>@(string.IsNullOrEmpty(item.Phone) ? "Không có" : item.Phone)</td>
+                                    <td>@(string.IsNullOrEmpty(item.Email) ? "Không có" : item.Email)</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Edit", "Employees", new { id = item.EmployeeID })" class="btn btn-primary btn-sm" title="Sửa">
+                                            <i class="bi bi-pencil-square"></i>
                                         </a>
-                                </td>*@
-                        </tr>
+                                        <button class="btn btn-info btn-sm view-btn" data-id="@item.EmployeeID" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        @if (ViewBag.UserRole == "Admin")
+                                        {
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="@item.EmployeeID" data-name="@(item.FirstName + " " + item.LastName)" title="Xóa">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phân trang -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
+                    <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", "Employees", new { page = Model.PageNumber - 1 }))"
+                       tabindex="@(Model.IsFirstPage ? "-1" : "0")"
+                       aria-disabled="@(Model.IsFirstPage ? "true" : "false")">
+                        <i class="fas fa-chevron-left"></i> Trang trước
+                    </a>
+                </li>
+                @{
+                    int maxPagesToShow = 5;
+                    int pagesBeforeAfter = maxPagesToShow / 2;
+                    int startPage = Math.Max(1, Model.PageNumber - pagesBeforeAfter);
+                    int endPage = Math.Min(Model.PageCount, startPage + maxPagesToShow - 1);
+                    if (endPage - startPage + 1 < maxPagesToShow)
+                    {
+                        startPage = Math.Max(1, endPage - maxPagesToShow + 1);
                     }
-                </tbody>
-            </table>
+                }
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", "Employees", new { page = i })">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
+                    <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", "Employees", new { page = Model.PageNumber + 1 }))"
+                       tabindex="@(Model.IsLastPage ? "-1" : "0")"
+                       aria-disabled="@(Model.IsLastPage ? "true" : "false")">
+                        Trang sau <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Modal Xem chi tiết -->
+        <div class="modal fade" id="detailsEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="detailsEmployeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsEmployeeModalLabel"><i class="fas fa-user mr-2"></i>Chi tiết nhân viên</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Mã nhân viên:</strong> <span id="detailsEmployeeID"></span></p>
+                        <p><strong>Tài khoản:</strong> <span id="detailsAccountUsername"></span></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Họ và Tên:</strong> <span id="detailsFullName"></span></p>
+                                <p><strong>Thành phố:</strong> <span id="detailsCity"></span></p>
+                                <p><strong>Quốc gia:</strong> <span id="detailsCountry"></span></p>
+                                <p><strong>Ngày sinh:</strong> <span id="detailsBirthDate"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Điện thoại:</strong> <span id="detailsPhone"></span></p>
+                                <p><strong>Email:</strong> <span id="detailsEmail"></span></p>
+                                <p><strong>Mã bưu điện:</strong> <span id="detailsPostalCode"></span></p>
+                                <p><strong>Ngày thuê:</strong> <span id="detailsHireDate"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-2"></i>Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Xác nhận xóa -->
+        <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title" id="deleteEmployeeModalLabel"><i class="fas fa-trash-alt mr-2"></i>Xác nhận xóa</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc muốn xóa nhân viên <strong id="deleteEmployeeName"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-2"></i>Hủy</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn"><i class="fas fa-trash mr-2"></i>Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast thông báo -->
+        <div class="toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; min-width: 250px;" data-delay="3000">
+            <div class="toast-header">
+                <strong class="mr-auto" id="toastTitle"></strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Hàm định dạng ngày yyyy-MM-dd thành dd/MM/yyyy
+            function formatDate(dateStr) {
+                if (!dateStr) {
+                    console.log("Date string is null or empty");
+                    return 'Không có';
+                }
+                const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
+                if (!regex.test(dateStr)) {
+                    console.log("Invalid date format: " + dateStr);
+                    return 'Không có';
+                }
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) {
+                    console.log("Failed to parse date: " + dateStr);
+                    return 'Không có';
+                }
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            // Hiển thị toast nếu có TempData
+            var successMessage = '@TempData["SuccessMessage"]';
+            var errorMessage = '@TempData["ErrorMessage"]';
+            if (successMessage) {
+                showToast('Thành công', successMessage, 'bg-success');
+            }
+            if (errorMessage) {
+                showToast('Lỗi', errorMessage, 'bg-danger');
+            }
+
+            // Xử lý nút Xem chi tiết
+            $('.view-btn').click(function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("Details", "Employees")/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("Details response:", response.data);
+                            $('#detailsEmployeeID').text(response.data.EmployeeID);
+                            $('#detailsAccountUsername').text(response.data.AccountUsername || 'Không có');
+                            $('#detailsFullName').text(response.data.FullName || 'Không có');
+                            $('#detailsCity').text(response.data.City || 'Không có');
+                            $('#detailsCountry').text(response.data.Country || 'Không có');
+                            $('#detailsBirthDate').text(formatDate(response.data.BirthDate));
+                            $('#detailsPhone').text(response.data.Phone || 'Không có');
+                            $('#detailsEmail').text(response.data.Email || 'Không có');
+                            $('#detailsPostalCode').text(response.data.PostalCode || 'Không có');
+                            $('#detailsHireDate').text(formatDate(response.data.HireDate));
+                            $('.delete-btn[data-id="' + id + '"]').prop('disabled', response.data.HasOrders || response.data.IsAdmin);
+                            $('#detailsEmployeeModal').modal('show');
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("AJAX error:", status, error);
+                        showToast('Lỗi', 'Có lỗi xảy ra khi lấy chi tiết!', 'bg-danger');
+                    }
+                });
+            });
+
+            // Xử lý nút Xóa
+            $('.delete-btn').click(function () {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                $('#deleteEmployeeName').text(name);
+                $('#confirmDeleteBtn').data('id', id);
+                $('#deleteEmployeeModal').modal('show');
+            });
+
+            $('#confirmDeleteBtn').click(function () {
+                var id = $(this).data('id');
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                if (!token) {
+                    console.error("Anti-forgery token not found!");
+                    showToast('Lỗi', 'Không tìm thấy token xác thực!', 'bg-danger');
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("Delete", "Employees")',
+                    type: 'POST',
+                    data: { id: id, __RequestVerificationToken: token },
+                    success: function (response) {
+                        $('#deleteEmployeeModal').modal('hide');
+                        if (response.success) {
+                            showToast('Thành công', response.message, 'bg-success');
+                            setTimeout(function () { location.reload(); }, 2000);
+                        } else {
+                            showToast('Lỗi', response.message, 'bg-danger');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", status, error, xhr.responseText);
+                        $('#deleteEmployeeModal').modal('hide');
+                        var message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Lỗi không xác định khi xóa nhân viên!';
+                        showToast('Lỗi', message, 'bg-danger');
+                    }
+                });
+            });
+
+            // Hàm hiển thị toast
+            function showToast(title, message, bgClass) {
+                $('#toastTitle').text(title);
+                $('#toastMessage').text(message);
+                $('#notificationToast').removeClass('bg-success bg-danger').addClass(bgClass);
+                $('#notificationToast').toast('show');
+            }
+        });
+    </script>
+}
