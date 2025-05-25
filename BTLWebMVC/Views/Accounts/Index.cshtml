@@ -11,7 +11,7 @@
     <div style="margin:0.3cm;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Danh Sách Tài Khoản</h2>
-
+            <a href="@Url.Action("Create", "Accounts")" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Thêm Mới</a>
         </div>
 
         <div class="table-responsive">
@@ -55,6 +55,9 @@
                                 <a href="@Url.Action("Edit", "Accounts", new { id = item.AccountID })"
                                    class="btn btn-primary btn-sm" title="Sửa">
                                     <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="@Url.Action("Detail", "Accounts", new { id = item.AccountID })" class="btn btn-info btn-sm" title="Chi tiết">
+                                    <i class="bi bi-eye"></i>
                                 </a>
                             </td>
 

@@ -1,0 +1,231 @@
+﻿@model BTLWebMVC.Models.Account
+
+@{
+    ViewBag.Title = "Chi tiết Tài Khoản";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+}
+
+<style>
+    .content-wrapper {
+        padding: 20px;
+        background: #f4f6f9;
+        min-height: calc(100vh - 56px);
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .profile-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border: 1px solid #e9ecef;
+    }
+
+    .profile-image-container {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .form-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    label {
+        font-weight: 500;
+        color: #343a40;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control-static {
+        font-size: 1rem;
+        color: #495057;
+        padding: 0.375rem 0;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s;
+    }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-secondary {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s;
+    }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    @@media (max-width: 992px) {
+        .form-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .profile-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-secondary {
+            margin-left: 0 !important;
+        }
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-user mr-2"></i>Chi tiết Tài Khoản</h4>
+            </div>
+            <div class="card-body">
+                <!-- Phần ảnh đại diện -->
+                <div class="profile-section">
+                    <div class="profile-image-container">
+                        @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                        {
+                            <img src="~/Content/accountImages/@Model.ProfileImage" class="profile-image" alt="Ảnh đại diện" />
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/default.png" class="profile-image" alt="Ảnh mặc định" />
+                        }
+                    </div>
+                </div>
+
+                <!-- Phần thông tin tài khoản - Bố cục 2 cột -->
+                <div class="form-row">
+                    <!-- Cột 1 -->
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Tên đăng nhập</label>
+                            <p class="form-control-static">@Html.DisplayFor(model => model.Username)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <p class="form-control-static">@Html.DisplayFor(model => model.Email)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ngày tạo</label>
+                            <p class="form-control-static">@Html.DisplayFor(model => model.CreatedDate, "{0:dd/MM/yyyy HH:mm:ss}")</p>
+                        </div>
+
+                     
+                    </div>
+
+                    <!-- Cột 2 -->
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <p class="form-control-static">********</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Vai trò</label>
+                            <p class="form-control-static">@Html.DisplayFor(model => model.Role)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <p class="form-control-static">@(Model.IsLock ? "Bị khóa" : "Hoạt động")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút hành động -->
+                <div class="action-buttons">
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.AccountID }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary ml-3" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
