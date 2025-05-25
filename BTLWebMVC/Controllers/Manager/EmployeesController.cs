@@ -339,11 +339,11 @@ namespace BTLWebMVC.Controllers.Manager
                         return RedirectToAction("Index", "HomeManager");
                     }
 
-                    // Cập nhật thông tin Employee, trừ HireDate
+                    // Cập nhật thông tin Employee
                     existingEmployee.FirstName = employee.FirstName;
                     existingEmployee.LastName = employee.LastName;
                     existingEmployee.BirthDate = employee.BirthDate;
-                    // Không cập nhật HireDate: existingEmployee.HireDate = employee.HireDate;
+                    // existingEmployee.HireDate = employee.HireDate;
                     existingEmployee.Address = employee.Address;
                     existingEmployee.City = employee.City;
                     existingEmployee.PostalCode = employee.PostalCode;
