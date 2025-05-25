@@ -1,136 +1,499 @@
 ﻿@model BTLWebMVC.Models.Product
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Tạo sản phẩm";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
 }
+
+<style>
+    .content-wrapper {
+        padding: 20px;
+        background: #f4f6f9;
+        min-height: calc(100vh - 56px);
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-control, .custom-select {
+        border-radius: 8px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus, .custom-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-control.is-invalid, .custom-select.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .invalid-feedback {
+        font-size: 0.85rem;
+        display: none;
+    }
+
+    .form-control.is-invalid ~ .invalid-feedback,
+    .custom-select.is-invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        transition: all 0.3s;
+    }
+
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-preview-container {
+        position: relative;
+        max-width: 320px;
+        margin: 0 auto 20px auto;
+        text-align: center;
+    }
+
+    .image-preview {
+        width: 300px;
+        height: 300px;
+        object-fit: contain;
+        border-radius: 4px !important;
+        border: 2px solid #dee2e6;
+        background: #fff;
+        transition: all 0.3s ease;
+        display: block;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: visible;
+    }
+
+    .image-preview:hover {
+        transform: scale(1.02);
+        border-color: #007bff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-upload {
+        max-width: 320px;
+        margin: 20px auto 0 auto; /* Khoảng cách trên để tách biệt với ảnh */
+        text-align: center;
+    }
+
+    .upload-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border: 2px dashed #ced4da;
+        border-radius: 10px;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #343a40;
+        font-weight: 500;
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
+        margin-top: 300px;
+        position: relative; /* Đảm bảo không chồng lấn */
+    }
+
+    .upload-btn:hover {
+        background: linear-gradient(135deg, #e7f0fd, #f1f3f5);
+        border-color: #007bff;
+        transform: scale(1.02);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .upload-btn i {
+        margin-right: 10px;
+        color: #007bff;
+        font-size: 1.4rem;
+    }
+
+    .upload-btn span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 80%;
+    }
+
+    .upload-btn.loading i.fa-camera {
+        display: none;
+    }
+
+    .upload-btn.loading i.fa-spinner {
+        margin-right: 10px;
+    }
+
+    .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .clear-image {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .clear-image:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .file-info {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: #6c757d;
+        text-align: center;
+    }
+
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    label {
+        font-weight: 500;
+        color: #343a40;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+</style>
+
 <div class="content-wrapper">
-    <div class="container mt-4">
-        <h2 class="mb-4">Tạo sản phẩm</h2>
-        <hr />
-
-        @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-
-            <div class="row">
-
-                <div class="col-md-6">
-                    <fieldset>
-
-
-                        <div class="form-group">
-                            <label for="ProductID">Tên sản phẩm</label>
-                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", id = "ProductID" } })
-                            <small id="tf1Help" class="form-text text-muted">Nhập tên sản phẩm của bạn.</small>
-                            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="form-group">
-                            <label for="CategoryID">Danh mục sản phẩm</label>
-                            <div>
-                                @Html.DropDownList("CategoryID", null, "Loại sản phẩm", new { @class = "custom-select", id = "CategoryID", required = "" })
-                                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="mb-3 form-group">
-                            <label for="SuppilerID">Nhà cung cấp</label>
-                            @Html.DropDownList("SupplierID", null, "Chọn nhà cung cấp", new { @class = "custom-select", required = "" })
-                            @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "invalid-feedback" })
-                        </div>
-
-
-                        <!-- Khối lượng (Number input) -->
-                        <div class="form-group">
-                            <label for="QuantityPerUnit">Khối lượng</label>
-                            <div class="custom-number">
-                                @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control", id = "QuantityPerUnit", type = "number", min = "0", max = "1000", step = "1", value = "0" } })
-                            </div>
-                            @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "text-danger" })
-                        </div>
-
-                        <!-- Giá (Number input) -->
-                        <div class="form-group">
-                            <label for="UnitPrice">Giá</label>
-                            <div class="custom-number">
-                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "0.01", value = "0" } })
-                            </div>
-                            @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="Description">Mô tả</label>
-                            <textarea class="form-control" id="Description" name="ProductDescription" rows="3">@Model?.ProductDescription</textarea>
-                            @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "text-danger" })
-                        </div>
-                    </fieldset>
-                </div>
-
-
-                <!-- Tải lên hình ảnh -->
-                <div class="col-md-6">
-                    <fieldset>
-                        <legend>Hình ảnh sản phẩm</legend>
-                        <div class="text-center mb-3">
-                            <img id="previewImage" src="@Url.Content("~/Content/Images/default-product.jpg")" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 300px; object-fit: contain; transition: all 0.3s ease;" onerror="this.src='https://via.placeholder.com/300x300?text=Default+Image';" />
-                            <p class="mt-2 mb-0 text-muted small">Ảnh sản phẩm sẽ hiển thị ở đây</p>
-                        </div>
-                        <div class="input-group has-clearable">
-                            <label class="input-group-prepend" for="ImageFile">
-                                <span class="input-group-text"><i class="fa fa-upload"></i></span>
-                            </label>
-                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" onchange="previewImage(event)">
-                            <button type="button" class="close" aria-label="Close">
-                                <span aria-hidden="true"><i class="fa fa-times-circle"></i></span>
-                            </button>
-                        </div>
-                    </fieldset>
-                </div>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-box-open mr-2"></i>Tạo sản phẩm mới</h4>
             </div>
-            <div class="row mt-4">
-                <div class="col-12 text-center">
-                    <button type="submit" class="btn btn-primary px-5 fw-semibold shadow">Tạo sản phẩm</button>
-                    @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-secondary px-4 ms-2 fw-semibold" })
-                </div>
-            </div>}
+            <div class="card-body">
+                @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation", novalidate = "" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="row">
+                        <!-- Cột thông tin sản phẩm -->
+                        <div class="col-md-6 form-col">
+                            <div class="form-group">
+                                <label for="ProductName">Tên sản phẩm</label>
+                                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên sản phẩm", required = "required" } })
+                                <small class="form-text">Tên sản phẩm nên ngắn gọn và rõ ràng.</small>
+                                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="CategoryID">Danh mục sản phẩm</label>
+                                @Html.DropDownList("CategoryID", null, "Chọn danh mục", new { @class = "custom-select", required = "required" })
+                                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="SupplierID">Nhà cung cấp</label>
+                                @Html.DropDownList("SupplierID", null, "Chọn nhà cung cấp", new { @class = "custom-select", required = "required" })
+                                @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="QuantityPerUnit">Khối lượng (kg)</label>
+                                @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "1000", step = "0.1", value = "0", required = "required" } })
+                                <small class="form-text">Nhập khối lượng sản phẩm (0-1000 kg).</small>
+                                @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="UnitPrice">Giá (VND)</label>
+                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", step = "1000", value = "0", required = "required" } })
+                                <small class="form-text">Nhập giá sản phẩm, tối thiểu 0 VND.</small>
+                                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ProductDescription">Mô tả</label>
+                                @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = "4", placeholder = "Nhập mô tả sản phẩm" })
+                                <small class="form-text">Mô tả chi tiết về sản phẩm (tùy chọn).</small>
+                                @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "invalid-feedback" })
+                            </div>
+                        </div>
+
+                        <!-- Cột hình ảnh sản phẩm -->
+                        <div class="col-md-6 form-col">
+                            <fieldset>
+                                <legend class="mb-3">Hình ảnh sản phẩm</legend>
+                                <div class="image-preview-container">
+                                    <img id="previewImage" src="@Url.Content("~/Content/Images/default-product.jpg")" alt="Xem trước ảnh" class="img-fluid image-preview" />
+                                    <button type="button" class="clear-image" title="Xóa ảnh"><i class="fas fa-times"></i></button>
+                                    <small class="form-text mt-2">Hình ảnh sản phẩm sẽ hiển thị ở đây</small>
+                                </div>
+                                <div class="image-upload mt-3">
+                                    <label class="upload-btn" for="ImageFile">
+                                        <i class="fas fa-camera"></i>
+                                        <span id="uploadText">Chọn hình ảnh sản phẩm</span>
+                                    </label>
+                                    <input type="file" class="file-input" id="ImageFile" name="ImageFile" accept=".jpg,.jpeg,.png" required="required" />
+                                    <small id="fileInfo" class="file-info">Kích thước tối đa: 5MB - Định dạng: JPG, PNG</small>
+                                    @Html.ValidationMessage("ImageFile", "", new { @class = "invalid-feedback d-block text-center" })
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Tạo sản phẩm</button>
+                            @Html.ActionLink("Trở lại", "Index", null, new { @class = "btn btn-outline-secondary ml-2" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-    function previewImage(event) {
-        var output = document.getElementById('previewImage');
-        if (!output) {
-            console.error("Không tìm thấy phần tử previewImage.");
-            return;
-        }
-        if (event.target.files && event.target.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                output.src = reader.result;
-                console.log("Đã cập nhật hình ảnh xem trước:", reader.result);
-            };
-            reader.onerror = function () {
-                console.error("Lỗi khi đọc tệp hình ảnh.");
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        } else {
-            console.log("Không có tệp nào được chọn, giữ nguyên hình ảnh mặc định.");
-        }
-    }
-
-    document.querySelectorAll('.has-clearable .close').forEach(button => {
-        button.addEventListener('click', () => {
-            const input = button.parentElement.querySelector('input, textarea');
-            if (input) {
-                input.value = '';
-                var output = document.getElementById('previewImage');
-                if (output) {
-                    output.src = "@Url.Content("~/Content/Images/default-product.jpg")";
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Xác thực client-side với Bootstrap
+            $("form").validate({
+                rules: {
+                    ProductName: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    CategoryID: {
+                        required: true
+                    },
+                    SupplierID: {
+                        required: true
+                    },
+                    QuantityPerUnit: {
+                        required: true,
+                        number: true,
+                        min: 0,
+                        max: 1000
+                    },
+                    UnitPrice: {
+                        required: true,
+                        number: true,
+                        min: 0
+                    },
+                    ImageFile: {
+                        required: true,
+                        accept: "image/jpeg,image/png",
+                        filesize: 5242880 // 5MB
+                    },
+                    ProductDescription: {
+                        maxlength: 1000
+                    }
+                },
+                messages: {
+                    ProductName: {
+                        required: "Vui lòng nhập tên sản phẩm",
+                        maxlength: "Tên sản phẩm không được vượt quá 100 ký tự"
+                    },
+                    CategoryID: {
+                        required: "Vui lòng chọn danh mục"
+                    },
+                    SupplierID: {
+                        required: "Vui lòng chọn nhà cung cấp"
+                    },
+                    QuantityPerUnit: {
+                        required: "Vui lòng nhập khối lượng",
+                        number: "Khối lượng phải là số",
+                        min: "Khối lượng không được nhỏ hơn 0",
+                        max: "Khối lượng không được vượt quá 1000 kg"
+                    },
+                    UnitPrice: {
+                        required: "Vui lòng nhập giá",
+                        number: "Giá phải là số",
+                        min: "Giá không được nhỏ hơn 0"
+                    },
+                    ImageFile: {
+                        required: "Vui lòng chọn hình ảnh",
+                        accept: "Chỉ chấp nhận tệp .jpg hoặc .png",
+                        filesize: "Hình ảnh không được vượt quá 5MB"
+                    },
+                    ProductDescription: {
+                        maxlength: "Mô tả không được vượt quá 1000 ký tự"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.attr("name") === "ImageFile") {
+                        error.appendTo(element.closest(".image-upload"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                    error.addClass("invalid-feedback");
+                    element.addClass("is-invalid");
+                },
+                success: function (label, element) {
+                    $(element).removeClass("is-invalid");
                 }
+            });
+
+            // Thêm rule kiểm tra kích thước file
+            $.validator.addMethod("filesize", function (value, element, param) {
+                return this.optional(element) || (element.files[0].size <= param);
+            });
+
+            // Kiểm tra border-radius của previewImage
+            const previewImage = $("#previewImage");
+            console.log("Border-radius của previewImage:", previewImage.css("border-radius"));
+
+            // Xem trước hình ảnh
+            $("#ImageFile").change(function () {
+                const file = this.files[0];
+                const fileInfo = $("#fileInfo");
+                const previewImage = $("#previewImage");
+                const uploadText = $("#uploadText");
+                const uploadBtn = $(".upload-btn");
+
+                console.log("Kiểm tra previewImage:", previewImage.length);
+                if (!previewImage.length) {
+                    console.error("Không tìm thấy #previewImage");
+                    fileInfo.text("Lỗi: Không tìm thấy khung xem trước ảnh").addClass("text-danger");
+                    return;
+                }
+
+                if (file) {
+                    console.log("File được chọn:", file.name, file.type, file.size);
+                    if (!file.type.match("image/(jpeg|png)")) {
+                        fileInfo.text("Chỉ chấp nhận tệp .jpg hoặc .png").addClass("text-danger");
+                        $(this).val("");
+                        uploadBtn.removeClass("loading");
+                        return;
+                    }
+                    if (file.size > 5242880) {
+                        fileInfo.text("Hình ảnh không được vượt quá 5MB").addClass("text-danger");
+                        $(this).val("");
+                        uploadBtn.removeClass("loading");
+                        return;
+                    }
+
+                    uploadBtn.addClass("loading").html('<i class="fas fa-spinner fa-spin"></i><span>Đang tải...</span>');
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        console.log("Đã tải hình ảnh, độ dài Data URL:", e.target.result.length);
+                        previewImage.attr("src", e.target.result);
+                        previewImage.css("opacity", 1);
+                        setTimeout(() => {
+                            console.log("Src sau khi gán:", previewImage.attr("src").substring(0, 50) + "...");
+                            console.log("Border-radius sau khi tải:", previewImage.css("border-radius"));
+                            if (previewImage[0].naturalWidth === 0) {
+                                console.error("Ảnh không tải được, kích thước:", previewImage[0].naturalWidth, previewImage[0].naturalHeight);
+                                fileInfo.text("Lỗi: Không thể hiển thị ảnh").addClass("text-danger");
+                                resetImagePreview();
+                            }
+                        }, 100);
+                        uploadText.text(file.name.length > 20 ? file.name.substring(0, 20) + "..." : file.name);
+                        fileInfo.text(`Kích thước: ${formatFileSize(file.size)} - Định dạng: ${file.type.split("/")[1].toUpperCase()}`).removeClass("text-danger");
+                        uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>' + uploadText.text() + '</span>');
+                    };
+                    reader.onerror = function () {
+                        console.error("Lỗi khi đọc tệp hình ảnh");
+                        fileInfo.text("Lỗi khi đọc tệp hình ảnh").addClass("text-danger");
+                        resetImagePreview();
+                        uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>Chọn hình ảnh sản phẩm</span>');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    console.log("Không có file được chọn");
+                    resetImagePreview();
+                    uploadBtn.removeClass("loading");
+                }
+            });
+
+            // Xóa hình ảnh
+            $(".clear-image").click(function () {
+                console.log("Xóa hình ảnh");
+                $("#ImageFile").val("");
+                resetImagePreview();
+            });
+
+            // Reset hình ảnh về mặc định
+            function resetImagePreview() {
+                const previewImage = $("#previewImage");
+                const fileInfo = $("#fileInfo");
+                const uploadText = $("#uploadText");
+                const uploadBtn = $(".upload-btn");
+                previewImage.attr("src", "@Url.Content("~/Content/Images/default-product.jpg")");
+                previewImage.css("opacity", 1);
+                fileInfo.text("Kích thước tối đa: 5MB - Định dạng: JPG, PNG").removeClass("text-danger");
+                uploadText.text("Chọn hình ảnh sản phẩm");
+                uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>Chọn hình ảnh sản phẩm</span>');
+            }
+
+            // Định dạng kích thước file
+            function formatFileSize(bytes) {
+                if (bytes === 0) return "0 Bytes";
+                const k = 1024;
+                const sizes = ["Bytes", "KB", "MB", "GB"];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
             }
         });
-    });
-</script>
+    </script>
+}
