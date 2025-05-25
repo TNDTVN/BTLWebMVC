@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
 using BTLWebMVC.Models;
+using PagedList;
 
 namespace BTLWebMVC.Controllers.Manager
 {
@@ -16,10 +17,13 @@ namespace BTLWebMVC.Controllers.Manager
         private Context db = new Context();
 
         // GET: Customers
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             ViewBag.CurrentPage = "Customers";
-            var customers = db.Customers.Include(c => c.Account).ToList();
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+
+            var customers = db.Customers.Include(c => c.Account).OrderBy(c => c.AccountID).ToPagedList(pageNumber, pageSize);
             return View(customers);
         }
 

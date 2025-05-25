@@ -1,5 +1,5 @@
-﻿@model IEnumerable<BTLWebMVC.Models.Customer>
-
+﻿@model PagedList.IPagedList<BTLWebMVC.Models.Customer>
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
@@ -59,4 +59,47 @@
         </div>
     </div>
 
+
+    <!-- PHÂN TRANG -->
+    <nav aria-label="Page navigation example" class="mt-3">
+        <ul class="pagination justify-content-center">
+            <!-- Nút Previous -->
+            <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
+                <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", new { page = Model.PageNumber - 1 }))"
+                   tabindex="@(Model.IsFirstPage ? "-1" : "0")"
+                   aria-disabled="@(Model.IsFirstPage ? "true" : "false")">
+                    <i class="fas fa-chevron-left"></i> Trang trước
+                </a>
+            </li>
+
+            <!-- Các trang số (hiển thị tối đa 5 trang gần trang hiện tại) -->
+            @{
+                int maxPagesToShow = 5; // Tối đa 5 số trang
+                int pagesBeforeAfter = maxPagesToShow / 2; // 2 trang trước, 2 trang sau
+                int startPage = Math.Max(1, Model.PageNumber - pagesBeforeAfter);
+                int endPage = Math.Min(Model.PageCount, startPage + maxPagesToShow - 1);
+
+                // Điều chỉnh nếu gần cuối
+                if (endPage - startPage + 1 < maxPagesToShow)
+                {
+                    startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                }
+            }
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                </li>
+            }
+
+            <!-- Nút Next -->
+            <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
+                <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", new { page = Model.PageNumber + 1 }))"
+                   tabindex="@(Model.IsLastPage ? "-1" : "0")"
+                   aria-disabled="@(Model.IsLastPage ? "true" : "false")">
+                    Trang sau <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>

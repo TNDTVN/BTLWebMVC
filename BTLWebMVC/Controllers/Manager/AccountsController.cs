@@ -11,6 +11,7 @@ using System.IO;
 using BTLWebMVC.Models;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core;
+using PagedList;
 namespace BTLWebMVC.Controllers.Manager
 {
     public class AccountsController : Controller
@@ -19,10 +20,12 @@ namespace BTLWebMVC.Controllers.Manager
 
 
         // GET: Accounts
-        public ActionResult Index()
+        public ActionResult Index(int?page)
         {
             ViewBag.CurrentPage = "Accounts";
-            var accounts = db.Accounts.Include(a => a.Employees).Include(a => a.Customers).ToList();
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+            var accounts = db.Accounts.Include(a => a.Employees).Include(a => a.Customers).OrderBy(a => a.AccountID).ToPagedList(pageNumber, pageSize);
             return View(accounts);
         }
 
