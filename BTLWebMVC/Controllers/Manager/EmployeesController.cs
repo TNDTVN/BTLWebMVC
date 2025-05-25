@@ -312,7 +312,7 @@ namespace BTLWebMVC.Controllers.Manager
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfile([Bind(Include = "EmployeeID,FirstName,LastName,BirthDate,HireDate,Address,City,PostalCode,Country,Phone,Email,AccountID")] Employee employee, HttpPostedFileBase ProfileImage)
+        public ActionResult EditProfile([Bind(Include = "EmployeeID,FirstName,LastName,BirthDate,Address,City,PostalCode,Country,Phone,Email,AccountID,HireDate")] Employee employee, HttpPostedFileBase ProfileImage)
         {
             var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
@@ -339,11 +339,11 @@ namespace BTLWebMVC.Controllers.Manager
                         return RedirectToAction("Index", "HomeManager");
                     }
 
-                    // Cập nhật thông tin Employee
+                    // Cập nhật thông tin Employee, trừ HireDate
                     existingEmployee.FirstName = employee.FirstName;
                     existingEmployee.LastName = employee.LastName;
                     existingEmployee.BirthDate = employee.BirthDate;
-                    existingEmployee.HireDate = employee.HireDate;
+                    // Không cập nhật HireDate: existingEmployee.HireDate = employee.HireDate;
                     existingEmployee.Address = employee.Address;
                     existingEmployee.City = employee.City;
                     existingEmployee.PostalCode = employee.PostalCode;
@@ -364,6 +364,14 @@ namespace BTLWebMVC.Controllers.Manager
                         if (!allowedExtensions.Contains(extension))
                         {
                             ModelState.AddModelError("ProfileImage", "Chỉ chấp nhận tệp .jpg, .jpeg hoặc .png!");
+                            ViewBag.ProfileImage = oldImage;
+                            return View(employee);
+                        }
+
+                        // Kiểm tra kích thước ảnh
+                        if (ProfileImage.ContentLength > 5 * 1024 * 1024) // 5MB
+                        {
+                            ModelState.AddModelError("ProfileImage", "Tệp ảnh không được vượt quá 5MB!");
                             ViewBag.ProfileImage = oldImage;
                             return View(employee);
                         }

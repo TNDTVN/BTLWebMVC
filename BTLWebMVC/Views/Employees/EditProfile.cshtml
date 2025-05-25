@@ -41,10 +41,15 @@
         transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-control[readonly] {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
 
     .btn-primary {
         background: #007bff;
@@ -54,11 +59,11 @@
         transition: all 0.3s;
     }
 
-        .btn-primary:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    .btn-primary:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
     .btn-secondary {
         border-radius: 8px;
@@ -66,10 +71,10 @@
         transition: all 0.3s;
     }
 
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
     .profile-section {
         display: flex;
@@ -99,9 +104,9 @@
         transition: transform 0.3s;
     }
 
-        .profile-image:hover {
-            transform: scale(1.05);
-        }
+    .profile-image:hover {
+        transform: scale(1.05);
+    }
 
     .image-preview {
         position: absolute;
@@ -136,16 +141,16 @@
         max-width: 300px;
     }
 
-        .upload-btn:hover {
-            background-color: #f1f3f5;
-            border-color: #adb5bd;
-        }
+    .upload-btn:hover {
+        background-color: #f1f3f5;
+        border-color: #adb5bd;
+    }
 
-        .upload-btn i {
-            margin-right: 8px;
-            color: #007bff;
-            font-size: 1.2rem;
-        }
+    .upload-btn i {
+        margin-right: 8px;
+        color: #007bff;
+        font-size: 1.2rem;
+    }
 
     .file-input {
         position: absolute;
@@ -245,6 +250,7 @@
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.EmployeeID)
                     @Html.HiddenFor(model => model.AccountID)
+                    @Html.HiddenFor(model => model.HireDate)
 
                     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
@@ -311,7 +317,7 @@
 
                             <div class="form-group">
                                 <label for="HireDate">Ngày thuê</label>
-                                @Html.TextBoxFor(model => model.HireDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required" })
+                                @Html.TextBoxFor(model => model.HireDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @readonly = "readonly" })
                                 @Html.ValidationMessageFor(model => model.HireDate, "", new { @class = "invalid-feedback" })
                             </div>
 
@@ -365,9 +371,6 @@
                     },
                     BirthDate: {
                         required: true
-                    },
-                    HireDate: {
-                        required: true
                     }
                 },
                 messages: {
@@ -383,9 +386,6 @@
                     },
                     BirthDate: {
                         required: "Ngày sinh là bắt buộc"
-                    },
-                    HireDate: {
-                        required: "Ngày thuê là bắt buộc"
                     }
                 },
                 errorPlacement: function (error, element) {
