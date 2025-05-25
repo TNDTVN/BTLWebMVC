@@ -7,6 +7,7 @@ using BTLWebMVC.App_Start;
 using BTLWebMVC.Models;
 using PagedList;
 using System.IO;
+using System.Web;
 
 namespace BTLWebMVC.Controllers.Manager
 {
@@ -276,6 +277,144 @@ namespace BTLWebMVC.Controllers.Manager
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
+        public ActionResult EditProfile()
+        {
+            var accountId = Session["AccountId"]?.ToString();
+            if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
+            {
+                Console.WriteLine("Session AccountId invalid or missing.");
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để chỉnh sửa thông tin!";
+                return RedirectToAction("Login", "Login");
+            }
+
+            var employee = db.Employees.Include(e => e.Account)
+                .FirstOrDefault(e => e.AccountID == id);
+            if (employee == null || employee.Account == null)
+            {
+                Console.WriteLine($"Employee or Account not found for AccountID={id}.");
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin nhân viên!";
+                return RedirectToAction("Index", "HomeManager");
+            }
+
+            if (employee.Account.Role != "Admin" && employee.Account.Role != "Employee")
+            {
+                Console.WriteLine($"Account ID {id} role {employee.Account.Role} access denied.");
+                TempData["ErrorMessage"] = "Bạn không có quyền truy cập!";
+                return RedirectToAction("AccessDenied", "Home");
+            }
+
+            ViewBag.CurrentPage = "EditProfile";
+            ViewBag.ProfileImage = employee.Account.ProfileImage ?? "profile.jpg";
+            Console.WriteLine($"Edit Profile: AccountID={id}, Name={employee.FirstName} {employee.LastName}");
+            return View(employee);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile([Bind(Include = "EmployeeID,FirstName,LastName,BirthDate,HireDate,Address,City,PostalCode,Country,Phone,Email,AccountID")] Employee employee, HttpPostedFileBase ProfileImage)
+        {
+            var accountId = Session["AccountId"]?.ToString();
+            if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
+            {
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để chỉnh sửa thông tin!";
+                return RedirectToAction("Login", "Login");
+            }
+
+            if (employee.AccountID != id)
+            {
+                TempData["ErrorMessage"] = "Bạn chỉ có thể chỉnh sửa thông tin của chính mình!";
+                return RedirectToAction("Index", "HomeManager");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingEmployee = db.Employees.Include(e => e.Account)
+                        .FirstOrDefault(e => e.EmployeeID == employee.EmployeeID && e.AccountID == id);
+                    if (existingEmployee == null)
+                    {
+                        TempData["ErrorMessage"] = "Không tìm thấy thông tin nhân viên!";
+                        return RedirectToAction("Index", "HomeManager");
+                    }
+
+                    // Cập nhật thông tin Employee
+                    existingEmployee.FirstName = employee.FirstName;
+                    existingEmployee.LastName = employee.LastName;
+                    existingEmployee.BirthDate = employee.BirthDate;
+                    existingEmployee.HireDate = employee.HireDate;
+                    existingEmployee.Address = employee.Address;
+                    existingEmployee.City = employee.City;
+                    existingEmployee.PostalCode = employee.PostalCode;
+                    existingEmployee.Country = employee.Country;
+                    existingEmployee.Phone = employee.Phone;
+                    existingEmployee.Email = employee.Email;
+
+                    // Cập nhật Email trong Account
+                    existingEmployee.Account.Email = employee.Email;
+
+                    // Xử lý ảnh đại diện
+                    string oldImage = existingEmployee.Account.ProfileImage;
+                    if (ProfileImage != null && ProfileImage.ContentLength > 0)
+                    {
+                        // Kiểm tra định dạng ảnh
+                        string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+                        string extension = Path.GetExtension(ProfileImage.FileName).ToLower();
+                        if (!allowedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("ProfileImage", "Chỉ chấp nhận tệp .jpg, .jpeg hoặc .png!");
+                            ViewBag.ProfileImage = oldImage;
+                            return View(employee);
+                        }
+
+                        // Tạo tên tệp duy nhất
+                        string fileName = $"{Guid.NewGuid()}{extension}";
+                        string path = Path.Combine(Server.MapPath("~/Content/accountImages"), fileName);
+                        ProfileImage.SaveAs(path);
+
+                        // Xóa ảnh cũ nếu không phải profile.jpg
+                        if (!string.IsNullOrEmpty(oldImage) && oldImage != "profile.jpg")
+                        {
+                            string oldImagePath = Server.MapPath($"~/Content/accountImages/{oldImage}");
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                try
+                                {
+                                    System.IO.File.Delete(oldImagePath);
+                                    Console.WriteLine($"Old profile image deleted: {oldImage}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error deleting old profile image {oldImage}: {ex.Message}");
+                                }
+                            }
+                        }
+
+                        // Cập nhật ProfileImage
+                        existingEmployee.Account.ProfileImage = fileName;
+                        Console.WriteLine($"New profile image saved: {fileName}");
+                    }
+
+                    db.Entry(existingEmployee).State = EntityState.Modified;
+                    db.Entry(existingEmployee.Account).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân thành công!";
+                    Console.WriteLine($"Profile Updated: EmployeeID={employee.EmployeeID}, Name={employee.FirstName} {employee.LastName}");
+                    return RedirectToAction("EditProfile");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error updating profile: {ex.Message}");
+                    TempData["ErrorMessage"] = "Lỗi khi cập nhật thông tin: " + ex.Message;
+                }
+            }
+
+            ViewBag.ProfileImage = db.Accounts.Find(employee.AccountID)?.ProfileImage ?? "profile.jpg";
+            ViewBag.CurrentPage = "EditProfile";
+            return View(employee);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
