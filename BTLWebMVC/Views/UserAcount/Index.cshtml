@@ -7,9 +7,8 @@
 @model BTLWebMVC.Models.Customer
 @* Các phần khai báo model, etc. giữ nguyên *@
 
-<div class="container-fluid mt-5 pt-4">
+<div class="container-fluid mt-5 pt-5 pb-5">
     <div class="profile-container p-4 bg-white shadow-sm rounded mx-auto" style="max-width: 700px;">
-        @* Phần hiển thị hình ảnh, thông tin và nút chọn file mới *@
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="d-flex align-items-center">
                 <img src="~/Content/accountImages/@(Model.Account.ProfileImage ?? "profile.jpg")"
@@ -22,14 +21,10 @@
                     <small class="text-muted">e.g. @Model.City, @Model.Country</small>
                 </div>
             </div>
-
-            @* Nút chọn file được thiết kế lại và đặt ở đây *@
             <div class="form-group mb-0">
-                @* mb-0 để không ảnh hưởng đến căn chỉnh dọc của d-flex cha *@
                 <label for="profileImageInput" class="btn btn-outline-primary btn-sm custom-file-upload">
                     <i class="fas fa-camera"></i> Tải ảnh mới
                 </label>
-                @* Input file gốc được ẩn đi *@
             </div>
         </div>
 
@@ -46,8 +41,6 @@
         @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
-
-            @* Input file được di chuyển lên trên, nhưng vẫn cần input ẩn này để form hoạt động *@
             <input type="file" name="profileImage" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
 
             <div class="row">
@@ -71,7 +64,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Email</label>
-                        @Html.TextBoxFor(m => m.Account.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com", @readonly = "readonly" })
+                        @Html.TextBoxFor(m => m.Account.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com" })
                         @Html.ValidationMessageFor(m => m.Account.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -118,13 +111,6 @@
                 </div>
             </div>
 
-            @* Xóa khối input file cũ ở đây nếu có:
-                <div class="form-group">
-                    <label>Ảnh đại diện</label>
-                    <input type="file" name="profileImage" class="form-control-file" accept="image/*" />
-                </div>
-            *@
-
             <button type="submit" class="btn btn-orange btn-sm btn-block mt-4">Save Changes</button>
         }
     </div>
@@ -132,7 +118,6 @@
 
 @section styles {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    @* Thêm link Font Awesome nếu bạn muốn dùng icon (ví dụ: camera) *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
@@ -149,7 +134,8 @@
         }
 
         .container-fluid {
-            min-height: 100vh;
+            min-height: calc(100vh - 100px); /* Giảm chiều cao để tránh chồng lấn */
+            padding-top: 30px;
             padding-bottom: 50px;
         }
 
@@ -157,25 +143,18 @@
             border-radius: 15px;
             background: #fff;
             padding: 30px;
-            margin-top: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
 
-        /* Nút chọn file được tùy chỉnh */
         .custom-file-upload {
             cursor: pointer;
-            /* Bạn có thể thêm các style khác ở đây để làm nút đẹp hơn */
-            /* Ví dụ: giống với nút .btn-orange */
-            /* background-color: #ff6200; */
-            /* color: #fff; */
-            /* border-color: #ff6200; */
         }
 
             .custom-file-upload:hover {
-                /* background-color: #e65c00; */
-                /* border-color: #e65c00; */
             }
 
-            .custom-file-upload i { /* Style cho icon bên trong nút */
+            .custom-file-upload i {
                 margin-right: 0.3rem;
             }
 
@@ -207,7 +186,6 @@
                 background-color: #e65c00;
             }
 
-        /* Điều chỉnh label của form group để không bị ảnh hưởng bởi style của .custom-file-upload nếu nó cũng là label */
         .form-group > label:not(.custom-file-upload) {
             font-weight: 500;
             color: #333;
@@ -224,11 +202,10 @@
     <script>
         function previewImage(event) {
             const reader = new FileReader();
-            reader.onload = function(){
+            reader.onload = function () {
                 const output = document.getElementById('profileImagePreview');
                 output.src = reader.result;
             };
-            // Kiểm tra xem người dùng có chọn file không
             if (event.target.files && event.target.files[0]) {
                 reader.readAsDataURL(event.target.files[0]);
             }

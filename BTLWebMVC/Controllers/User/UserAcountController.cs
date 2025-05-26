@@ -6,13 +6,15 @@ using System.Web.Mvc;
 using BTLWebMVC.Models;
 using BTLWebMVC.App_Start;
 using System.IO;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace BTLWebMVC.Controllers.User
 {
     public class UserAcountController : Controller
     {
-
         Context db = new Context();
+
         // GET: UserAcount
         public ActionResult Index()
         {
@@ -28,8 +30,7 @@ namespace BTLWebMVC.Controllers.User
 
             if (customer == null)
             {
-                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
-                return RedirectToAction("Index", "Home");
+                return HttpNotFound();
             }
 
             return View(customer);
@@ -51,18 +52,12 @@ namespace BTLWebMVC.Controllers.User
                 var customer = db.Customers
                     .Include("Account")
                     .FirstOrDefault(c => c.AccountID == accountId);
-                var account = db.Accounts.FirstOrDefault(a => a.AccountID == accountId);
 
                 if (customer == null)
                 {
-                    TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
-                    return RedirectToAction("Index", "Home");
+                    return HttpNotFound();
                 }
-                if (account == null)
-                {
-                    TempData["ErrorMessage"] = "Không tìm thấy thông tin tài khoản!";
-                    return RedirectToAction("Index", "Home");
-                }
+
                 // Update customer information
                 customer.CustomerName = model.CustomerName;
                 customer.ContactName = model.ContactName;
@@ -72,9 +67,6 @@ namespace BTLWebMVC.Controllers.User
                 customer.Country = model.Country;
                 customer.Phone = model.Phone;
                 customer.Email = model.Email;
-
-                // Update account information
-                account.Email = model.Email;
 
                 // Handle profile image upload
                 if (profileImage != null && profileImage.ContentLength > 0)
@@ -93,4 +85,4 @@ namespace BTLWebMVC.Controllers.User
             return View("Index", model);
         }
     }
-} 
+}

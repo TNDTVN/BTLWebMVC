@@ -2636,7 +2636,6 @@
     <Content Include="Views\UserCartItems\PurchaseHistory.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Accounts\Edit.cshtml" />
-    <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\UserAcount\Index.cshtml" />
     <Content Include="Views\Orders\CancelOrderDetails.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
