@@ -195,7 +195,7 @@
 
                             <div class="form-group">
                                 <label for="UnitPrice">Giá đơn vị</label>
-                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "0.01" } })
+                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "1000" } })
                                 @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                             </div>
 
