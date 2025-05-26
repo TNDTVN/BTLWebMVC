@@ -18,6 +18,8 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Index(int? page)
         {
+
+           
             var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
             {
@@ -38,8 +40,11 @@ namespace BTLWebMVC.Controllers.Manager
                 Console.WriteLine($"Account ID {id} role {account.Role} access denied.");
                 return RedirectToAction("AccessDenied", "Home");
             }
+      
 
             ViewBag.CurrentPage = "Employees";
+
+            
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             var employees = db.Employees

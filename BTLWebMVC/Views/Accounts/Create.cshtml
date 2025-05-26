@@ -1,0 +1,155 @@
+﻿@model BTLWebMVC.Models.Account
+
+@{
+    ViewBag.Title = "Thêm Tài Khoản";
+    Layout = "~/Views/Shared/Layoutmanager.cshtml";
+}
+
+<style>
+    .content-wrapper {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+        transition: border-color 0.2s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn-primary {
+        background: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: transform 0.2s;
+    }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+    .btn-secondary {
+        border-radius: 5px;
+        transition: transform 0.2s;
+    }
+
+        .btn-secondary:hover {
+            transform: scale(1.05);
+        }
+
+    .text-danger {
+        font-size: 0.9em;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="fas fa-user-plus mr-2"></i>Thêm Tài Khoản</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Tên đăng nhập</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đăng nhập", required = "required" } })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Mật khẩu</label>
+                        <div class="col-sm-10">
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập email", type = "email" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Ảnh đại diện</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="FileAnh" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+                            @if (ViewData.ModelState["FileAnh"] != null && ViewData.ModelState["FileAnh"].Errors.Any())
+                            {
+                                <span class="text-danger">@ViewData.ModelState["FileAnh"].Errors.First().ErrorMessage</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Ngày tạo</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(model => model.CreatedDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @readonly = "readonly", value = DateTime.Now.ToString("yyyy-MM-dd") })
+                            @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Vai trò</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownList("Role", (SelectList)ViewBag.Role, "Chọn vai trò", new { @class = "form-select", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Khóa tài khoản</label>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.IsLock, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.IsLock, "Khóa", new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.IsLock, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Mã Token</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.TokenCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập mã token (nếu có)" } })
+                            @Html.ValidationMessageFor(model => model.TokenCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <div class="offset-sm-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Thêm</button>
+                            @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary ml-2" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
