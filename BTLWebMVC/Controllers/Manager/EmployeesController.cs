@@ -123,7 +123,7 @@ namespace BTLWebMVC.Controllers.Manager
             if (employee == null)
             {
                 TempData["ErrorMessage"] = "Không tìm thấy nhân viên!";
-                return HttpNotFound();
+                return RedirectToAction("Index", "Employees");
             }
             if (employee.Account == null)
             {

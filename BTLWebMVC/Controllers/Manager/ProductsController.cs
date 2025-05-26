@@ -54,6 +54,8 @@ namespace BTLWebMVC.Controllers
             return View(product);
         }
 
+
+        // lỗi khi thêm 2 hình ãnh
         public ActionResult Create()
         {
             ViewBag.CurrentPage = "Products";
@@ -71,9 +73,7 @@ namespace BTLWebMVC.Controllers
             {
                 try
                 {
-                    db.Products.Add(product);
-                    db.SaveChanges();
-
+                    // Kiểm tra hình ảnh trước khi thêm sản phẩm
                     if (ImageFiles != null && ImageFiles.Any(f => f != null && f.ContentLength > 0))
                     {
                         string thuMuc = Server.MapPath("~/Content/Images/");
@@ -88,15 +88,29 @@ namespace BTLWebMVC.Controllers
                             string extension = Path.GetExtension(file.FileName).ToLower();
                             if (!allowedExtensions.Contains(extension))
                             {
-                                ModelState.AddModelError("ImageFiles", "Chỉ chấp nhận tệp .jpg, .jpeg hoặc .png!");
-                                continue;
+                                ModelState.AddModelError("ImageFiles", $"Tệp {file.FileName} không hợp lệ. Chỉ chấp nhận .jpg, .jpeg hoặc .png!");
+                                return View(product); // Trả lại view ngay lập tức nếu có lỗi
                             }
                             if (file.ContentLength > 5 * 1024 * 1024) // 5MB
                             {
-                                ModelState.AddModelError("ImageFiles", "Tệp ảnh không được vượt quá 5MB!");
-                                continue;
+                                ModelState.AddModelError("ImageFiles", $"Tệp {file.FileName} vượt quá 5MB!");
+                                return View(product); // Trả lại view ngay lập tức nếu có lỗi
                             }
+                        }
+                    }
 
+                    // Chỉ thêm sản phẩm sau khi kiểm tra hình ảnh
+                    db.Products.Add(product);
+                    db.SaveChanges();
+
+                    // Lưu hình ảnh
+                    if (ImageFiles != null && ImageFiles.Any(f => f != null && f.ContentLength > 0))
+                    {
+                        string thuMuc = Server.MapPath("~/Content/Images/");
+                        foreach (var file in ImageFiles.Where(f => f != null && f.ContentLength > 0))
+                        {
+                            string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+                            string extension = Path.GetExtension(file.FileName).ToLower();
                             string tenFileGoc = Path.GetFileNameWithoutExtension(file.FileName);
                             string tenFile = $"{tenFileGoc}_{DateTime.Now.Ticks}{extension}";
                             string duongDanAnh = Path.Combine(thuMuc, tenFile);
@@ -107,12 +121,9 @@ namespace BTLWebMVC.Controllers
                         db.SaveChanges();
                     }
 
-                    if (ModelState.IsValid)
-                    {
-                        TempData["SuccessMessage"] = "Tạo sản phẩm thành công!";
-                        Debug.WriteLine($"Product Created: ID={product.ProductID}, Name={product.ProductName}");
-                        return RedirectToAction("Index");
-                    }
+                    TempData["SuccessMessage"] = "Tạo sản phẩm thành công!";
+                    Debug.WriteLine($"Product Created: ID={product.ProductID}, Name={product.ProductName}");
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {

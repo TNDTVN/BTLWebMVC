@@ -260,6 +260,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="UnitsInStock">Số lượng tồn kho</label>
+                                @Html.EditorFor(model => model.UnitsInStock, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", step = "1", value = "0", placeholder = "Nhập vào số luộng tồn kho", required = "required" } })
+                                <small class="form-text">Nhập giá sản phẩm, tối thiểu 0 VND.</small>
+                                @Html.ValidationMessageFor(model => model.UnitsInStock, "", new { @class = "invalid-feedback" })
+                            </div>
+
+                            <div class="form-group">
                                 <label for="ProductDescription">Mô tả</label>
                                 @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = "4", placeholder = "Nhập mô tả sản phẩm" })
                                 <small class="form-text">Mô tả chi tiết về sản phẩm (tùy chọn).</small>
@@ -298,38 +305,44 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
             console.log("Create page loaded");
+            let validFiles = []; // Mảng lưu các tệp hợp lệ
+
             $("#ImageFiles").on("change", function () {
                 console.log("ImageFiles change event triggered");
                 const files = this.files;
                 const previewContainer = $("#imagePreviewContainer");
                 const defaultImage = $("#defaultImage");
 
+                // Xóa ảnh hiện tại
+                if (defaultImage.length > 0) {
+                    defaultImage.remove();
+                }
+                previewContainer.empty();
+                validFiles = []; // Reset danh sách tệp hợp lệ
+
                 if (files && files.length > 0) {
                     console.log("Number of files selected:", files.length);
-                    // Xóa ảnh mặc định khi có ảnh mới được chọn
-                    if (defaultImage.length > 0) {
-                        defaultImage.remove();
-                    }
-                    previewContainer.empty();
 
                     Array.from(files).forEach((file, index) => {
                         console.log(`Processing file ${index}:`, file.name, file.type, file.size);
                         if (!file.type.match("image/(jpeg|png)")) {
                             console.error("Invalid file type:", file.type);
-                            alert("Chỉ chấp nhận tệp .jpg hoặc .png");
+                            alert(`Tệp ${file.name} không hợp lệ. Chỉ chấp nhận .jpg hoặc .png`);
                             return;
                         }
                         if (file.size > 5242880) {
                             console.error("File too large:", file.size);
-                            alert("Hình ảnh không được vượt quá 5MB");
+                            alert(`Tệp ${file.name} vượt quá 5MB`);
                             return;
                         }
+
+                        // Thêm vào danh sách tệp hợp lệ
+                        validFiles.push(file);
 
                         const reader = new FileReader();
                         reader.onload = function (e) {
@@ -347,7 +360,9 @@
                             }).on("click", function () {
                                 $(this).parent().remove();
                                 console.log("Uploaded image deleted from preview");
-                                // Khôi phục ảnh mặc định nếu không còn ảnh nào
+                                // Xóa tệp khỏi validFiles
+                                validFiles = validFiles.filter(f => f !== file);
+                                // Khôi phục ảnh mặc định nếu không còn ảnh
                                 if (previewContainer.find(".image-item").length === 0) {
                                     previewContainer.append(
                                         $("<img>", {
@@ -366,10 +381,34 @@
                         };
                         reader.onerror = function () {
                             console.error("Error reading file:", file.name);
-                            alert("Lỗi khi đọc tệp hình ảnh");
+                            alert(`Lỗi khi đọc tệp ${file.name}`);
                         };
                         reader.readAsDataURL(file);
                     });
+
+                    // Cập nhật input file để chỉ chứa các tệp hợp lệ
+                    const dataTransfer = new DataTransfer();
+                    validFiles.forEach(file => dataTransfer.items.add(file));
+                    this.files = dataTransfer.files;
+                }
+            });
+
+            // Ngăn gửi form nếu không có tệp hợp lệ
+            $("form").on("submit", function (e) {
+                const files = $("#ImageFiles")[0].files;
+                if (files.length > 0) {
+                    for (let file of files) {
+                        if (!file.type.match("image/(jpeg|png)")) {
+                            alert(`Tệp ${file.name} không hợp lệ. Chỉ chấp nhận .jpg hoặc .png`);
+                            e.preventDefault();
+                            return false;
+                        }
+                        if (file.size > 5242880) {
+                            alert(`Tệp ${file.name} vượt quá 5MB`);
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                 }
             });
         });

@@ -327,8 +327,8 @@ namespace BTLWebMVC.Controllers.Manager
 
                 // Gán giá trị mặc định cho tài khoản
                 account.CreatedDate = DateTime.Now;
-                account.ProfileImage = "profile.jpg"; // Ảnh đại diện mặc định
-                account.TokenCode = null; // Không sử dụng TokenCode
+                account.ProfileImage = "profile.jpg"; 
+                account.TokenCode = null; 
 
                 // Thêm tài khoản vào CSDL
                 db.Accounts.Add(account);
@@ -445,7 +445,8 @@ namespace BTLWebMVC.Controllers.Manager
             if (account == null)
             {
                 System.Diagnostics.Debug.WriteLine($"Không tìm thấy tài khoản với ID: {id}");
-                return HttpNotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng!";
+                return RedirectToAction("Index", "Accounts");
             }
 
             System.Diagnostics.Debug.WriteLine($"Tải chi tiết tài khoản thành công: AccountID={account.AccountID}, Username={account.Username}");
