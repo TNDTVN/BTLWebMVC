@@ -41,14 +41,14 @@
         transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .form-control:focus, .custom-select:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
+        .form-control:focus, .custom-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
 
-    .form-control.is-invalid, .custom-select.is-invalid {
-        border-color: #dc3545;
-    }
+        .form-control.is-invalid, .custom-select.is-invalid {
+            border-color: #dc3545;
+        }
 
     .invalid-feedback {
         font-size: 0.85rem;
@@ -68,11 +68,11 @@
         transition: all 0.3s;
     }
 
-    .btn-primary:hover {
-        background: #0056b3;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
     .btn-outline-secondary {
         border-radius: 8px;
@@ -80,123 +80,85 @@
         transition: all 0.3s;
     }
 
-    .btn-outline-secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        .btn-outline-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
     .image-preview-container {
-        position: relative;
-        max-width: 320px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         margin: 0 auto 20px auto;
-        text-align: center;
+        min-height: 100px;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        background: #fff;
+        position: relative;
     }
 
-    .image-preview {
-        width: 300px;
-        height: 300px;
-        object-fit: contain;
+    .product-image-preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
         border-radius: 4px !important;
         border: 2px solid #dee2e6;
         background: #fff;
         transition: all 0.3s ease;
-        display: block;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        overflow: visible;
+        display: block;
+        position: relative;
     }
 
-    .image-preview:hover {
-        transform: scale(1.02);
-        border-color: #007bff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
+        .product-image-preview:hover {
+            transform: scale(1.02);
+            border-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
 
     .image-upload {
-        max-width: 320px;
-        margin: 20px auto 0 auto; /* Khoảng cách trên để tách biệt với ảnh */
+        margin: 20px 0;
         text-align: center;
+        position: relative;
+        width: 100%;
     }
 
     .upload-btn {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         background: #fff;
         border: 2px dashed #ced4da;
-        border-radius: 10px;
+        border-radius: 10px !important;
         padding: 12px 24px;
         cursor: pointer;
         transition: all 0.3s;
         color: #343a40;
         font-weight: 500;
         font-size: 1rem;
-        width: 100%;
-        text-align: center;
-        margin-top: 300px;
-        position: relative; /* Đảm bảo không chồng lấn */
+        width: auto;
+        margin: 0 auto;
+        box-sizing: border-box;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
     }
 
-    .upload-btn:hover {
-        background: linear-gradient(135deg, #e7f0fd, #f1f3f5);
-        border-color: #007bff;
-        transform: scale(1.02);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        .upload-btn:hover {
+            background: linear-gradient(135deg, #e7f0fd, #f1f3f5);
+            border-color: #007bff;
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-    .upload-btn i {
-        margin-right: 10px;
-        color: #007bff;
-        font-size: 1.4rem;
-    }
-
-    .upload-btn span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 80%;
-    }
-
-    .upload-btn.loading i.fa-camera {
-        display: none;
-    }
-
-    .upload-btn.loading i.fa-spinner {
-        margin-right: 10px;
-    }
+        .upload-btn i {
+            margin-right: 10px;
+            color: #007bff;
+            font-size: 1.4rem;
+        }
 
     .file-input {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
-
-    .clear-image {
-        position: absolute;
-        top: -12px;
-        right: -12px;
-        background: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        opacity: 0.8;
-        transition: opacity 0.3s, transform 0.3s;
-    }
-
-    .clear-image:hover {
-        opacity: 1;
-        transform: scale(1.1);
+        display: none;
     }
 
     .file-info {
@@ -220,6 +182,34 @@
         resize: vertical;
         min-height: 100px;
     }
+
+    .image-item {
+        position: relative;
+        display: inline-block;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 20px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
 </style>
 
 <div class="content-wrapper">
@@ -235,7 +225,6 @@
                     @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
                     <div class="row">
-                        <!-- Cột thông tin sản phẩm -->
                         <div class="col-md-6 form-col">
                             <div class="form-group">
                                 <label for="ProductName">Tên sản phẩm</label>
@@ -257,9 +246,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="QuantityPerUnit">Khối lượng (kg)</label>
-                                @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "1000", step = "0.1", value = "0", required = "required" } })
-                                <small class="form-text">Nhập khối lượng sản phẩm (0-1000 kg).</small>
+                                <label for="QuantityPerUnit">Khối lượng</label>
+                                @Html.EditorFor(model => model.QuantityPerUnit, new { htmlAttributes = new { @class = "form-control", type = "text", placeholder = "Ví dụ: 1 kg", required = "required" } })
+                                <small class="form-text">Nhập khối lượng sản phẩm (ví dụ: 1 kg).</small>
                                 @Html.ValidationMessageFor(model => model.QuantityPerUnit, "", new { @class = "invalid-feedback" })
                             </div>
 
@@ -278,23 +267,21 @@
                             </div>
                         </div>
 
-                        <!-- Cột hình ảnh sản phẩm -->
                         <div class="col-md-6 form-col">
                             <fieldset>
                                 <legend class="mb-3">Hình ảnh sản phẩm</legend>
-                                <div class="image-preview-container">
-                                    <img id="previewImage" src="@Url.Content("~/Content/Images/default-product.jpg")" alt="Xem trước ảnh" class="img-fluid image-preview" />
-                                    <button type="button" class="clear-image" title="Xóa ảnh"><i class="fas fa-times"></i></button>
-                                    <small class="form-text mt-2">Hình ảnh sản phẩm sẽ hiển thị ở đây</small>
+                                <div class="image-preview-container" id="imagePreviewContainer">
+                                    <img src="@Url.Content("~/Content/Images/default-product.jpg")" alt="Ảnh mặc định" class="product-image-preview" id="defaultImage" onerror="this.src='/Content/Images/fallback.jpg'" />
                                 </div>
-                                <div class="image-upload mt-3">
-                                    <label class="upload-btn" for="ImageFile">
+                                <div class="image-upload">
+                                    <label class="upload-btn" for="ImageFiles">
                                         <i class="fas fa-camera"></i>
-                                        <span id="uploadText">Chọn hình ảnh sản phẩm</span>
+                                        <span>Chọn hình ảnh sản phẩm</span>
                                     </label>
-                                    <input type="file" class="file-input" id="ImageFile" name="ImageFile" accept=".jpg,.jpeg,.png" required="required" />
-                                    <small id="fileInfo" class="file-info">Kích thước tối đa: 5MB - Định dạng: JPG, PNG</small>
-                                    @Html.ValidationMessage("ImageFile", "", new { @class = "invalid-feedback d-block text-center" })
+                                    <input type="file" class="file-input" id="ImageFiles" name="ImageFiles" accept=".jpg,.jpeg,.png" multiple />
+                                    <br />
+                                    <small class="file-info">Kích thước tối đa: 5MB - Định dạng: JPG, PNG - Chọn nhiều ảnh</small>
+                                    @Html.ValidationMessage("ImageFiles", "", new { @class = "invalid-feedback d-block text-center" })
                                 </div>
                             </fieldset>
                         </div>
@@ -316,184 +303,75 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
-            // Xác thực client-side với Bootstrap
-            $("form").validate({
-                rules: {
-                    ProductName: {
-                        required: true,
-                        maxlength: 100
-                    },
-                    CategoryID: {
-                        required: true
-                    },
-                    SupplierID: {
-                        required: true
-                    },
-                    QuantityPerUnit: {
-                        required: true,
-                        number: true,
-                        min: 0,
-                        max: 1000
-                    },
-                    UnitPrice: {
-                        required: true,
-                        number: true,
-                        min: 0
-                    },
-                    ImageFile: {
-                        required: true,
-                        accept: "image/jpeg,image/png",
-                        filesize: 5242880 // 5MB
-                    },
-                    ProductDescription: {
-                        maxlength: 1000
+            console.log("Create page loaded");
+            $("#ImageFiles").on("change", function () {
+                console.log("ImageFiles change event triggered");
+                const files = this.files;
+                const previewContainer = $("#imagePreviewContainer");
+                const defaultImage = $("#defaultImage");
+
+                if (files && files.length > 0) {
+                    console.log("Number of files selected:", files.length);
+                    // Xóa ảnh mặc định khi có ảnh mới được chọn
+                    if (defaultImage.length > 0) {
+                        defaultImage.remove();
                     }
-                },
-                messages: {
-                    ProductName: {
-                        required: "Vui lòng nhập tên sản phẩm",
-                        maxlength: "Tên sản phẩm không được vượt quá 100 ký tự"
-                    },
-                    CategoryID: {
-                        required: "Vui lòng chọn danh mục"
-                    },
-                    SupplierID: {
-                        required: "Vui lòng chọn nhà cung cấp"
-                    },
-                    QuantityPerUnit: {
-                        required: "Vui lòng nhập khối lượng",
-                        number: "Khối lượng phải là số",
-                        min: "Khối lượng không được nhỏ hơn 0",
-                        max: "Khối lượng không được vượt quá 1000 kg"
-                    },
-                    UnitPrice: {
-                        required: "Vui lòng nhập giá",
-                        number: "Giá phải là số",
-                        min: "Giá không được nhỏ hơn 0"
-                    },
-                    ImageFile: {
-                        required: "Vui lòng chọn hình ảnh",
-                        accept: "Chỉ chấp nhận tệp .jpg hoặc .png",
-                        filesize: "Hình ảnh không được vượt quá 5MB"
-                    },
-                    ProductDescription: {
-                        maxlength: "Mô tả không được vượt quá 1000 ký tự"
-                    }
-                },
-                errorPlacement: function (error, element) {
-                    if (element.attr("name") === "ImageFile") {
-                        error.appendTo(element.closest(".image-upload"));
-                    } else {
-                        error.insertAfter(element);
-                    }
-                    error.addClass("invalid-feedback");
-                    element.addClass("is-invalid");
-                },
-                success: function (label, element) {
-                    $(element).removeClass("is-invalid");
+                    previewContainer.empty();
+
+                    Array.from(files).forEach((file, index) => {
+                        console.log(`Processing file ${index}:`, file.name, file.type, file.size);
+                        if (!file.type.match("image/(jpeg|png)")) {
+                            console.error("Invalid file type:", file.type);
+                            alert("Chỉ chấp nhận tệp .jpg hoặc .png");
+                            return;
+                        }
+                        if (file.size > 5242880) {
+                            console.error("File too large:", file.size);
+                            alert("Hình ảnh không được vượt quá 5MB");
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            console.log("FileReader onload, data URL length:", e.target.result.length);
+                            const imageItem = $("<div>", { class: "image-item" });
+                            const img = $("<img>", {
+                                src: e.target.result,
+                                alt: "Xem trước ảnh",
+                                class: "product-image-preview"
+                            });
+                            const deleteBtn = $("<button>", {
+                                class: "delete-btn",
+                                type: "button",
+                                text: "x"
+                            }).on("click", function () {
+                                $(this).parent().remove();
+                                console.log("Uploaded image deleted from preview");
+                                // Khôi phục ảnh mặc định nếu không còn ảnh nào
+                                if (previewContainer.find(".image-item").length === 0) {
+                                    previewContainer.append(
+                                        $("<img>", {
+                                            src: "@Url.Content("~/Content/Images/default-product.jpg")",
+                                            alt: "Ảnh mặc định",
+                                            class: "product-image-preview",
+                                            id: "defaultImage",
+                                            onerror: "this.src='/Content/Images/fallback.jpg'"
+                                        })
+                                    );
+                                }
+                            });
+                            imageItem.append(img).append(deleteBtn);
+                            previewContainer.append(imageItem);
+                            console.log("Uploaded image appended to previewContainer");
+                        };
+                        reader.onerror = function () {
+                            console.error("Error reading file:", file.name);
+                            alert("Lỗi khi đọc tệp hình ảnh");
+                        };
+                        reader.readAsDataURL(file);
+                    });
                 }
             });
-
-            // Thêm rule kiểm tra kích thước file
-            $.validator.addMethod("filesize", function (value, element, param) {
-                return this.optional(element) || (element.files[0].size <= param);
-            });
-
-            // Kiểm tra border-radius của previewImage
-            const previewImage = $("#previewImage");
-            console.log("Border-radius của previewImage:", previewImage.css("border-radius"));
-
-            // Xem trước hình ảnh
-            $("#ImageFile").change(function () {
-                const file = this.files[0];
-                const fileInfo = $("#fileInfo");
-                const previewImage = $("#previewImage");
-                const uploadText = $("#uploadText");
-                const uploadBtn = $(".upload-btn");
-
-                console.log("Kiểm tra previewImage:", previewImage.length);
-                if (!previewImage.length) {
-                    console.error("Không tìm thấy #previewImage");
-                    fileInfo.text("Lỗi: Không tìm thấy khung xem trước ảnh").addClass("text-danger");
-                    return;
-                }
-
-                if (file) {
-                    console.log("File được chọn:", file.name, file.type, file.size);
-                    if (!file.type.match("image/(jpeg|png)")) {
-                        fileInfo.text("Chỉ chấp nhận tệp .jpg hoặc .png").addClass("text-danger");
-                        $(this).val("");
-                        uploadBtn.removeClass("loading");
-                        return;
-                    }
-                    if (file.size > 5242880) {
-                        fileInfo.text("Hình ảnh không được vượt quá 5MB").addClass("text-danger");
-                        $(this).val("");
-                        uploadBtn.removeClass("loading");
-                        return;
-                    }
-
-                    uploadBtn.addClass("loading").html('<i class="fas fa-spinner fa-spin"></i><span>Đang tải...</span>');
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        console.log("Đã tải hình ảnh, độ dài Data URL:", e.target.result.length);
-                        previewImage.attr("src", e.target.result);
-                        previewImage.css("opacity", 1);
-                        setTimeout(() => {
-                            console.log("Src sau khi gán:", previewImage.attr("src").substring(0, 50) + "...");
-                            console.log("Border-radius sau khi tải:", previewImage.css("border-radius"));
-                            if (previewImage[0].naturalWidth === 0) {
-                                console.error("Ảnh không tải được, kích thước:", previewImage[0].naturalWidth, previewImage[0].naturalHeight);
-                                fileInfo.text("Lỗi: Không thể hiển thị ảnh").addClass("text-danger");
-                                resetImagePreview();
-                            }
-                        }, 100);
-                        uploadText.text(file.name.length > 20 ? file.name.substring(0, 20) + "..." : file.name);
-                        fileInfo.text(`Kích thước: ${formatFileSize(file.size)} - Định dạng: ${file.type.split("/")[1].toUpperCase()}`).removeClass("text-danger");
-                        uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>' + uploadText.text() + '</span>');
-                    };
-                    reader.onerror = function () {
-                        console.error("Lỗi khi đọc tệp hình ảnh");
-                        fileInfo.text("Lỗi khi đọc tệp hình ảnh").addClass("text-danger");
-                        resetImagePreview();
-                        uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>Chọn hình ảnh sản phẩm</span>');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    console.log("Không có file được chọn");
-                    resetImagePreview();
-                    uploadBtn.removeClass("loading");
-                }
-            });
-
-            // Xóa hình ảnh
-            $(".clear-image").click(function () {
-                console.log("Xóa hình ảnh");
-                $("#ImageFile").val("");
-                resetImagePreview();
-            });
-
-            // Reset hình ảnh về mặc định
-            function resetImagePreview() {
-                const previewImage = $("#previewImage");
-                const fileInfo = $("#fileInfo");
-                const uploadText = $("#uploadText");
-                const uploadBtn = $(".upload-btn");
-                previewImage.attr("src", "@Url.Content("~/Content/Images/default-product.jpg")");
-                previewImage.css("opacity", 1);
-                fileInfo.text("Kích thước tối đa: 5MB - Định dạng: JPG, PNG").removeClass("text-danger");
-                uploadText.text("Chọn hình ảnh sản phẩm");
-                uploadBtn.removeClass("loading").html('<i class="fas fa-camera"></i><span>Chọn hình ảnh sản phẩm</span>');
-            }
-
-            // Định dạng kích thước file
-            function formatFileSize(bytes) {
-                if (bytes === 0) return "0 Bytes";
-                const k = 1024;
-                const sizes = ["Bytes", "KB", "MB", "GB"];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-            }
         });
     </script>
 }

@@ -46,10 +46,17 @@ namespace BTLWebMVC.Controllers.User
         public JsonResult RemoveItem(int cartItemId)
         {
             var cartItem = db.CartItems.Find(cartItemId);
+            var product = db.Products.Find(cartItem?.ProductID);
             if (cartItem == null)
             {
                 return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng!" });
             }
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại!" });
+            }
+            // Trả lại số lượng sản phẩm vào kho
+            product.UnitsInStock += cartItem.Quantity;
 
             db.CartItems.Remove(cartItem);
             db.SaveChanges();
@@ -74,6 +81,20 @@ namespace BTLWebMVC.Controllers.User
             }
 
             var cartItems = db.CartItems.Where(c => c.CustomerID == customer.CustomerID).ToList();
+            if (!cartItems.Any())
+            {
+                return Json(new { success = false, message = "Giỏ hàng đã trống!" });
+            }
+            // Trả lại số lượng sản phẩm vào kho   
+            foreach (var item in cartItems)
+            {
+                var product = db.Products.Find(item.ProductID);
+                if (product != null)
+                {
+                    product.UnitsInStock += item.Quantity;
+                }
+            }
+            // Xóa tất cả sản phẩm trong giỏ hàng
             db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
 

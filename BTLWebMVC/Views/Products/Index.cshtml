@@ -53,12 +53,28 @@
                                 <td>
                                     @if (item.Images != null && item.Images.Any())
                                     {
-                                        var image = item.Images.FirstOrDefault();
-                                        <img src="@Url.Content("~/Content/Images/" + image.ImageName)" alt="Product Image" style="height: 60px;" />
+                                        <div id="carousel-@item.ProductID" class="carousel slide" data-ride="carousel" style="width: 100px;">
+                                            <div class="carousel-inner">
+                                                @foreach (var image in item.Images.Select((img, index) => new { img, index }))
+                                                {
+                                                    <div class="carousel-item @(image.index == 0 ? "active" : "")">
+                                                        <img src="@Url.Content("~/Content/Images/" + image.img.ImageName)" alt="Product Image" class="d-block" style="height: 60px; object-fit: cover;" />
+                                                    </div>
+                                                }
+                                            </div>
+                                            <a class="carousel-control-prev" href="#carousel-@item.ProductID" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#carousel-@item.ProductID" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
                                     }
                                     else
                                     {
-                                        <span>No Image</span>
+                                        <span>Không có ảnh</span>
                                     }
                                 </td>
                                 <td style="white-space: nowrap;">
@@ -82,7 +98,6 @@
         <!-- PHÂN TRANG -->
         <nav aria-label="Page navigation example" class="mt-3">
             <ul class="pagination justify-content-center">
-                <!-- Nút Previous -->
                 <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
                     <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", new { page = Model.PageNumber - 1 }))"
                        tabindex="@(Model.IsFirstPage ? "-1" : "0")"
@@ -90,15 +105,11 @@
                         <i class="fas fa-chevron-left"></i> Trang trước
                     </a>
                 </li>
-
-                <!-- Các trang số (hiển thị tối đa 5 trang gần trang hiện tại) -->
                 @{
-                    int maxPagesToShow = 5; // Tối đa 5 số trang
-                    int pagesBeforeAfter = maxPagesToShow / 2; // 2 trang trước, 2 trang sau
+                    int maxPagesToShow = 5;
+                    int pagesBeforeAfter = maxPagesToShow / 2;
                     int startPage = Math.Max(1, Model.PageNumber - pagesBeforeAfter);
                     int endPage = Math.Min(Model.PageCount, startPage + maxPagesToShow - 1);
-
-                    // Điều chỉnh nếu gần cuối
                     if (endPage - startPage + 1 < maxPagesToShow)
                     {
                         startPage = Math.Max(1, endPage - maxPagesToShow + 1);
@@ -110,8 +121,6 @@
                         <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
                     </li>
                 }
-
-                <!-- Nút Next -->
                 <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
                     <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", new { page = Model.PageNumber + 1 }))"
                        tabindex="@(Model.IsLastPage ? "-1" : "0")"
@@ -123,7 +132,6 @@
         </nav>
     </div>
 
-    <!-- Toast thông báo -->
     <div class="toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; min-width: 250px;" data-delay="3000">
         <div class="toast-header">
             <strong class="mr-auto" id="toastTitle"></strong>
@@ -138,7 +146,6 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Hiển thị toast nếu có TempData
             var successMessage = '@TempData["SuccessMessage"]';
             var errorMessage = '@TempData["ErrorMessage"]';
             if (successMessage) {
@@ -148,13 +155,17 @@
                 showToast('Lỗi', errorMessage, 'bg-danger');
             }
 
-            // Hàm hiển thị toast
             function showToast(title, message, bgClass) {
                 $('#toastTitle').text(title);
                 $('#toastMessage').text(message);
                 $('#notificationToast').removeClass('bg-success bg-danger').addClass(bgClass);
                 $('#notificationToast').toast('show');
             }
+
+            // Khởi tạo carousel
+            $('.carousel').carousel({
+                interval: false
+            });
         });
     </script>
 }
