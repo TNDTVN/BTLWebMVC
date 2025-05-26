@@ -38,7 +38,6 @@ namespace BTLWebMVC.Models
         [StringLength(50, ErrorMessage = "Quốc gia không được vượt quá 50 ký tự")]
         public string Country { get; set; }
 
-        [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
         [StringLength(20, ErrorMessage = "Số điện thoại không được vượt quá 20 ký tự")]
         public string Phone { get; set; }
 

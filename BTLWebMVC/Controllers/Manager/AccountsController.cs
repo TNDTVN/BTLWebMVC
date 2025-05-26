@@ -68,18 +68,32 @@ namespace BTLWebMVC.Controllers.Manager
             ViewBag.CurrentPage = "Accounts";
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["ErrorMessage"] = "Không tìm thấy tài khoản liên kết!";
+                return RedirectToAction("Index");
             }
 
             Account account = db.Accounts.Find(id);
             if (account == null)
             {
-                return HttpNotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy tài khoản liên kết!";
+                return RedirectToAction("Index");
             }
 
-            // Lấy danh sách vai trò duy nhất từ CSDL
-            var roles = db.Accounts.Select(a => a.Role).Distinct().ToList();
-            ViewBag.Role = new SelectList(roles.Select(r => new SelectListItem
+            List<string> allowedRoles;
+            if (account.Role == "Customer")
+            {
+                allowedRoles = new List<string> { "Customer" };
+            }
+            else if (account.Role == "Employee" || account.Role == "Admin")
+            {
+                allowedRoles = new List<string> { "Employee", "Admin" };
+            }
+            else
+            {
+                allowedRoles = new List<string> { account.Role };
+            }
+
+            ViewBag.Role = new SelectList(allowedRoles.Select(r => new SelectListItem
             {
                 Text = r,
                 Value = r
@@ -88,239 +102,157 @@ namespace BTLWebMVC.Controllers.Manager
             return View(account);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "AccountID,Username,Password,Email,ProfileImage,CreatedDate,Role,IsLock")] Account account, HttpPostedFileBase FileAnh)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var existingAccount = db.Accounts.Find(account.AccountID);
-        //        if (existingAccount == null)
-        //        {
-        //            return HttpNotFound();
-        //        }
-
-        //        // Cập nhật thông tin tài khoản
-        //        existingAccount.Username = account.Username;
-        //        existingAccount.Password = account.Password;
-        //        existingAccount.Email = account.Email;
-        //        existingAccount.Role = account.Role;
-        //        existingAccount.IsLock = account.IsLock;
-
-        //        // Xử lý upload ảnh
-        //        if (FileAnh != null && FileAnh.ContentLength > 0)
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("FileAnh được gửi: " + FileAnh.FileName);
-        //            string oldImagePath = existingAccount.ProfileImage;
-        //            string fileExtension = Path.GetExtension(FileAnh.FileName).ToLower();
-
-        //            // Kiểm tra định dạng file
-        //            if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(fileExtension))
-        //            {
-        //                ModelState.AddModelError("FileAnh", "Chỉ hỗ trợ file ảnh .jpg, .jpeg, .png, .gif");
-        //                System.Diagnostics.Debug.WriteLine("Lỗi định dạng file: " + fileExtension);
-        //            }
-        //            else
-        //            {
-        //                // Tạo tên file mới
-        //                string fileName = Guid.NewGuid().ToString() + fileExtension;
-        //                string path = Path.Combine(Server.MapPath("~/Content/Images"), fileName);
-        //                string relativePath = "/Content/Images/" + fileName;
-
-        //                // Kiểm tra độ dài đường dẫn
-        //                if (relativePath.Length > 255)
-        //                {
-        //                    ModelState.AddModelError("FileAnh", "Đường dẫn ảnh quá dài, vui lòng chọn file có tên ngắn hơn.");
-        //                    System.Diagnostics.Debug.WriteLine("Lỗi độ dài đường dẫn: " + relativePath.Length);
-        //                }
-        //                else
-        //                {
-        //                    // Lưu file
-        //                    FileAnh.SaveAs(path);
-        //                    existingAccount.ProfileImage = relativePath;
-        //                    System.Diagnostics.Debug.WriteLine("Cập nhật ProfileImage: " + relativePath);
-
-        //                    // Xóa ảnh cũ
-        //                    if (!string.IsNullOrEmpty(oldImagePath) && System.IO.File.Exists(Server.MapPath(oldImagePath)))
-        //                    {
-        //                        System.IO.File.Delete(Server.MapPath(oldImagePath));
-        //                        System.Diagnostics.Debug.WriteLine("Xóa ảnh cũ: " + oldImagePath);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("Không có file ảnh được gửi hoặc file rỗng.");
-        //        }
-
-        //        // Cập nhật CSDL
-        //        db.Entry(existingAccount).State = EntityState.Modified;
-        //        try
-        //        {
-        //            db.SaveChanges();
-        //            System.Diagnostics.Debug.WriteLine("Lưu CSDL thành công, ProfileImage: " + existingAccount.ProfileImage);
-        //            return RedirectToAction("Index");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("Lỗi khi lưu CSDL: " + ex.ToString());
-        //            System.Diagnostics.Debug.WriteLine("Inner Exception: " + ex.InnerException?.ToString());
-        //            ModelState.AddModelError("", "Lỗi khi lưu vào CSDL: " + (ex.InnerException?.Message ?? ex.Message));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("ModelState không hợp lệ: " + string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
-        //    }
-
-        //    // Lấy lại danh sách vai trò khi form không hợp lệ
-        //    var roles = db.Accounts.Select(a => a.Role).Distinct().ToList();
-        //    ViewBag.Role = new SelectList(roles.Select(r => new SelectListItem
-        //    {
-        //        Text = r,
-        //        Value = r
-        //    }), "Value", "Text", account.Role);
-
-        //    return View(account);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "AccountID,Username,Password,Email,ProfileImage,CreatedDate,Role,IsLock")] Account account, HttpPostedFileBase FileAnh)
         {
-            System.Diagnostics.Debug.WriteLine($"Bắt đầu Edit, AccountID: {account.AccountID}");
+            var result = new { success = false, errors = new Dictionary<string, string>() };
 
             if (ModelState.IsValid)
             {
-                System.Diagnostics.Debug.WriteLine("ModelState hợp lệ, bắt đầu xử lý cập nhật.");
                 var existingAccount = db.Accounts.Find(account.AccountID);
                 if (existingAccount == null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Không tìm thấy tài khoản với AccountID: " + account.AccountID);
-                    return HttpNotFound();
+                    result.errors.Add("", "Không tìm thấy tài khoản với AccountID: " + account.AccountID);
+                    return Json(result);
+                }
+
+                // Kiểm tra email trùng (trừ email của chính tài khoản đang chỉnh sửa)
+                if (db.Accounts.Any(a => a.Email == account.Email && a.AccountID != account.AccountID))
+                {
+                    ModelState.AddModelError("Email", "Email đã được sử dụng bởi tài khoản khác.");
+                }
+
+                // Kiểm tra vai trò hợp lệ
+                if (existingAccount.Role == "Customer" && account.Role != "Customer")
+                {
+                    ModelState.AddModelError("Role", "Không thể thay đổi vai trò của tài khoản Customer.");
+                }
+                else if ((existingAccount.Role == "Employee" || existingAccount.Role == "Admin") && account.Role == "Customer")
+                {
+                    ModelState.AddModelError("Role", "Không thể thay đổi vai trò sang Customer.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    // Thu thập lỗi validation
+                    foreach (var error in ModelState)
+                    {
+                        foreach (var err in error.Value.Errors)
+                        {
+                            result.errors.Add(error.Key, err.ErrorMessage);
+                        }
+                    }
+                    return Json(result);
                 }
 
                 // Cập nhật thông tin tài khoản
-                System.Diagnostics.Debug.WriteLine($"Cập nhật thông tin tài khoản: Username={account.Username}, Email={account.Email}, Role={account.Role}, IsLock={account.IsLock}");
                 existingAccount.Username = account.Username;
                 existingAccount.Password = account.Password;
                 existingAccount.Email = account.Email;
                 existingAccount.Role = account.Role;
                 existingAccount.IsLock = account.IsLock;
 
-                // Xử lý upload ảnh
+                // Đồng bộ email với bảng Customer hoặc Employee
+                if (existingAccount.Role == "Customer")
+                {
+                    var customer = db.Customers.FirstOrDefault(c => c.AccountID == account.AccountID);
+                    if (customer != null)
+                    {
+                        customer.Email = account.Email;
+                        db.Entry(customer).State = EntityState.Modified;
+                    }
+                }
+                else if (existingAccount.Role == "Employee" || existingAccount.Role == "Admin")
+                {
+                    var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
+                    if (employee != null)
+                    {
+                        employee.Email = account.Email;
+                        db.Entry(employee).State = EntityState.Modified;
+                    }
+                }
+
+                // Giữ nguyên ảnh cũ nếu không có ảnh mới
                 if (FileAnh != null && FileAnh.ContentLength > 0)
                 {
-                    System.Diagnostics.Debug.WriteLine($"File ảnh được gửi: FileName={FileAnh.FileName}, ContentLength={FileAnh.ContentLength}");
                     string oldImagePath = existingAccount.ProfileImage;
                     string fileExtension = Path.GetExtension(FileAnh.FileName).ToLower();
 
                     // Kiểm tra định dạng file
                     if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(fileExtension))
                     {
-                        System.Diagnostics.Debug.WriteLine("Lỗi định dạng file: " + fileExtension);
-                        ModelState.AddModelError("FileAnh", "Chỉ hỗ trợ file ảnh .jpg, .jpeg, .png, .gif");
+                        result.errors.Add("FileAnh", "Chỉ hỗ trợ file ảnh .jpg, .jpeg, .png, .gif");
+                        return Json(result);
                     }
-                    else
+
+                    // Tạo tên file mới
+                    string fileName = Guid.NewGuid().ToString() + fileExtension;
+                    string path = Path.Combine(Server.MapPath("~/Content/accountImages"), fileName);
+                    string fileNameOnly = fileName;
+
+                    // Kiểm tra độ dài tên file
+                    if (fileNameOnly.Length > 255)
                     {
-                        // Tạo tên file mới
-                        string fileName = Guid.NewGuid().ToString() + fileExtension;
-                        string path = Path.Combine(Server.MapPath("~/Content/Images"), fileName);
-                        string relativePath = "/Content/Images/" + fileName;
+                        result.errors.Add("FileAnh", "Tên file quá dài, vui lòng chọn file có tên ngắn hơn.");
+                        return Json(result);
+                    }
 
-                        // Kiểm tra độ dài đường dẫn
-                        if (relativePath.Length > 255)
+                    // Đảm bảo thư mục tồn tại
+                    string directory = Server.MapPath("~/Content/accountImages");
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    // Lưu file
+                    try
+                    {
+                        FileAnh.SaveAs(path);
+                        existingAccount.ProfileImage = fileNameOnly;
+
+                        // Xóa ảnh cũ
+                        if (!string.IsNullOrEmpty(oldImagePath) && System.IO.File.Exists(Server.MapPath("~/Content/accountImages/" + oldImagePath)))
                         {
-                            System.Diagnostics.Debug.WriteLine($"Lỗi độ dài đường dẫn: {relativePath.Length}");
-                            ModelState.AddModelError("FileAnh", "Đường dẫn ảnh quá dài, vui lòng chọn file có tên ngắn hơn.");
+                            System.IO.File.Delete(Server.MapPath("~/Content/accountImages/" + oldImagePath));
                         }
-                        else
-                        {
-                            // Lưu file
-                            try
-                            {
-                                FileAnh.SaveAs(path);
-                                System.Diagnostics.Debug.WriteLine($"Lưu file ảnh thành công: {path}");
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Lỗi khi lưu file ảnh: {ex.Message}");
-                                ModelState.AddModelError("FileAnh", "Lỗi khi lưu file ảnh: " + ex.Message);
-                                return View(account);
-                            }
-
-                            // Cập nhật đường dẫn ảnh mới
-                            existingAccount.ProfileImage = relativePath;
-                            System.Diagnostics.Debug.WriteLine($"Cập nhật ProfileImage: {relativePath}");
-
-                            // Xóa ảnh cũ
-                            if (!string.IsNullOrEmpty(oldImagePath) && System.IO.File.Exists(Server.MapPath(oldImagePath)))
-                            {
-                                try
-                                {
-                                    System.IO.File.Delete(Server.MapPath(oldImagePath));
-                                    System.Diagnostics.Debug.WriteLine($"Xóa ảnh cũ thành công: {oldImagePath}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"Lỗi khi xóa ảnh cũ: {ex.Message}");
-                                }
-                            }
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        result.errors.Add("FileAnh", "Lỗi khi lưu file ảnh: " + ex.Message);
+                        return Json(result);
                     }
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Không có file ảnh được gửi hoặc file rỗng.");
-                    // Nếu cần bắt buộc chọn file ảnh, thêm lỗi vào ModelState
-                    // ModelState.AddModelError("FileAnh", "Vui lòng chọn một file ảnh.");
+                    existingAccount.ProfileImage = existingAccount.ProfileImage; // Giữ nguyên ảnh cũ
                 }
 
                 // Cập nhật CSDL
                 db.Entry(existingAccount).State = EntityState.Modified;
-                System.Diagnostics.Debug.WriteLine($"Trạng thái trước khi lưu: ProfileImage={existingAccount.ProfileImage}, Username={existingAccount.Username}");
                 try
                 {
                     db.SaveChanges();
-                    System.Diagnostics.Debug.WriteLine("Lưu CSDL thành công.");
-                    return RedirectToAction("Index");
-                }
-                catch (EntityCommandExecutionException cmdEx)
-                {
-                    System.Diagnostics.Debug.WriteLine($"EntityCommandExecutionException: {cmdEx.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Inner Exception: {cmdEx.InnerException?.ToString() ?? "Không có inner exception"}");
-                    ModelState.AddModelError("", $"Lỗi khi thực thi lệnh CSDL: {cmdEx.InnerException?.Message ?? cmdEx.Message}");
-                }
-                catch (DbUpdateException dbEx)
-                {
-                    System.Diagnostics.Debug.WriteLine($"DbUpdateException: {dbEx.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Inner Exception: {dbEx.InnerException?.ToString() ?? "Không có inner exception"}");
-                    ModelState.AddModelError("", $"Lỗi khi lưu vào CSDL: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                    return Json(new { success = true });
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Lỗi chung: {ex.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Inner Exception: {ex.InnerException?.ToString() ?? "Không có inner exception"}");
-                    ModelState.AddModelError("", $"Lỗi khi lưu vào CSDL: {ex.Message}");
+                    result.errors.Add("", "Lỗi khi lưu vào CSDL: " + ex.Message);
+                    return Json(result);
                 }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("ModelState không hợp lệ: " + string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                // Thu thập lỗi validation
+                foreach (var error in ModelState)
+                {
+                    foreach (var err in error.Value.Errors)
+                    {
+                        result.errors.Add(error.Key, err.ErrorMessage);
+                    }
+                }
+                return Json(result);
             }
-
-
-            System.Diagnostics.Debug.WriteLine("Tải lại danh sách vai trò cho ViewBag.");
-            var roles = db.Accounts.Select(a => a.Role).Distinct().ToList();
-            ViewBag.Role = new SelectList(roles.Select(r => new SelectListItem
-            {
-                Text = r,
-                Value = r
-            }), "Value", "Text", account.Role);
-
-            System.Diagnostics.Debug.WriteLine("Trả về view với model.");
-            return View(account);
         }
 
 
@@ -343,113 +275,155 @@ namespace BTLWebMVC.Controllers.Manager
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Username,Password,Email,Role,IsLock")] Account account, HttpPostedFileBase FileAnh)
+        public ActionResult Create([Bind(Include = "Username,Password,Email,Role,IsLock")] Account account, string CustomerName, string FirstName, string LastName, DateTime? BirthDate, DateTime? HireDate)
         {
+            var result = new { success = false, errors = new Dictionary<string, string>() };
+
             if (ModelState.IsValid)
             {
-                // kiem tra username co ton tai\
+                // Kiểm tra username trùng
                 if (db.Accounts.Any(a => a.Username == account.Username))
                 {
-                    ModelState.AddModelError("Username", "Tên đăng nhập đã được sử dụng");
-
+                    ModelState.AddModelError("Username", "Tên đăng nhập đã được sử dụng.");
                 }
 
-                else
+                // Kiểm tra email trùng
+                if (db.Accounts.Any(a => a.Email == account.Email))
                 {
-                    // gan gia tri mac dinh
-                    account.CreatedDate = DateTime.Now;
-                    account.ProfileImage = "/Content/Images/default.png";
+                    ModelState.AddModelError("Email", "Email đã được sử dụng bởi tài khoản khác.");
+                }
 
-                    if (FileAnh != null && FileAnh.ContentLength > 0)
+                // Kiểm tra các trường bắt buộc cho Employee/Admin
+                if (account.Role == "Employee" || account.Role == "Admin")
+                {
+                    if (string.IsNullOrEmpty(FirstName))
+                        ModelState.AddModelError("FirstName", "Họ là bắt buộc.");
+                    if (string.IsNullOrEmpty(LastName))
+                        ModelState.AddModelError("LastName", "Tên là bắt buộc.");
+                    if (!BirthDate.HasValue)
+                        ModelState.AddModelError("BirthDate", "Ngày sinh là bắt buộc.");
+                    if (!HireDate.HasValue)
+                        ModelState.AddModelError("HireDate", "Ngày thuê là bắt buộc.");
+                }
+
+                // Kiểm tra trường bắt buộc cho Customer
+                if (account.Role == "Customer" && string.IsNullOrEmpty(CustomerName))
+                {
+                    ModelState.AddModelError("CustomerName", "Tên khách hàng là bắt buộc.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    foreach (var error in ModelState)
                     {
-                        string fileExtension = Path.GetExtension(FileAnh.FileName).ToLower();
-
-                        // check dinh ang
-                        if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(fileExtension))
+                        foreach (var err in error.Value.Errors)
                         {
-                            System.Diagnostics.Debug.WriteLine("Lỗi định dạng file: " + fileExtension);
-                            ModelState.AddModelError("FileAnh", "Chỉ hỗ trợ file ảnh .jpg, .jpeg, .png, .gif");
+                            result.errors.Add(error.Key, err.ErrorMessage);
+                            System.Diagnostics.Debug.WriteLine($"Lỗi ModelState: Key={error.Key}, Error={err.ErrorMessage}");
                         }
-                        else
+                    }
+                    return Json(result);
+                }
+
+                // Gán giá trị mặc định cho tài khoản
+                account.CreatedDate = DateTime.Now;
+                account.ProfileImage = "profile.jpg"; // Ảnh đại diện mặc định
+                account.TokenCode = null; // Không sử dụng TokenCode
+
+                // Thêm tài khoản vào CSDL
+                db.Accounts.Add(account);
+                try
+                {
+                    db.SaveChanges();
+                    System.Diagnostics.Debug.WriteLine($"Tài khoản được tạo: AccountID={account.AccountID}, Role={account.Role}");
+
+                    // Tạo bản ghi trong bảng Customer hoặc Employee dựa trên Role
+                    try
+                    {
+                        if (account.Role == "Customer")
                         {
-                            string fileName = Guid.NewGuid().ToString() + fileExtension;
-                            string path = Path.Combine(Server.MapPath("~/Content/Images"), fileName);
-                            string relativePath = "/Content/Images/" + fileName;
-
-
-                            if (relativePath.Length > 255)
+                            var customer = new Customer
                             {
-                                System.Diagnostics.Debug.WriteLine($"Lỗi độ dài đường dẫn: {relativePath.Length}");
-                                ModelState.AddModelError("FileAnh", "Đường dẫn ảnh quá dài, vui lòng chọn file có tên ngắn hơn.");
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    FileAnh.SaveAs(path);
-                                    System.Diagnostics.Debug.WriteLine($"Lưu file ảnh thành công: {path}");
-                                    account.ProfileImage = relativePath;
-
-
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"Lỗi khi lưu thay ảnh: {ex.Message}");
-
-                                    ModelState.AddModelError("FileAnh", "Lỗi khi lưu file ảnh: " + ex.Message);
-
-                                }
-                            }
+                                AccountID = account.AccountID,
+                                Email = account.Email,
+                                CustomerName = CustomerName,
+                                ContactName = CustomerName,
+                                Address = "",
+                                City = "",
+                                PostalCode = "",
+                                Country = ""
+                            };
+                            db.Customers.Add(customer);
+                            System.Diagnostics.Debug.WriteLine($"Tạo bản ghi Customer: CustomerName={CustomerName}, AccountID={account.AccountID}");
                         }
-
-                        if (ModelState.IsValid)
+                        else if (account.Role == "Employee" || account.Role == "Admin")
                         {
-                            // them tai khoan vao csdl
-
-                            db.Accounts.Add(account);
-                            try
+                            var employee = new Employee
                             {
-                                db.SaveChanges();
-                                System.Diagnostics.Debug.WriteLine("Lưu tài khoản thành công.");
-                                return RedirectToAction("Index");
-                            }
-                            catch (DbUpdateException dbEx)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"DbUpdateException: {dbEx.Message}");
-                                System.Diagnostics.Debug.WriteLine($"Inner Exception: {dbEx.InnerException?.ToString() ?? "Không có inner exception"}");
-                                ModelState.AddModelError("", $"Lỗi khi lưu vào CSDL: {dbEx.InnerException?.Message ?? dbEx.Message}");
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Lỗi chung: {ex.Message}");
-                                ModelState.AddModelError("", $"Lỗi khi lưu vào CSDL: {ex.Message}");
-                            }
+                                AccountID = account.AccountID,
+                                Email = account.Email,
+                                FirstName = FirstName,
+                                LastName = LastName,
+                                BirthDate = BirthDate.Value,
+                                HireDate = HireDate.Value,
+                                Address = "",
+                                City = "",
+                                PostalCode = "",
+                                Country = ""
+                            };
+                            db.Employees.Add(employee);
+                            System.Diagnostics.Debug.WriteLine($"Tạo bản ghi Employee: FirstName={FirstName}, LastName={LastName}, AccountID={account.AccountID}");
                         }
 
+                        // Lưu các thay đổi vào CSDL
+                        db.SaveChanges();
+                        System.Diagnostics.Debug.WriteLine("Lưu thay đổi vào CSDL thành công.");
+                        return Json(new { success = true });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Xóa tài khoản đã tạo nếu thất bại
+                        db.Accounts.Remove(account);
+                        db.SaveChanges();
+                        System.Diagnostics.Debug.WriteLine($"Đã xóa tài khoản AccountID={account.AccountID} do lỗi tạo Customer/Employee.");
 
+                        // Ghi lỗi
+                        result.errors.Add("", "Lỗi khi tạo Customer/Employee: " + ex.Message);
+                        System.Diagnostics.Debug.WriteLine($"Lỗi khi tạo Customer/Employee: {ex.Message}, StackTrace: {ex.StackTrace}");
+                        return Json(result);
                     }
                 }
-
+                catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+                {
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            result.errors.Add(validationError.PropertyName, validationError.ErrorMessage);
+                            System.Diagnostics.Debug.WriteLine($"Lỗi xác thực: Property={validationError.PropertyName}, Error={validationError.ErrorMessage}");
+                        }
+                    }
+                    return Json(result);
+                }
+                catch (Exception ex)
+                {
+                    result.errors.Add("", "Lỗi khi lưu vào CSDL: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine($"Lỗi chung: {ex.Message}, StackTrace: {ex.StackTrace}");
+                    return Json(result);
+                }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("ModelState không hợp lệ: " + string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                foreach (var error in ModelState)
+                {
+                    foreach (var err in error.Value.Errors)
+                    {
+                        result.errors.Add(error.Key, err.ErrorMessage);
+                        System.Diagnostics.Debug.WriteLine($"Lỗi ModelState: Key={error.Key}, Error={err.ErrorMessage}");
+                    }
+                }
+                return Json(result);
             }
-
-            // Tải lại danh sách vai trò khi form không hợp lệ
-            var roles = db.Accounts.Select(a => a.Role).Distinct().ToList();
-            ViewBag.Role = new SelectList(roles.Select(r => new SelectListItem
-            {
-                Text = r,
-                Value = r
-            }), "Value", "Text", account.Role);
-
-            System.Diagnostics.Debug.WriteLine("Trả về view với model.");
-
-
-
-            return View();
         }
 
         // xem chi tiet tai khona

@@ -53,6 +53,10 @@
     .text-danger {
         font-size: 0.9em;
     }
+
+    .form-check-input {
+        margin-top: 0.3rem;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -62,11 +66,10 @@
                 <h4><i class="fas fa-user-plus mr-2"></i>Thêm Tài Khoản</h4>
             </div>
             <div class="card-body">
-                @using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
+                <form id="createForm">
                     @Html.AntiForgeryToken()
 
-                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                    <div id="errorSummary" class="alert alert-danger" style="display: none;"></div>
 
                     <div class="mb-3 row">
                         <label class="col-sm-2 col-form-label">Tên đăng nhập</label>
@@ -87,35 +90,64 @@
                     <div class="mb-3 row">
                         <label class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập email", type = "email" } })
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập email", type = "email", required = "required" } })
                             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Ảnh đại diện</label>
-                        <div class="col-sm-10">
-                            <input type="file" name="FileAnh" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
-                            @if (ViewData.ModelState["FileAnh"] != null && ViewData.ModelState["FileAnh"].Errors.Any())
-                            {
-                                <span class="text-danger">@ViewData.ModelState["FileAnh"].Errors.First().ErrorMessage</span>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Ngày tạo</label>
-                        <div class="col-sm-10">
-                            @Html.TextBoxFor(model => model.CreatedDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @readonly = "readonly", value = DateTime.Now.ToString("yyyy-MM-dd") })
-                            @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label class="col-sm-2 col-form-label">Vai trò</label>
                         <div class="col-sm-10">
-                            @Html.DropDownList("Role", (SelectList)ViewBag.Role, "Chọn vai trò", new { @class = "form-select", required = "required" })
+                            <select name="Role" class="form-select" required>
+                                <option value="" disabled selected>Chọn vai trò</option>
+                                <option value="Admin">Quản trị viên</option>
+                                <option value="Employee">Nhân viên</option>
+                                <option value="Customer">Khách hàng</option>
+                            </select>
                             @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <!-- Trường cho Customer -->
+                    <div id="customerFields" style="display: none;">
+                        <div class="mb-3 row">
+                            <label class="col-sm-2 col-form-label">Tên khách hàng</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="CustomerName" class="form-control" placeholder="Nhập tên khách hàng" required />
+                                <span class="text-danger" data-valmsg-for="CustomerName" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trường cho Employee/Admin -->
+                    <div id="employeeFields" style="display: none;">
+                        <div class="mb-3 row">
+                            <label class="col-sm-2 col-form-label">Họ</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="FirstName" class="form-control" placeholder="Nhập họ" required />
+                                <span class="text-danger" data-valmsg-for="FirstName" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-2 col-form-label">Tên</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="LastName" class="form-control" placeholder="Nhập tên" required />
+                                <span class="text-danger" data-valmsg-for="LastName" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-2 col-form-label">Ngày sinh</label>
+                            <div class="col-sm-10">
+                                <input type="date" name="BirthDate" class="form-control" required />
+                                <span class="text-danger" data-valmsg-for="BirthDate" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-2 col-form-label">Ngày thuê</label>
+                            <div class="col-sm-10">
+                                <input type="date" name="HireDate" class="form-control" required />
+                                <span class="text-danger" data-valmsg-for="HireDate" data-valmsg-replace="true"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -131,25 +163,197 @@
                     </div>
 
                     <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Mã Token</label>
-                        <div class="col-sm-10">
-                            @Html.EditorFor(model => model.TokenCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập mã token (nếu có)" } })
-                            @Html.ValidationMessageFor(model => model.TokenCode, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
                         <div class="offset-sm-2 col-sm-10">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Thêm</button>
                             @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary ml-2" })
                         </div>
                     </div>
-                }
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#createForm').validate({
+                rules: {
+                    Username: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 100
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    Role: {
+                        required: true
+                    },
+                    CustomerName: {
+                        required: function(element) {
+                            return $('select[name="Role"]').val() === "Customer";
+                        },
+                        maxlength: 100
+                    },
+                    FirstName: {
+                        required: function(element) {
+                            return $('select[name="Role"]').val() === "Employee" || $('select[name="Role"]').val() === "Admin";
+                        },
+                        maxlength: 50
+                    },
+                    LastName: {
+                        required: function(element) {
+                            return $('select[name="Role"]').val() === "Employee" || $('select[name="Role"]').val() === "Admin";
+                        },
+                        maxlength: 50
+                    },
+                    BirthDate: {
+                        required: function(element) {
+                            return $('select[name="Role"]').val() === "Employee" || $('select[name="Role"]').val() === "Admin";
+                        },
+                        date: true
+                    },
+                    HireDate: {
+                        required: function(element) {
+                            return $('select[name="Role"]').val() === "Employee" || $('select[name="Role"]').val() === "Admin";
+                        },
+                        date: true
+                    }
+                },
+                messages: {
+                    Username: {
+                        required: "Tên đăng nhập là bắt buộc.",
+                        minlength: "Tên đăng nhập phải từ 3 ký tự.",
+                        maxlength: "Tên đăng nhập không được vượt quá 50 ký tự."
+                    },
+                    Password: {
+                        required: "Mật khẩu là bắt buộc.",
+                        minlength: "Mật khẩu phải từ 6 ký tự.",
+                        maxlength: "Mật khẩu không được vượt quá 100 ký tự."
+                    },
+                    Email: {
+                        required: "Email là bắt buộc.",
+                        email: "Email không hợp lệ."
+                    },
+                    Role: {
+                        required: "Vui lòng chọn vai trò."
+                    },
+                    CustomerName: {
+                        required: "Tên khách hàng là bắt buộc.",
+                        maxlength: "Tên khách hàng không được vượt quá 100 ký tự."
+                    },
+                    FirstName: {
+                        required: "Họ là bắt buộc.",
+                        maxlength: "Họ không được vượt quá 50 ký tự."
+                    },
+                    LastName: {
+                        required: "Tên là bắt buộc.",
+                        maxlength: "Tên không được vượt quá 50 ký tự."
+                    },
+                    BirthDate: {
+                        required: "Ngày sinh là bắt buộc.",
+                        date: "Ngày sinh không hợp lệ."
+                    },
+                    HireDate: {
+                        required: "Ngày thuê là bắt buộc.",
+                        date: "Ngày thuê không hợp lệ."
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    error.appendTo(element.closest('.col-sm-10').find('span[data-valmsg-for="' + element.attr('name') + '"]'));
+                }
+            });
+
+            // Hiển thị/ẩn các trường dựa trên vai trò
+            $('select[name="Role"]').change(function () {
+                var role = $(this).val();
+                console.log('Vai trò được chọn:', role); // Log vai trò
+                if (role === "Customer") {
+                    $('#customerFields').show();
+                    $('#employeeFields').hide();
+                    $('input[name="CustomerName"]').prop('required', true);
+                    $('input[name="FirstName"]').prop('required', false);
+                    $('input[name="LastName"]').prop('required', false);
+                    $('input[name="BirthDate"]').prop('required', false);
+                    $('input[name="HireDate"]').prop('required', false);
+                } else if (role === "Employee" || role === "Admin") {
+                    $('#customerFields').hide();
+                    $('#employeeFields').show();
+                    $('input[name="CustomerName"]').prop('required', false);
+                    $('input[name="FirstName"]').prop('required', true);
+                    $('input[name="LastName"]').prop('required', true);
+                    $('input[name="BirthDate"]').prop('required', true);
+                    $('input[name="HireDate"]').prop('required', true);
+                } else {
+                    $('#customerFields').hide();
+                    $('#employeeFields').hide();
+                    $('input[name="CustomerName"]').prop('required', false);
+                    $('input[name="FirstName"]').prop('required', false);
+                    $('input[name="LastName"]').prop('required', false);
+                    $('input[name="BirthDate"]').prop('required', false);
+                    $('input[name="HireDate"]').prop('required', false);
+                }
+                // Đặt lại lỗi khi thay đổi vai trò
+                $('#createForm').validate().resetForm();
+                $('.text-danger').html('');
+                $('#errorSummary').hide();
+            });
+
+            // Xử lý submit form
+            $('#createForm').on('submit', function (e) {
+                e.preventDefault();
+                if ($(this).valid()) {
+                    var formData = new FormData(this);
+                    var formDataObject = Object.fromEntries(formData);
+                    console.log('Form data:', formDataObject);
+                    $.ajax({
+                        url: '@Url.Action("Create", "Accounts")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            console.log('Phản hồi từ server:', response);
+                            if (response.success) {
+                                $('#errorSummary').removeClass('alert-danger').addClass('alert-success').html('<p>Tạo tài khoản thành công!</p>').show();
+                                setTimeout(function() {
+                                    window.location.href = '@Url.Action("Index", "Accounts")';
+                                }, 1000);
+                            } else {
+                                $('#errorSummary').html('').addClass('alert-danger').show();
+                                if (response.errors) {
+                                    $.each(response.errors, function (key, value) {
+                                        var errorElement = $('span[data-valmsg-for="' + key + '"]');
+                                        if (errorElement.length) {
+                                            errorElement.html(value).show();
+                                        } else {
+                                            $('#errorSummary').append('<p>' + (key ? key + ': ' : '') + value + '</p>');
+                                        }
+                                    });
+                                } else {
+                                    $('#errorSummary').html('<p>Có lỗi xảy ra, vui lòng thử lại.</p>');
+                                }
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Lỗi AJAX:', error, xhr.responseText);
+                            $('#errorSummary').html('<p>Lỗi khi gửi yêu cầu: ' + error + '</p>').addClass('alert-danger').show();
+                        }
+                    });
+                } else {
+                    console.log('Form không hợp lệ, kiểm tra lỗi xác thực.');
+                }
+            });
+        });
+    </script>
 }

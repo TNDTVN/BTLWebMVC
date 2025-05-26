@@ -15,15 +15,14 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        @using (Html.BeginForm("Edit", "Accounts", FormMethod.Post, new { enctype = "multipart/form-data", id = "editForm" }))
-                        {
+                        <form id="editForm" enctype="multipart/form-data">
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
                             @Html.HiddenFor(model => model.AccountID)
 
                             <div class="form-horizontal">
                                 <h4>Account</h4>
                                 <hr />
+                                <div id="errorSummary" class="text-danger mb-3"></div>
 
                                 <div class="form-group">
                                     <label>Tài khoản</label>
@@ -45,16 +44,22 @@
 
                                 <div class="form-group">
                                     <label>Vai trò</label>
-                                    @Html.DropDownList("Role", ViewBag.Role as SelectList, "Chọn vai trò", new { @class = "form-control custom-select", required = "required" })
-                                    @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                                    <div>
+                                        <select name="Role" class="form-control custom-select" required>
+                                            <option value="Admin" @(Model != null && Model.Role == "Admin" ? "selected" : "")>Quản trị viên</option>
+                                            <option value="Employee" @(Model != null && Model.Role == "Employee" ? "selected" : "")>Nhân viên</option>
+                                            <option value="Customer" @(Model != null && Model.Role == "Customer" ? "selected" : "")>Khách hàng</option>
+                                        </select>
+                                        @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     @Html.DropDownListFor(model => model.IsLock, new SelectList(new[]
                                     {
-                                        new { Value = "true", Text = "Hoạt động" },
-                                        new { Value = "false", Text = "Khóa" }
+                                        new { Value = "false", Text = "Hoạt động" },
+                                        new { Value = "true", Text = "Khóa" }
                                     }, "Value", "Text", Model.IsLock), new { @class = "form-control custom-select" })
                                     @Html.ValidationMessageFor(model => model.IsLock, "", new { @class = "text-danger" })
                                 </div>
@@ -64,7 +69,7 @@
                                     <input type="submit" value="Lưu" class="btn btn-primary" />
                                 </div>
                             </div>
-                        }
+                        </form>
                     </div>
 
                     <div class="col-md-4 d-flex flex-column align-items-center">
@@ -82,7 +87,7 @@
                         <div class="form-group mt-3">
                             <label for="FileAnh">Tải lên ảnh đại diện</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="FileAnh" name="FileAnh" accept="image/*" onchange="previewImage(event)" required>
+                                <input type="file" class="custom-file-input" id="FileAnh" name="FileAnh" accept="image/*" onchange="previewImage(event)">
                                 <label class="custom-file-label" for="FileAnh">Chọn file</label>
                             </div>
                             @Html.ValidationMessageFor(model => model.ProfileImage, "", new { @class = "text-danger" })
@@ -119,22 +124,46 @@
 
         $(document).ready(function () {
             $('#editForm').on('submit', function (e) {
-                var fileInput = $('#FileAnh');
-                var file = fileInput[0].files[0];
-                if (!file) {
-                    console.log("Không có file được chọn khi submit form.");
-                    $('#fileError').text('Vui lòng chọn một file ảnh.');
-                    e.preventDefault();
-                    return false;
-                }
-                // Kiểm tra kích thước file (tối đa 10MB)
-                if (file.size > 10 * 1024 * 1024) {
-                    console.log("File quá lớn: " + file.size + " bytes");
+                e.preventDefault(); // Ngăn chặn submit form mặc định
+
+                var formData = new FormData(this);
+                var fileInput = $('#FileAnh')[0].files[0];
+                if (fileInput && fileInput.size > 10 * 1024 * 1024) {
                     $('#fileError').text('File ảnh không được lớn hơn 10MB.');
-                    e.preventDefault();
+                    console.log("File quá lớn: " + fileInput.size + " bytes");
                     return false;
                 }
-                console.log("Form được submit, file: " + file.name + ", kích thước: " + file.size + " bytes");
+
+                $.ajax({
+                    url: '@Url.Action("Edit", "Accounts")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            // Chuyển hướng về trang Index nếu thành công
+                            window.location.href = '@Url.Action("Index", "Accounts")';
+                        } else {
+                            // Hiển thị lỗi validation
+                            $('#errorSummary').html('');
+                            if (response.errors) {
+                                $.each(response.errors, function (key, value) {
+                                    if (key === '') {
+                                        $('#errorSummary').append('<p>' + value + '</p>');
+                                    } else {
+                                        $('span[data-valmsg-for="' + key + '"]').html(value);
+                                    }
+                                });
+                            }
+                            console.log("Lỗi từ server: ", response.errors);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#errorSummary').html('<p>Lỗi khi gửi yêu cầu: ' + error + '</p>');
+                        console.log("Lỗi AJAX: ", error);
+                    }
+                });
             });
         });
     </script>
