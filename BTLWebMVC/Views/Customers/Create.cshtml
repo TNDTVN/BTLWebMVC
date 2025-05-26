@@ -132,13 +132,27 @@
                         </div>
                     </div>
 
-                    @*<div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Tài khoản</label>
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Tên đăng nhập</label>
                         <div class="col-sm-10">
-                            @Html.DropDownList("AccountID", null, "Chọn tài khoản", new { @class = "form-select" })
-                            @Html.ValidationMessageFor(model => model.AccountID, "", new { @class = "text-danger" })
+                            <input type="text" name="Username" class="form-control" placeholder="Nhập tên đăng nhập" required />
+                            @if (ViewData.ModelState["Username"] != null && ViewData.ModelState["Username"].Errors.Any())
+                            {
+                                <span class="text-danger">@ViewData.ModelState["Username"].Errors.First().ErrorMessage</span>
+                            }
                         </div>
-                    </div>*@
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Mật khẩu</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="Password" class="form-control" placeholder="Nhập mật khẩu" required />
+                            @if (ViewData.ModelState["Password"] != null && ViewData.ModelState["Password"].Errors.Any())
+                            {
+                                <span class="text-danger">@ViewData.ModelState["Password"].Errors.First().ErrorMessage</span>
+                            }
+                        </div>
+                    </div>
 
                     <div class="mb-3 row">
                         <div class="offset-sm-2 col-sm-10">
