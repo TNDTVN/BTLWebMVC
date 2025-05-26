@@ -1,14 +1,23 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Thông tin tài khoản";
     Layout = "~/Views/Shared/LayoutUsers.cshtml";
 }
 
 @model BTLWebMVC.Models.Customer
-@* Các phần khai báo model, etc. giữ nguyên *@
 
 <div class="container-fluid mt-5 pt-5 pb-5">
     <div class="profile-container p-4 bg-white shadow-sm rounded mx-auto" style="max-width: 700px;">
+        <!-- Toast container -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+            <div id="toastMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+                <div class="toast-header">
+                    <strong class="me-auto" id="toastTitle"></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toastText"></div>
+            </div>
+        </div>
+
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="d-flex align-items-center">
                 <img src="~/Content/accountImages/@(Model.Account.ProfileImage ?? "profile.jpg")"
@@ -17,8 +26,8 @@
                      style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #e0e0e0; margin-right: 1cm;"
                      alt="Profile Image">
                 <div>
-                    <h4 class="mb-0">@Model.CustomerName</h4>
-                    <small class="text-muted">e.g. @Model.City, @Model.Country</small>
+                    <h4 class="mb-0" id="customerNameDisplay">@Model.CustomerName</h4>
+                    <small class="text-muted" id="locationDisplay">e.g. @Model.City, @Model.Country</small>
                 </div>
             </div>
             <div class="form-group mb-0">
@@ -28,17 +37,7 @@
             </div>
         </div>
 
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-        }
-
-        @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Update", "UserAcount", FormMethod.Post, new { id = "updateForm", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
             <input type="file" name="profileImage" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
@@ -64,8 +63,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Email</label>
-                        @Html.TextBoxFor(m => m.Account.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com" })
-                        @Html.ValidationMessageFor(m => m.Account.Email, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -111,7 +110,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-orange btn-sm btn-block mt-4">Save Changes</button>
+            <button type="submit" class="btn btn-orange btn-sm btn-block mt-4">Lưu thay đổi</button>
         }
     </div>
 </div>
@@ -134,7 +133,7 @@
         }
 
         .container-fluid {
-            min-height: calc(100vh - 100px); /* Giảm chiều cao để tránh chồng lấn */
+            min-height: calc(100vh - 100px);
             padding-top: 30px;
             padding-bottom: 50px;
         }
@@ -150,13 +149,6 @@
         .custom-file-upload {
             cursor: pointer;
         }
-
-            .custom-file-upload:hover {
-            }
-
-            .custom-file-upload i {
-                margin-right: 0.3rem;
-            }
 
         .form-control-lg {
             padding: 15px;
@@ -195,10 +187,46 @@
         .text-muted {
             color: #6c757d !important;
         }
+
+        /* Toast styles */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1055;
+        }
+
+        .toast {
+            min-width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast-success .toast-header {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .toast-error .toast-header {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .toast-header {
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .toast-body {
+            font-size: 14px;
+            padding: 15px;
+        }
     </style>
 }
 
 @section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function previewImage(event) {
             const reader = new FileReader();
@@ -210,5 +238,59 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
+
+        $(document).ready(function () {
+            $('#updateForm').on('submit', function (e) {
+                e.preventDefault(); // Ngăn form submit thông thường
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '@Url.Action("Update", "UserAcount")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        var toast = $('#toastMessage');
+                        var toastTitle = $('#toastTitle');
+                        var toastText = $('#toastText');
+
+                        // Xóa các class trước đó
+                        toast.removeClass('toast-success toast-error');
+                        toastTitle.text(response.success ? 'Thành công' : 'Lỗi');
+
+                        if (response.success) {
+                            toast.addClass('toast-success');
+                            toastText.text(response.message);
+
+                            // Cập nhật hiển thị tên và vị trí
+                            $('#customerNameDisplay').text($('#CustomerName').val());
+                            $('#locationDisplay').text('e.g. ' + $('#City').val() + ', ' + $('#Country').val());
+                        } else {
+                            toast.addClass('toast-error');
+                            toastText.text(response.message);
+                        }
+
+                        // Hiển thị toast
+                        var bsToast = new bootstrap.Toast(toast);
+                        bsToast.show();
+                    },
+                    error: function (xhr, status, error) {
+                        var toast = $('#toastMessage');
+                        var toastTitle = $('#toastTitle');
+                        var toastText = $('#toastText');
+
+                        toast.removeClass('toast-success toast-error').addClass('toast-error');
+                        toastTitle.text('Lỗi');
+                        toastText.text('Lỗi khi gửi yêu cầu: ' + error);
+
+                        // Hiển thị toast
+                        var bsToast = new bootstrap.Toast(toast);
+                        bsToast.show();
+                    }
+                });
+            });
+        });
     </script>
 }
