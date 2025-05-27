@@ -46,14 +46,14 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Tên</label>
-                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "Ngô Tấn Phúc" })
+                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "vd: Ngô Tấn Phúc" })
                         @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Họ</label>
-                        @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "Phúc" })
+                        @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "vd: Phúc" })
                         @Html.ValidationMessageFor(m => m.ContactName, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -63,14 +63,14 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Email</label>
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "customer@vtnn.com" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "vd: customer@vtnn.com" })
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Số điện thoại</label>
-                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "0909765432" })
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control form-control-lg border-0 shadow-sm", @placeholder = "0909765432", type = "text", maxlength = "10" })
                         @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -238,6 +238,27 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
+
+        // xử l1i elememnt document
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ngăn nhập ký tự đặc biệt vào tên
+            const nameInput = document.querySelector("input[name='CustomerName']");
+            nameInput.addEventListener("input", function () {
+                const regex = /[^a-zA-ZÀ-ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]/g;
+                this.value = this.value.replace(regex, '');
+            });
+            const contactNameInput = document.querySelector("input[name='ContactName']");
+            contactNameInput.addEventListener("input", function () {
+                const regex = /[^a-zA-ZÀ-ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]/g;
+                this.value = this.value.replace(regex, '');
+            })
+
+            // Sửa lại phoneInput vào cùng khối
+            const phoneInput = document.querySelector("input[name='Phone']");
+            phoneInput.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+        });
 
         $(document).ready(function () {
             $('#updateForm').on('submit', function (e) {

@@ -166,7 +166,8 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
                     @Html.HiddenFor(model => model.ProductID)
-
+                    // input an de cap nhap cac san pam
+                    <input type="hidden" name="ImagesToDelete" id="ImagesToDelete" value="" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -279,6 +280,9 @@
         $(document).ready(function () {
             console.log("Edit page loaded, Images count: " + @(Model.Images?.Count ?? 0));
 
+            // Khởi tạo mảng để lưu các imageId cần xóa
+            let imagesToDelete = [];
+
             // Định dạng giá trị UnitPrice khi trang tải
             const unitPriceInput = $("#UnitPrice");
             if (unitPriceInput.val()) {
@@ -350,8 +354,13 @@
             $("#existingImagePreviewContainer .delete-btn").on("click", function () {
                 const imageId = $(this).val();
                 if (imageId) {
+                    // Thêm imageId vào mảng imagesToDelete
+                    imagesToDelete.push(imageId);
+                    // Cập nhật giá trị của input ẩn
+                    $("#ImagesToDelete").val(imagesToDelete.join(","));
+                    // Xóa phần tử khỏi giao diện
                     $(this).parent().remove();
-                    console.log("Image with ID " + imageId + " deleted from preview");
+                    console.log("Image with ID " + imageId + " added to delete list: ", imagesToDelete);
                 }
             });
         });

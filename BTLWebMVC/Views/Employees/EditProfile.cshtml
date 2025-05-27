@@ -41,15 +41,15 @@
         transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
 
-    .form-control[readonly] {
-        background-color: #e9ecef;
-        cursor: not-allowed;
-    }
+        .form-control[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
 
     .btn-primary {
         background: #007bff;
@@ -59,11 +59,11 @@
         transition: all 0.3s;
     }
 
-    .btn-primary:hover {
-        background: #0056b3;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
     .btn-secondary {
         border-radius: 8px;
@@ -71,10 +71,10 @@
         transition: all 0.3s;
     }
 
-    .btn-secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
     .profile-section {
         display: flex;
@@ -104,9 +104,9 @@
         transition: transform 0.3s;
     }
 
-    .profile-image:hover {
-        transform: scale(1.05);
-    }
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
 
     .image-preview {
         position: absolute;
@@ -141,16 +141,16 @@
         max-width: 300px;
     }
 
-    .upload-btn:hover {
-        background-color: #f1f3f5;
-        border-color: #adb5bd;
-    }
+        .upload-btn:hover {
+            background-color: #f1f3f5;
+            border-color: #adb5bd;
+        }
 
-    .upload-btn i {
-        margin-right: 8px;
-        color: #007bff;
-        font-size: 1.2rem;
-    }
+        .upload-btn i {
+            margin-right: 8px;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
 
     .file-input {
         position: absolute;
@@ -299,12 +299,22 @@
                                 @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập mã bưu điện" } })
                                 @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "invalid-feedback" })
                             </div>
-
                             <div class="form-group">
                                 <label for="Phone">Số điện thoại</label>
-                                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số điện thoại" } })
+                                @Html.EditorFor(model => model.Phone, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập số điện thoại",
+                                        type = "text",
+                                        maxlength = "10",
+
+                                    }
+                                })
                                 @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "invalid-feedback" })
                             </div>
+
                         </div>
 
                         <!-- Cột 2 -->
@@ -442,5 +452,16 @@
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
         });
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.querySelector("input[name='Phone']");
+            phoneInput.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+        });
+
+
     </script>
 }

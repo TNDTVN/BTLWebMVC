@@ -38,8 +38,11 @@ namespace BTLWebMVC.Models
         [StringLength(50, ErrorMessage = "Quốc gia không được vượt quá 50 ký tự")]
         public string Country { get; set; }
 
-        [StringLength(20, ErrorMessage = "Số điện thoại không được vượt quá 20 ký tự")]
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải gồm đúng 10 chữ số")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Số điện thoại phải gồm đúng 10 chữ số")]
         public string Phone { get; set; }
+
 
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         [StringLength(100, ErrorMessage = "Email không được vượt quá 100 ký tự")]

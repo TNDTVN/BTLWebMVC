@@ -45,11 +45,16 @@
                                     {
                                         <span class="badge bg-danger">Ngừng bán</span>
                                     }
+                                    else if (item.UnitsInStock == 0)
+                                    {
+                                        <span class="badge bg-warning text-dark">Tạm hết hàng</span>
+                                    }
                                     else
                                     {
                                         <span class="badge bg-success">Còn hàng</span>
                                     }
                                 </td>
+
                                 <td>
                                     @if (item.Images != null && item.Images.Any())
                                     {

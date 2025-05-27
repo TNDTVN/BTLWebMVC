@@ -1,5 +1,7 @@
 System.InvalidOperationException: The model backing the 'Context' context has changed since the database was created. Consider using Code First Migrations to update the database (http://go.microsoft.com/fwlink/?LinkId=238269).
    at System.Data.Entity.CreateDatabaseIfNotExists`1.InitializeDatabase(TContext context)
+   at System.Data.Entity.Internal.InternalContext.<>c__DisplayClassf`1.<CreateInitializationAction>b__e()
    at System.Data.Entity.Internal.InternalContext.PerformInitializationAction(Action action)
    at System.Data.Entity.Internal.InternalContext.PerformDatabaseInitialization()
-   at BTLWebMVC.MvcApplication.Application_Start() in D:\LapTrinhWebMVC\BTLWebMVC\BTLWebMVC\Global.asax.cs:line 21
+   at System.Data.Entity.Database.Initialize(Boolean force)
+   at BTLWebMVC.MvcApplication.Application_Start() in D:\Dthu\HK6\MVC\BTL_MVC\BTLWebMVC\BTLWebMVC\Global.asax.cs:line 21

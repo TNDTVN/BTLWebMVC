@@ -113,7 +113,7 @@
                     <div class="mb-3 row">
                         <label class="col-sm-2 col-form-label">Quốc gia</label>
                         <div class="col-sm-10">
-                            @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập quốc gia" } })
+                            @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập quốc gia"  } })
                             @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                     <div class="mb-3 row">
                         <label class="col-sm-2 col-form-label">Số điện thoại</label>
                         <div class="col-sm-10">
-                            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số điện thoại" } })
+                            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số điện thoại", type = "number", maxlength = "10" } })
                             @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -158,6 +158,12 @@
     <script>
         $(document).ready(function () {
             console.log("Server Debug: @ViewBag.DebugMessage");
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.querySelector("input[name='Phone']");
+            phoneInput.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
         });
     </script>
 }

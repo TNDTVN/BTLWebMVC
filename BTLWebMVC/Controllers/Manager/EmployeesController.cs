@@ -24,21 +24,24 @@ namespace BTLWebMVC.Controllers.Manager
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
             {
                 Console.WriteLine("Session AccountId invalid or missing.");
-                return RedirectToAction("Login", "Login");
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Home");
             }
 
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == id);
             if (account == null)
             {
                 Console.WriteLine($"Account with ID {id} not found.");
-                return RedirectToAction("Login", "Login");
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.UserRole = account.Role;
             if (account.Role != "Admin" && account.Role != "Employee")
             {
                 Console.WriteLine($"Account ID {id} role {account.Role} access denied.");
-                return RedirectToAction("AccessDenied", "Home");
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Home");
             }
       
 
@@ -290,7 +293,7 @@ namespace BTLWebMVC.Controllers.Manager
             {
                 Console.WriteLine("Session AccountId invalid or missing.");
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để chỉnh sửa thông tin!";
-                return RedirectToAction("Login", "Login");
+                return RedirectToAction("Index", "Home");
             }
 
             var employee = db.Employees.Include(e => e.Account)
@@ -323,7 +326,7 @@ namespace BTLWebMVC.Controllers.Manager
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int id))
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để chỉnh sửa thông tin!";
-                return RedirectToAction("Login", "Login");
+                return RedirectToAction("Index", "Home");
             }
 
             if (employee.AccountID != id)

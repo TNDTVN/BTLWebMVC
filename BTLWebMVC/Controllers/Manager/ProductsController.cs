@@ -89,12 +89,12 @@ namespace BTLWebMVC.Controllers
                             if (!allowedExtensions.Contains(extension))
                             {
                                 ModelState.AddModelError("ImageFiles", $"Tệp {file.FileName} không hợp lệ. Chỉ chấp nhận .jpg, .jpeg hoặc .png!");
-                                return View(product); // Trả lại view ngay lập tức nếu có lỗi
+                                return View(product); 
                             }
-                            if (file.ContentLength > 5 * 1024 * 1024) // 5MB
+                            if (file.ContentLength > 5 * 1024 * 1024) 
                             {
                                 ModelState.AddModelError("ImageFiles", $"Tệp {file.FileName} vượt quá 5MB!");
-                                return View(product); // Trả lại view ngay lập tức nếu có lỗi
+                                return View(product); 
                             }
                         }
                     }
@@ -161,7 +161,7 @@ namespace BTLWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product, HttpPostedFileBase[] ImageFiles, int[] ImagesToDelete)
+        public ActionResult Edit([Bind(Include = "ProductID,ProductName,CategoryID,SupplierID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,Discontinued,ProductDescription")] Product product, HttpPostedFileBase[] ImageFiles, string ImagesToDelete)
         {
             if (ModelState.IsValid)
             {
@@ -170,9 +170,11 @@ namespace BTLWebMVC.Controllers
                     db.Entry(product).State = EntityState.Modified;
                     db.SaveChanges();
 
-                    if (ImagesToDelete != null && ImagesToDelete.Any())
+                    // Xử lý danh sách ImagesToDelete
+                    if (!string.IsNullOrEmpty(ImagesToDelete))
                     {
-                        foreach (var imageId in ImagesToDelete)
+                        var imageIds = ImagesToDelete.Split(',').Select(int.Parse).ToArray();
+                        foreach (var imageId in imageIds)
                         {
                             var image = db.Images.FirstOrDefault(i => i.ImageID == imageId && i.ProductID == product.ProductID);
                             if (image != null)
