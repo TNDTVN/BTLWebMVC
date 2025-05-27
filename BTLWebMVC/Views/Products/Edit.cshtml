@@ -195,7 +195,7 @@
 
                             <div class="form-group">
                                 <label for="UnitPrice">Giá đơn vị</label>
-                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "1000" } })
+                                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", id = "UnitPrice", type = "number", min = "0", step = "1", value = Model.UnitPrice.ToString("F0") } })
                                 @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                             </div>
 
@@ -278,6 +278,23 @@
     <script>
         $(document).ready(function () {
             console.log("Edit page loaded, Images count: " + @(Model.Images?.Count ?? 0));
+
+            // Định dạng giá trị UnitPrice khi trang tải
+            const unitPriceInput = $("#UnitPrice");
+            if (unitPriceInput.val()) {
+                unitPriceInput.val(parseInt(unitPriceInput.val())); // Chuyển về số nguyên
+            }
+
+            // Xử lý sự kiện submit form
+            $("form").on("submit", function (e) {
+                // Đảm bảo giá trị UnitPrice là số nguyên trước khi submit
+                const unitPrice = unitPriceInput.val();
+                if (unitPrice) {
+                    unitPriceInput.val(parseInt(unitPrice)); // Loại bỏ phần thập phân
+                }
+            });
+
+            // Xử lý chọn file ảnh
             $("#ImageFiles").on("change", function () {
                 console.log("ImageFiles change event triggered");
                 const files = this.files;
