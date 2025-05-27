@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using BTLWebMVC.App_Start;
 using BTLWebMVC.Models;
+using System.Text.RegularExpressions;
 
 namespace BTLWebMVC.Controllers
 {
@@ -164,23 +165,86 @@ namespace BTLWebMVC.Controllers
         [HttpPost]
         public JsonResult Register(string newUsername, string newPassword, string newName, string newEmail, string newPhone)
         {
+            // Xóa khoảng trắng thừa
+            newUsername = newUsername?.Trim();
+            newPassword = newPassword?.Trim();
+            newName = newName?.Trim();
+            newEmail = newEmail?.Trim();
+            newPhone = newPhone?.Trim();
+
+            // Kiểm tra các trường không được để trống
+            if (string.IsNullOrEmpty(newUsername))
+            {
+                return Json(new { success = false, message = "Tên đăng nhập không được để trống." });
+            }
+            if (string.IsNullOrEmpty(newPassword))
+            {
+                return Json(new { success = false, message = "Mật khẩu không được để trống." });
+            }
+            if (string.IsNullOrEmpty(newName))
+            {
+                return Json(new { success = false, message = "Tên không được để trống." });
+            }
+            if (string.IsNullOrEmpty(newEmail))
+            {
+                return Json(new { success = false, message = "Email không được để trống." });
+            }
+            if (string.IsNullOrEmpty(newPhone))
+            {
+                return Json(new { success = false, message = "Số điện thoại không được để trống." });
+            }
+
+            // Kiểm tra định dạng tên người dùng
+            if (!Regex.IsMatch(newUsername, @"^[a-zA-Z0-9_.]{3,50}$"))
+            {
+                return Json(new { success = false, message = "Tên đăng nhập chỉ chứa chữ cái, số, dấu chấm hoặc gạch dưới, độ dài từ 3 đến 50 ký tự." });
+            }
+
+            // Kiểm tra tên người dùng đã tồn tại
             if (db.Accounts.Any(a => a.Username == newUsername))
             {
                 return Json(new { success = false, message = "Tên đăng nhập đã tồn tại." });
             }
 
+            // Kiểm tra định dạng mật khẩu
+            if (newPassword.Length < 6 || newPassword.Length > 100)
+            {
+                return Json(new { success = false, message = "Mật khẩu phải có độ dài từ 6 đến 100 ký tự." });
+            }
+            if (!Regex.IsMatch(newPassword, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,100}$"))
+            {
+                return Json(new { success = false, message = "Mật khẩu phải chứa ít nhất một chữ cái in hoa, một chữ cái thường, một số và một ký tự đặc biệt." });
+            }
+
+            // Kiểm tra định dạng email
+            if (newEmail.Length > 100 || !Regex.IsMatch(newEmail, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            {
+                return Json(new { success = false, message = "Email không đúng định dạng." });
+            }
+
+            // Kiểm tra email đã tồn tại
             if (db.Accounts.Any(a => a.Email == newEmail))
             {
                 return Json(new { success = false, message = "Email đã được sử dụng." });
             }
-            if (newPassword.Length < 6)
+
+            // Kiểm tra định dạng số điện thoại
+            if (newPhone.Length > 15 || !Regex.IsMatch(newPhone, @"^(?:\+84|0)(3|5|7|8|9)\d{8}$"))
             {
-                return Json(new { success = false, message = "Mật khẩu vui lòng nhập nhiều hơn 6 ký tự." });
+                return Json(new { success = false, message = "Số điện thoại không đúng định dạng (VD: +849xxxxxxxx hoặc 09xxxxxxxx)." });
             }
+
+            // Kiểm tra định dạng tên
+            if (newName.Length < 2 || newName.Length > 100 || !Regex.IsMatch(newName, @"^[a-zA-ZÀ-ỹ\s]+$"))
+            {
+                return Json(new { success = false, message = "Tên chỉ chứa chữ cái và dấu cách, độ dài từ 2 đến 100 ký tự." });
+            }
+
+            // Tạo tài khoản
             var account = new Account
             {
                 Username = newUsername,
-                Password = newPassword,
+                Password = newPassword, // Lưu ý: Nên mã hóa mật khẩu trước khi lưu
                 Email = newEmail,
                 ProfileImage = "profile.jpg",
                 CreatedDate = DateTime.Now,
@@ -190,6 +254,7 @@ namespace BTLWebMVC.Controllers
             db.Accounts.Add(account);
             db.SaveChanges();
 
+            // Tạo khách hàng
             var customer = new Customer
             {
                 CustomerName = newName,
