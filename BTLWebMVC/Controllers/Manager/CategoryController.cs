@@ -23,7 +23,7 @@ namespace BTLWebMVC.Controllers.Manager
             }
 
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
-            if (account == null || account.Role != "Admin")
+            if (account == null)
             {
                 Debug.WriteLine($"Account with ID {parsedAccountId} not found or not Admin.");
                 return RedirectToAction("Index", "Home");

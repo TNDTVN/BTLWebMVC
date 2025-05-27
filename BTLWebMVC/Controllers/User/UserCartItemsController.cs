@@ -134,7 +134,7 @@ namespace BTLWebMVC.Controllers.User
 
         // POST: Chuyển giỏ hàng thành đơn hàng
         [HttpPost]
-        public JsonResult CreateOrder(string customerName, string contactName, string phone, string email, string shipAddress, string shipCity, string shipPostalCode, string shipCountry, string notes)
+        public JsonResult CreateOrder(string shipAddress, string shipCity, string shipPostalCode, string shipCountry, string notes)
         {
             if (Session["AccountId"] == null)
             {
@@ -149,22 +149,6 @@ namespace BTLWebMVC.Controllers.User
             }
 
             // Kiểm tra các trường bắt buộc
-            if (string.IsNullOrEmpty(customerName))
-            {
-                return Json(new { success = false, message = "Tên khách hàng không được để trống!" });
-            }
-            if (string.IsNullOrEmpty(contactName))
-            {
-                return Json(new { success = false, message = "Tên người liên hệ không được để trống!" });
-            }
-            if (string.IsNullOrEmpty(phone))
-            {
-                return Json(new { success = false, message = "Số điện thoại không được để trống!" });
-            }
-            if (string.IsNullOrEmpty(email))
-            {
-                return Json(new { success = false, message = "Email không được để trống!" });
-            }
             if (string.IsNullOrEmpty(shipAddress))
             {
                 return Json(new { success = false, message = "Địa chỉ giao hàng không được để trống!" });
@@ -182,23 +166,7 @@ namespace BTLWebMVC.Controllers.User
                 return Json(new { success = false, message = "Quốc gia không được để trống!" });
             }
 
-            // Kiểm tra độ dài tối đa (dựa trên model Customer)
-            if (customerName.Length > 100)
-            {
-                return Json(new { success = false, message = "Tên khách hàng không được vượt quá 100 ký tự!" });
-            }
-            if (contactName.Length > 100)
-            {
-                return Json(new { success = false, message = "Tên người liên hệ không được vượt quá 100 ký tự!" });
-            }
-            if (phone.Length > 20)
-            {
-                return Json(new { success = false, message = "Số điện thoại không được vượt quá 20 ký tự!" });
-            }
-            if (email.Length > 100)
-            {
-                return Json(new { success = false, message = "Email không được vượt quá 100 ký tự!" });
-            }
+            // Kiểm tra độ dài tối đa (dựa trên model Customer để nhất quán)
             if (shipAddress.Length > 100)
             {
                 return Json(new { success = false, message = "Địa chỉ giao hàng không được vượt quá 100 ký tự!" });
@@ -218,28 +186,6 @@ namespace BTLWebMVC.Controllers.User
             if (!string.IsNullOrEmpty(notes) && notes.Length > 500) // Giả sử Notes tối đa 500 ký tự
             {
                 return Json(new { success = false, message = "Ghi chú không được vượt quá 500 ký tự!" });
-            }
-
-            // Kiểm tra định dạng số điện thoại (Việt Nam)
-            if (!Regex.IsMatch(phone, @"^(?:\+84|0)(3|5|7|8|9)\d{8}$"))
-            {
-                return Json(new { success = false, message = "Số điện thoại không đúng định dạng (VD: +849xxxxxxxx hoặc 09xxxxxxxx)." });
-            }
-
-            // Kiểm tra định dạng email
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                return Json(new { success = false, message = "Email không đúng định dạng." });
-            }
-
-            // Kiểm tra định dạng tên khách hàng và tên liên hệ (chỉ chứa chữ cái, dấu cách, và ký tự tiếng Việt)
-            if (!Regex.IsMatch(customerName, @"^[a-zA-ZÀ-ỹ\s]+$"))
-            {
-                return Json(new { success = false, message = "Tên khách hàng chỉ được chứa chữ cái và dấu cách." });
-            }
-            if (!Regex.IsMatch(contactName, @"^[a-zA-ZÀ-ỹ\s]+$"))
-            {
-                return Json(new { success = false, message = "Tên người liên hệ chỉ được chứa chữ cái và dấu cách." });
             }
 
             // Kiểm tra định dạng thành phố và quốc gia (chỉ chứa chữ cái, dấu cách, và ký tự tiếng Việt)
@@ -281,7 +227,7 @@ namespace BTLWebMVC.Controllers.User
                     ShipCity = shipCity,
                     ShipPostalCode = shipPostalCode,
                     ShipCountry = shipCountry,
-                    Notes = notes,
+                    Notes = HttpUtility.HtmlEncode(notes), // Mã hóa để tránh XSS
                     Freight = 0,
                     IsCancelled = false
                 };
@@ -304,6 +250,8 @@ namespace BTLWebMVC.Controllers.User
             }
             catch (Exception ex)
             {
+                // Log lỗi để debug
+                System.Diagnostics.Debug.WriteLine($"Error creating order: {ex.Message}, StackTrace: {ex.StackTrace}");
                 return Json(new { success = false, message = "Có lỗi xảy ra khi tạo đơn hàng: " + ex.Message });
             }
         }
