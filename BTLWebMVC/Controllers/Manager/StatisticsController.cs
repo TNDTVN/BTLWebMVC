@@ -40,11 +40,12 @@ namespace BTLWebMVC.Controllers.Manager
                 return RedirectToAction("Index", "Home");
             }
 
-            // Lấy danh sách đơn hàng
+            // Lấy danh sách đơn hàng, loại bỏ hóa đơn chưa duyệt (EmployeeID == null) và hóa đơn đã hủy (IsCancelled == true)
             var ordersQuery = db.Orders
                 .Include(o => o.OrderDetails.Select(od => od.Product))
                 .Include(o => o.Customer)
-                .Include(o => o.Employee);
+                .Include(o => o.Employee)
+                .Where(o => o.EmployeeID != null && !o.IsCancelled); // Thêm điều kiện lọc
 
             if (filterType == "Month")
             {
@@ -114,7 +115,8 @@ namespace BTLWebMVC.Controllers.Manager
             var chartData = new List<object>();
             var ordersQuery = db.Orders
                 .Include(o => o.OrderDetails)
-                .Where(o => filterType == "Month" ? o.OrderDate.Month == month && o.OrderDate.Year == year : o.OrderDate.Year == year);
+                .Where(o => filterType == "Month" ? o.OrderDate.Month == month && o.OrderDate.Year == year : o.OrderDate.Year == year)
+                .Where(o => o.EmployeeID != null && !o.IsCancelled); // Thêm điều kiện lọc
 
             if (account.Role != "Admin")
             {
@@ -199,10 +201,12 @@ namespace BTLWebMVC.Controllers.Manager
                 return new HttpStatusCodeResult(401);
             }
 
+            // Lấy danh sách đơn hàng, loại bỏ hóa đơn chưa duyệt (EmployeeID == null) và hóa đơn đã hủy (IsCancelled == true)
             var ordersQuery = db.Orders
                 .Include(o => o.OrderDetails.Select(od => od.Product))
                 .Include(o => o.Customer)
-                .Include(o => o.Employee);
+                .Include(o => o.Employee)
+                .Where(o => o.EmployeeID != null && !o.IsCancelled); // Thêm điều kiện lọc
 
             if (filterType == "Month")
             {
@@ -357,7 +361,8 @@ namespace BTLWebMVC.Controllers.Manager
             var chartData = new List<ChartData>();
             var ordersQuery = db.Orders
                 .Include(o => o.OrderDetails)
-                .Where(o => filterType == "Month" ? o.OrderDate.Month == month && o.OrderDate.Year == year : o.OrderDate.Year == year);
+                .Where(o => filterType == "Month" ? o.OrderDate.Month == month && o.OrderDate.Year == year : o.OrderDate.Year == year)
+                .Where(o => o.EmployeeID != null && !o.IsCancelled); // Thêm điều kiện lọc
 
             if (account.Role != "Admin")
             {
@@ -424,4 +429,5 @@ namespace BTLWebMVC.Controllers.Manager
             return chartData;
         }
     }
+    
 }

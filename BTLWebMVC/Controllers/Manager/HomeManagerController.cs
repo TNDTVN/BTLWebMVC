@@ -48,7 +48,8 @@ namespace BTLWebMVC.Controllers
         public int ThongKeDonHangTheoThang(int month, int year)
         {
             return db.Orders
-                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
+                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year
+                            && o.EmployeeID != null && !o.IsCancelled) // Loại bỏ hóa đơn chưa duyệt và đã hủy
                 .Count();
         }
 
@@ -56,7 +57,8 @@ namespace BTLWebMVC.Controllers
         {
             var ordersInMonth = db.Orders
                 .Include(o => o.OrderDetails)
-                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
+                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year
+                            && o.EmployeeID != null && !o.IsCancelled) // Loại bỏ hóa đơn chưa duyệt và đã hủy
                 .ToList();
 
             if (!ordersInMonth.Any())
@@ -74,6 +76,7 @@ namespace BTLWebMVC.Controllers
         public int NewCustomerCount(int month, int year)
         {
             var firstOrderDates = db.Orders
+                .Where(o => o.EmployeeID != null && !o.IsCancelled) // Loại bỏ hóa đơn chưa duyệt và đã hủy
                 .GroupBy(o => o.CustomerID)
                 .Select(g => new { CustomerID = g.Key, FirstOrderDate = g.Min(o => o.OrderDate) })
                 .Where(o => o.FirstOrderDate.Month == month && o.FirstOrderDate.Year == year);
@@ -85,7 +88,8 @@ namespace BTLWebMVC.Controllers
         {
             var ordersInMonth = db.Orders
                 .Include(o => o.OrderDetails)
-                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
+                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year
+                            && o.EmployeeID != null && !o.IsCancelled) // Loại bỏ hóa đơn chưa duyệt và đã hủy
                 .ToList();
 
             if (!ordersInMonth.Any())
@@ -109,7 +113,8 @@ namespace BTLWebMVC.Controllers
                     .Include(o => o.OrderDetails)
                     .Where(o => o.OrderDate.Month == month &&
                                 o.OrderDate.Year == year &&
-                                o.OrderDate.Day == day)
+                                o.OrderDate.Day == day &&
+                                o.EmployeeID != null && !o.IsCancelled) 
                     .ToList();
 
                 decimal dailyRevenue = dailyOrders
