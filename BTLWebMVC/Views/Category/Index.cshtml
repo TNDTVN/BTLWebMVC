@@ -199,7 +199,7 @@
     <script>
         $(document).ready(function () {
             // Khởi tạo DataTables
-            $('#categoryTable').DataTable({
+            var table = $('#categoryTable').DataTable({
                 "paging": false, // Tắt phân trang client-side
                 "lengthChange": false,
                 "searching": true,
@@ -215,6 +215,12 @@
                     $('td:eq(0)', row).html(index + 1);
                 }
             });
+
+            // Vô hiệu hóa autofill và xóa giá trị trường tìm kiếm
+            var searchInput = $('#categoryTable_filter input');
+            searchInput.attr('autocomplete', 'off'); // Ngăn trình duyệt tự động điền
+            searchInput.val(''); // Xóa giá trị tự điền
+            table.search('').draw(); // Đặt lại bộ lọc để hiển thị toàn bộ dữ liệu
 
             // Kiểm tra sessionStorage để hiển thị toast sau reload
             var action = sessionStorage.getItem('categoryAction');
