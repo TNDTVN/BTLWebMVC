@@ -23,9 +23,9 @@ namespace BTLWebMVC.Controllers.Manager
             }
 
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
-            if (account == null || account.Role != "Admin")
+            if (account == null || (account.Role != "Admin" && account.Role != "Employee"))
             {
-                Debug.WriteLine($"Account with ID {parsedAccountId} not found or not Admin.");
+                Debug.WriteLine($"Account with ID {parsedAccountId} not found or not authorized.");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -62,7 +62,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SupplierName,ContactName,Address,City,PostalCode,Country,Phone,Email")] Supplier supplier)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
 
             var supplier = db.Suppliers.Find(id);
             if (supplier == null)
@@ -117,7 +117,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SupplierID,SupplierName,ContactName,Address,City,PostalCode,Country,Phone,Email")] Supplier supplier)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             if (ModelState.IsValid)
             {
@@ -156,7 +156,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             var supplier = db.Suppliers.Include(s => s.Products).FirstOrDefault(s => s.SupplierID == id);
             if (supplier == null)
@@ -181,13 +181,13 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Details(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không được phép!" }, JsonRequestBehavior.AllowGet);
 
             var supplier = db.Suppliers.Find(id);
             if (supplier == null)
             {
                 Debug.WriteLine($"Supplier with ID {id} not found.");
-                return Json(new { success = false, message = "Nhà cung cấp không tồn tại!" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, message = "Không tìm thấy nhà cung cấp!" }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -208,17 +208,17 @@ namespace BTLWebMVC.Controllers.Manager
             }, JsonRequestBehavior.AllowGet);
         }
 
-        private bool IsAdmin()
+        private bool IsAuthorized()
         {
             var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
             {
-                Debug.WriteLine("Session AccountId invalid or missing.");
+                Debug.WriteLine("Session Account ID invalid or missing.");
                 return false;
             }
 
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
-            return account != null && account.Role == "Admin";
+            return account != null && (account.Role == "Admin" || account.Role == "Employee");
         }
 
         protected override void Dispose(bool disposing)

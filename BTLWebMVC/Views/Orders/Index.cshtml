@@ -1,5 +1,5 @@
-﻿@model PagedList.IPagedList<BTLWebMVC.Models.Order>
-@using PagedList;
+﻿@model BTLWebMVC.Models.OrderViewModel
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layoutmanager.cshtml";
@@ -59,7 +59,6 @@
         font-weight: 500;
     }
 </style>
-
 <div class="content-wrapper">
     <div style="margin:0.4cm;">
         <h2 class="mb-4">Danh sách đơn hàng</h2>
@@ -94,7 +93,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Where(o => o.EmployeeID == null && !o.IsCancelled))
+                                @foreach (var item in Model.PendingOrders)
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
@@ -119,6 +118,27 @@
                         </table>
                     </div>
                 </div>
+                <!-- Phân trang cho tab Chưa duyệt -->
+                <nav aria-label="Page navigation pending" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.PendingOrders.IsFirstPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.PendingOrders.IsFirstPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber - 1, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = Model.CancelledOrders.PageNumber }))">
+                                <i class="fas fa-chevron-left"></i> Trang trước
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.PendingOrders.PageCount; i++)
+                        {
+                            <li class="page-item @(i == Model.PendingOrders.PageNumber ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pendingPage = i, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = Model.CancelledOrders.PageNumber })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PendingOrders.IsLastPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.PendingOrders.IsLastPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber + 1, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = Model.CancelledOrders.PageNumber }))">
+                                Trang sau <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
             <!-- Đã duyệt -->
@@ -138,7 +158,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Where(o => o.EmployeeID != null && !o.IsCancelled))
+                                @foreach (var item in Model.ApprovedOrders)
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
@@ -161,6 +181,27 @@
                         </table>
                     </div>
                 </div>
+                <!-- Phân trang cho tab Đã duyệt -->
+                <nav aria-label="Page navigation approved" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.ApprovedOrders.IsFirstPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.ApprovedOrders.IsFirstPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = Model.ApprovedOrders.PageNumber - 1, cancelledPage = Model.CancelledOrders.PageNumber }))">
+                                <i class="fas fa-chevron-left"></i> Trang trước
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.ApprovedOrders.PageCount; i++)
+                        {
+                            <li class="page-item @(i == Model.ApprovedOrders.PageNumber ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = i, cancelledPage = Model.CancelledOrders.PageNumber })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.ApprovedOrders.IsLastPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.ApprovedOrders.IsLastPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = Model.ApprovedOrders.PageNumber + 1, cancelledPage = Model.CancelledOrders.PageNumber }))">
+                                Trang sau <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
             <!-- Đã hủy -->
@@ -180,7 +221,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Where(o => o.IsCancelled))
+                                @foreach (var item in Model.CancelledOrders)
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
@@ -201,6 +242,27 @@
                         </table>
                     </div>
                 </div>
+                <!-- Phân trang cho tab Đã hủy -->
+                <nav aria-label="Page navigation cancelled" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.CancelledOrders.IsFirstPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.CancelledOrders.IsFirstPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = Model.CancelledOrders.PageNumber - 1 }))">
+                                <i class="fas fa-chevron-left"></i> Trang trước
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.CancelledOrders.PageCount; i++)
+                        {
+                            <li class="page-item @(i == Model.CancelledOrders.PageNumber ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = i })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.CancelledOrders.IsLastPage ? "disabled" : "")">
+                            <a class="page-link" href="@(Model.CancelledOrders.IsLastPage ? "#" : Url.Action("Index", new { pendingPage = Model.PendingOrders.PageNumber, approvedPage = Model.ApprovedOrders.PageNumber, cancelledPage = Model.CancelledOrders.PageNumber + 1 }))">
+                                Trang sau <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
 
@@ -260,32 +322,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Phân trang -->
-        <nav aria-label="Page navigation example" class="mt-3">
-            <ul class="pagination justify-content-center">
-                <li class="page-item @(Model.IsFirstPage ? "disabled" : "")">
-                    <a class="page-link" href="@(Model.IsFirstPage ? "#" : Url.Action("Index", new { page = Model.PageNumber - 1 }))"
-                       tabindex="@(Model.IsFirstPage ? "-1" : "0")"
-                       aria-disabled="@(Model.IsFirstPage ? "true" : "false")">
-                        <i class="fas fa-chevron-left"></i> Trang trước
-                    </a>
-                </li>
-                @for (int i = 1; i <= Model.PageCount; i++)
-                {
-                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                    </li>
-                }
-                <li class="page-item @(Model.IsLastPage ? "disabled" : "")">
-                    <a class="page-link" href="@(Model.IsLastPage ? "#" : Url.Action("Index", new { page = Model.PageNumber + 1 }))"
-                       tabindex="@(Model.IsLastPage ? "-1" : "0")"
-                       aria-disabled="@(Model.IsLastPage ? "true" : "false")">
-                        Trang sau <i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </div>
 
@@ -297,10 +333,8 @@
                 var orderId = $(this).data('order-id');
                 var detailsUrl = $(this).data('order-details');
 
-                // Hiển thị spinner trong modal
                 $('#orderDetailsContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Đang tải...</span></div></div>');
 
-                // Tải chi tiết đơn hàng
                 $.ajax({
                     url: detailsUrl,
                     type: 'GET',
@@ -313,7 +347,6 @@
                     }
                 });
 
-                // Reset textarea lý do hủy
                 $('#cancelReason').val('');
                 $('#confirmCancelOrder').data('order-id', orderId);
             });
@@ -341,10 +374,8 @@
                 var orderId = $(this).data('order-id');
                 var detailsUrl = $(this).data('order-details');
 
-                // Hiển thị spinner trong modal
                 $('#cancelledOrderDetailsContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Đang tải...</span></div></div>');
 
-                // Tải chi tiết đơn hàng
                 $.ajax({
                     url: detailsUrl,
                     type: 'GET',

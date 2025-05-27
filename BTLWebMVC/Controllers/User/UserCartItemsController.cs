@@ -188,16 +188,6 @@ namespace BTLWebMVC.Controllers.User
                 return Json(new { success = false, message = "Ghi chú không được vượt quá 500 ký tự!" });
             }
 
-            // Kiểm tra định dạng thành phố và quốc gia (chỉ chứa chữ cái, dấu cách, và ký tự tiếng Việt)
-            if (!Regex.IsMatch(shipCity, @"^[a-zA-ZÀ-ỹ\s]+$"))
-            {
-                return Json(new { success = false, message = "Thành phố chỉ được chứa chữ cái và dấu cách." });
-            }
-            if (!Regex.IsMatch(shipCountry, @"^[a-zA-ZÀ-ỹ\s]+$"))
-            {
-                return Json(new { success = false, message = "Quốc gia chỉ được chứa chữ cái và dấu cách." });
-            }
-
             // Kiểm tra định dạng mã bưu điện (chỉ chứa số)
             if (!Regex.IsMatch(shipPostalCode, @"^\d+$"))
             {

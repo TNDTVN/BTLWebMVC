@@ -10,7 +10,7 @@ namespace BTLWebMVC.Controllers.Manager
 {
     public class CategoryController : Controller
     {
-        private Context db = new Context();
+        private readonly Context db = new Context();
 
         // GET: Manager/Category
         public ActionResult Index(int page = 1, int pageSize = 5)
@@ -21,11 +21,10 @@ namespace BTLWebMVC.Controllers.Manager
                 Debug.WriteLine("Session AccountId invalid or missing.");
                 return RedirectToAction("Index", "Home");
             }
-
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
-            if (account == null)
+            if (account == null || (account.Role != "Admin" && account.Role != "Employee"))
             {
-                Debug.WriteLine($"Account with ID {parsedAccountId} not found or not Admin.");
+                Debug.WriteLine($"Account with ID {parsedAccountId} not found or not authorized.");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -62,7 +61,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryName,Description")] Category category)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             if (ModelState.IsValid)
             {
@@ -85,7 +84,7 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
 
             var category = db.Categories.Find(id);
             if (category == null)
@@ -111,7 +110,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             if (ModelState.IsValid)
             {
@@ -144,7 +143,7 @@ namespace BTLWebMVC.Controllers.Manager
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" });
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" });
 
             var category = db.Categories.Include(c => c.Products).FirstOrDefault(c => c.CategoryID == id);
             if (category == null)
@@ -169,7 +168,7 @@ namespace BTLWebMVC.Controllers.Manager
         [HttpGet]
         public ActionResult Details(int id)
         {
-            if (!IsAdmin()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
+            if (!IsAuthorized()) return Json(new { success = false, message = "Không có quyền!" }, JsonRequestBehavior.AllowGet);
 
             var category = db.Categories.Find(id);
             if (category == null)
@@ -190,7 +189,7 @@ namespace BTLWebMVC.Controllers.Manager
             }, JsonRequestBehavior.AllowGet);
         }
 
-        private bool IsAdmin()
+        private bool IsAuthorized()
         {
             var accountId = Session["AccountId"]?.ToString();
             if (string.IsNullOrEmpty(accountId) || !int.TryParse(accountId, out int parsedAccountId))
@@ -200,7 +199,7 @@ namespace BTLWebMVC.Controllers.Manager
             }
 
             var account = db.Accounts.FirstOrDefault(a => a.AccountID == parsedAccountId);
-            return account != null && account.Role == "Admin";
+            return account != null && (account.Role == "Admin" || account.Role == "Employee");
         }
 
         protected override void Dispose(bool disposing)

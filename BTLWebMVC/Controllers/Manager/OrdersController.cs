@@ -26,11 +26,10 @@ namespace BTLWebMVC.Controllers.Manager
     {
         private Context db = new Context();
 
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? pendingPage, int? approvedPage, int? cancelledPage)
         {
             ViewBag.CurrentPage = "Orders";
             int pageSize = 5;
-            int pageNumber = (page ?? 1);
 
             var accountId = Session["AccountId"]?.ToString();
             var ordersQuery = db.Orders
@@ -44,19 +43,15 @@ namespace BTLWebMVC.Controllers.Manager
                 if (account != null)
                 {
                     var employee = db.Employees.FirstOrDefault(e => e.AccountID == account.AccountID);
-                    if (account.Role == "Admin")
-                    {
-                        // Admin thấy tất cả đơn hàng
-                    }
-                    else if (employee != null)
+                    if (account.Role != "Admin" && employee != null)
                     {
                         ordersQuery = ordersQuery
                             .Where(o => o.EmployeeID == null || o.EmployeeID == employee.EmployeeID);
                     }
-                    else
+                    else if (account.Role != "Admin")
                     {
                         TempData["ErrorMessage"] = "Tài khoản không có quyền truy cập đơn hàng.";
-                        return View(new List<Order>().ToPagedList(pageNumber, pageSize));
+                        return View(new OrderViewModel());
                     }
                 }
                 else
@@ -71,11 +66,26 @@ namespace BTLWebMVC.Controllers.Manager
                 return RedirectToAction("Index", "Home");
             }
 
-            var orders = ordersQuery
-                .OrderBy(o => o.OrderID)
-                .ToPagedList(pageNumber, pageSize);
+            // Tạo ViewModel
+            var viewModel = new OrderViewModel
+            {
+                PendingOrders = ordersQuery
+                    .Where(o => o.EmployeeID == null && !o.IsCancelled)
+                    .OrderBy(o => o.OrderID)
+                    .ToPagedList(pendingPage ?? 1, pageSize),
 
-            return View(orders);
+                ApprovedOrders = ordersQuery
+                    .Where(o => o.EmployeeID != null && !o.IsCancelled)
+                    .OrderBy(o => o.OrderID)
+                    .ToPagedList(approvedPage ?? 1, pageSize),
+
+                CancelledOrders = ordersQuery
+                    .Where(o => o.IsCancelled)
+                    .OrderBy(o => o.OrderID)
+                    .ToPagedList(cancelledPage ?? 1, pageSize)
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]
