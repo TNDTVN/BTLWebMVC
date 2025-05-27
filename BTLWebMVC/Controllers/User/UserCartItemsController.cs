@@ -1,5 +1,4 @@
-﻿using BTLWebMVC.App_Start;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +6,8 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using PagedList;
 using BTLWebMVC.Models;
+using BTLWebMVC.App_Start;
+using System.Text.RegularExpressions;
 
 namespace BTLWebMVC.Controllers.User
 {
@@ -55,7 +56,6 @@ namespace BTLWebMVC.Controllers.User
             {
                 return Json(new { success = false, message = "Sản phẩm không tồn tại!" });
             }
-            // Trả lại số lượng sản phẩm vào kho
             product.UnitsInStock += cartItem.Quantity;
 
             db.CartItems.Remove(cartItem);
@@ -85,7 +85,6 @@ namespace BTLWebMVC.Controllers.User
             {
                 return Json(new { success = false, message = "Giỏ hàng đã trống!" });
             }
-            // Trả lại số lượng sản phẩm vào kho   
             foreach (var item in cartItems)
             {
                 var product = db.Products.Find(item.ProductID);
@@ -94,7 +93,6 @@ namespace BTLWebMVC.Controllers.User
                     product.UnitsInStock += item.Quantity;
                 }
             }
-            // Xóa tất cả sản phẩm trong giỏ hàng
             db.CartItems.RemoveRange(cartItems);
             db.SaveChanges();
 
@@ -136,7 +134,7 @@ namespace BTLWebMVC.Controllers.User
 
         // POST: Chuyển giỏ hàng thành đơn hàng
         [HttpPost]
-        public JsonResult CreateOrder(string shipAddress, string shipCity, string shipPostalCode, string shipCountry, string notes)
+        public JsonResult CreateOrder(string customerName, string contactName, string phone, string email, string shipAddress, string shipCity, string shipPostalCode, string shipCountry, string notes)
         {
             if (Session["AccountId"] == null)
             {
@@ -150,10 +148,114 @@ namespace BTLWebMVC.Controllers.User
                 return Json(new { success = false, message = "Không tìm thấy thông tin khách hàng!" });
             }
 
-            if (string.IsNullOrEmpty(shipAddress) || string.IsNullOrEmpty(shipCity) ||
-                string.IsNullOrEmpty(shipPostalCode) || string.IsNullOrEmpty(shipCountry))
+            // Kiểm tra các trường bắt buộc
+            if (string.IsNullOrEmpty(customerName))
             {
-                return Json(new { success = false, message = "Vui lòng nhập đầy đủ thông tin giao hàng!" });
+                return Json(new { success = false, message = "Tên khách hàng không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(contactName))
+            {
+                return Json(new { success = false, message = "Tên người liên hệ không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(phone))
+            {
+                return Json(new { success = false, message = "Số điện thoại không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "Email không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(shipAddress))
+            {
+                return Json(new { success = false, message = "Địa chỉ giao hàng không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(shipCity))
+            {
+                return Json(new { success = false, message = "Thành phố không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(shipPostalCode))
+            {
+                return Json(new { success = false, message = "Mã bưu điện không được để trống!" });
+            }
+            if (string.IsNullOrEmpty(shipCountry))
+            {
+                return Json(new { success = false, message = "Quốc gia không được để trống!" });
+            }
+
+            // Kiểm tra độ dài tối đa (dựa trên model Customer)
+            if (customerName.Length > 100)
+            {
+                return Json(new { success = false, message = "Tên khách hàng không được vượt quá 100 ký tự!" });
+            }
+            if (contactName.Length > 100)
+            {
+                return Json(new { success = false, message = "Tên người liên hệ không được vượt quá 100 ký tự!" });
+            }
+            if (phone.Length > 20)
+            {
+                return Json(new { success = false, message = "Số điện thoại không được vượt quá 20 ký tự!" });
+            }
+            if (email.Length > 100)
+            {
+                return Json(new { success = false, message = "Email không được vượt quá 100 ký tự!" });
+            }
+            if (shipAddress.Length > 100)
+            {
+                return Json(new { success = false, message = "Địa chỉ giao hàng không được vượt quá 100 ký tự!" });
+            }
+            if (shipCity.Length > 50)
+            {
+                return Json(new { success = false, message = "Thành phố không được vượt quá 50 ký tự!" });
+            }
+            if (shipPostalCode.Length > 10)
+            {
+                return Json(new { success = false, message = "Mã bưu điện không được vượt quá 10 ký tự!" });
+            }
+            if (shipCountry.Length > 50)
+            {
+                return Json(new { success = false, message = "Quốc gia không được vượt quá 50 ký tự!" });
+            }
+            if (!string.IsNullOrEmpty(notes) && notes.Length > 500) // Giả sử Notes tối đa 500 ký tự
+            {
+                return Json(new { success = false, message = "Ghi chú không được vượt quá 500 ký tự!" });
+            }
+
+            // Kiểm tra định dạng số điện thoại (Việt Nam)
+            if (!Regex.IsMatch(phone, @"^(?:\+84|0)(3|5|7|8|9)\d{8}$"))
+            {
+                return Json(new { success = false, message = "Số điện thoại không đúng định dạng (VD: +849xxxxxxxx hoặc 09xxxxxxxx)." });
+            }
+
+            // Kiểm tra định dạng email
+            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            {
+                return Json(new { success = false, message = "Email không đúng định dạng." });
+            }
+
+            // Kiểm tra định dạng tên khách hàng và tên liên hệ (chỉ chứa chữ cái, dấu cách, và ký tự tiếng Việt)
+            if (!Regex.IsMatch(customerName, @"^[a-zA-ZÀ-ỹ\s]+$"))
+            {
+                return Json(new { success = false, message = "Tên khách hàng chỉ được chứa chữ cái và dấu cách." });
+            }
+            if (!Regex.IsMatch(contactName, @"^[a-zA-ZÀ-ỹ\s]+$"))
+            {
+                return Json(new { success = false, message = "Tên người liên hệ chỉ được chứa chữ cái và dấu cách." });
+            }
+
+            // Kiểm tra định dạng thành phố và quốc gia (chỉ chứa chữ cái, dấu cách, và ký tự tiếng Việt)
+            if (!Regex.IsMatch(shipCity, @"^[a-zA-ZÀ-ỹ\s]+$"))
+            {
+                return Json(new { success = false, message = "Thành phố chỉ được chứa chữ cái và dấu cách." });
+            }
+            if (!Regex.IsMatch(shipCountry, @"^[a-zA-ZÀ-ỹ\s]+$"))
+            {
+                return Json(new { success = false, message = "Quốc gia chỉ được chứa chữ cái và dấu cách." });
+            }
+
+            // Kiểm tra định dạng mã bưu điện (chỉ chứa số)
+            if (!Regex.IsMatch(shipPostalCode, @"^\d+$"))
+            {
+                return Json(new { success = false, message = "Mã bưu điện chỉ được chứa số." });
             }
 
             var cartItems = db.CartItems
@@ -166,33 +268,44 @@ namespace BTLWebMVC.Controllers.User
                 return Json(new { success = false, message = "Giỏ hàng trống!" });
             }
 
-            var order = new Order
+            try
             {
-                CustomerID = customer.CustomerID,
-                OrderDate = DateTime.Now,
-                EmployeeID = null,
-                ShippedDate = null,
-                ShipAddress = shipAddress,
-                ShipCity = shipCity,
-                ShipPostalCode = shipPostalCode,
-                ShipCountry = shipCountry,
-                Notes = notes,
-                Freight = 0
-            };
+                // Tạo đơn hàng mới
+                var order = new Order
+                {
+                    CustomerID = customer.CustomerID,
+                    OrderDate = DateTime.Now,
+                    EmployeeID = null,
+                    ShippedDate = null,
+                    ShipAddress = shipAddress,
+                    ShipCity = shipCity,
+                    ShipPostalCode = shipPostalCode,
+                    ShipCountry = shipCountry,
+                    Notes = notes,
+                    Freight = 0,
+                    IsCancelled = false
+                };
 
-            order.OrderDetails = cartItems.Select(c => new OrderDetail
+                // Tạo chi tiết đơn hàng từ giỏ hàng
+                order.OrderDetails = cartItems.Select(c => new OrderDetail
+                {
+                    ProductID = c.ProductID,
+                    UnitPrice = c.UnitPrice,
+                    Quantity = c.Quantity,
+                    Discount = 0
+                }).ToList();
+
+                // Thêm đơn hàng và xóa giỏ hàng
+                db.Orders.Add(order);
+                db.CartItems.RemoveRange(cartItems);
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "Đơn hàng đã được tạo thành công, đang chờ nhân viên duyệt!" });
+            }
+            catch (Exception ex)
             {
-                ProductID = c.ProductID,
-                UnitPrice = c.UnitPrice,
-                Quantity = c.Quantity,
-                Discount = 0
-            }).ToList();
-
-            db.Orders.Add(order);
-            db.CartItems.RemoveRange(cartItems);
-            db.SaveChanges();
-
-            return Json(new { success = true, message = "Đơn hàng đã được tạo thành công, đang chờ nhân viên duyệt!" });
+                return Json(new { success = false, message = "Có lỗi xảy ra khi tạo đơn hàng: " + ex.Message });
+            }
         }
 
         // Lịch sử mua hàng (giữ nguyên)

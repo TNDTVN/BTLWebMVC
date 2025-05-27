@@ -35,6 +35,26 @@
                         <div class="card-body">
                             <form id="order-form">
                                 <div class="mb-3">
+                                    <label for="customerName" class="form-label">Tên khách hàng *</label>
+                                    <input type="text" class="form-control" id="customerName" name="customerName" value="@(ViewBag.Customer?.CustomerName ?? "")" required />
+                                    <div class="invalid-feedback">Vui lòng nhập tên khách hàng.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactName" class="form-label">Tên người liên hệ *</label>
+                                    <input type="text" class="form-control" id="contactName" name="contactName" value="@(ViewBag.Customer?.ContactName ?? "")" required />
+                                    <div class="invalid-feedback">Vui lòng nhập tên người liên hệ.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Số điện thoại *</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" value="@(ViewBag.Customer?.Phone ?? "")" required pattern="^(?:\+84|0)(3|5|7|8|9)\d{8}$" />
+                                    <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ (VD: +849xxxxxxxx hoặc 09xxxxxxxx).</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="@(ViewBag.Customer?.Email ?? "")" required />
+                                    <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                                </div>
+                                <div class="mb-3">
                                     <label for="shipAddress" class="form-label">Địa chỉ giao hàng *</label>
                                     <input type="text" class="form-control" id="shipAddress" name="shipAddress" value="@(ViewBag.Customer?.Address ?? "")" required />
                                     <div class="invalid-feedback">Vui lòng nhập địa chỉ.</div>
@@ -226,7 +246,7 @@
                     }
                 });
             });
-            
+
             $("#btn-clear-cart").click(function () {
                 if (confirm("Bạn có chắc muốn xóa tất cả sản phẩm trong giỏ hàng?")) {
                     $.post("@Url.Action("ClearCart")", function (response) {
@@ -261,6 +281,7 @@
                     }
                 });
             });
+
             $("#btn-create-order").click(function () {
                 $("#order-form").addClass("was-validated");
                 if ($("#order-form")[0].checkValidity()) {
@@ -277,14 +298,14 @@
                                         </div>
                                     </div>
                                 `);
-                                window.location.reload()
+                                window.location.reload();
                             }, 3000);
                         } else {
                             toastr.error(response.message);
                         }
                     });
                 } else {
-                    toastr.error("Vui lòng điền đầy đủ thông tin giao hàng!");
+                    toastr.error("Vui lòng điền đầy đủ và đúng thông tin giao hàng!");
                 }
             });
         });
