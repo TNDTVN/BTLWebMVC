@@ -63,7 +63,14 @@
                                                 @foreach (var image in item.Images.Select((img, index) => new { img, index }))
                                                 {
                                                     <div class="carousel-item @(image.index == 0 ? "active" : "")">
-                                                        <img src="@Url.Content("~/Content/Images/" + image.img.ImageName)" alt="Product Image" class="d-block" style="height: 60px; object-fit: cover;" />
+                                                        @*<img src="@Url.Content("~/Content/Images/" + image.img.ImageName)" alt="Product Image" class="d-block" style="height: 60px; object-fit: cover;" />*@
+                                                        <img src="@Url.Content("~/Content/Images/" + image.img.ImageName)"
+                                                             class="d-block img-thumbnail"
+                                                             style="height: 60px; object-fit: cover; cursor: pointer;"
+                                                             data-toggle="modal"
+                                                             data-target="#imageModal"
+                                                             data-full="@Url.Content("~/Content/Images/" + image.img.ImageName)" />
+
                                                     </div>
                                                 }
                                             </div>
@@ -136,6 +143,17 @@
             </ul>
         </nav>
     </div>
+     
+
+    @* phong to hinh anh *@
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <img id="modalImage" src="" class="img-fluid rounded" />
+            </div>
+        </div>
+    </div>
+
 
     <div class="toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; min-width: 250px;" data-delay="3000">
         <div class="toast-header">
@@ -171,6 +189,12 @@
             $('.carousel').carousel({
                 interval: false
             });
+        });
+
+        // thu phóng hình ảnh
+        $(document).on("click", "img[data-toggle='modal']", function () {
+            var fullImageUrl = $(this).data("full");
+            $("#modalImage").attr("src", fullImageUrl);
         });
     </script>
 }
