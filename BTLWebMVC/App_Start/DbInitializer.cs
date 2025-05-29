@@ -56,7 +56,7 @@ namespace BTLWebMVC.App_Start
                     {
                         new Supplier
                         {
-                            SupplierName = "Cong Ty Phan Bon ABC",
+                            SupplierName = "Công ty TNHH Điện tử ABECO Việt Nam",
                             ContactName = "Nguyen H",
                             Address = "101 Phan Boi Chau",
                             City = "Hanoi",
@@ -67,7 +67,7 @@ namespace BTLWebMVC.App_Start
                         },
                         new Supplier
                         {
-                            SupplierName = "Cong Ty Vat Tu XYZ",
+                            SupplierName = "Công ty TNHH Kỹ thuật điện tử TH",
                             ContactName = "Le K",
                             Address = "202 Le Thanh Ton",
                             City = "HCM City",
