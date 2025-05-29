@@ -244,7 +244,7 @@ namespace BTLWebMVC.Controllers
             var account = new Account
             {
                 Username = newUsername,
-                Password = newPassword, // Lưu ý: Nên mã hóa mật khẩu trước khi lưu
+                Password = newPassword, 
                 Email = newEmail,
                 ProfileImage = "profile.jpg",
                 CreatedDate = DateTime.Now,
