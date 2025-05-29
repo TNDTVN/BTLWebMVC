@@ -290,6 +290,7 @@ namespace BTLWebMVC.Controllers
             }
             else
             {
+                TempData["SuccessMessage"] = "Đăng nhập thành công!";
                 return Json(new { success = true, reload = true });
             }
         }
