@@ -461,6 +461,8 @@
             $("#forgotPasswordForm").submit(function (e) {
                 e.preventDefault();
 
+                $("#loading-spinner").show();
+
                 var username = $("#usernameForgotPassword").val();
                 var email = $("#email").val();
                 var phoneNumber = $("#phoneForgotPassword").val();
@@ -470,6 +472,8 @@
                     type: "POST",
                     data: { username: username, email: email, phoneNumber: phoneNumber },
                     success: function (response) {
+                        $("#loading-spinner").hide();
+
                         if (response.success) {
                             $("#forgotPasswordMessageSucess").text(response.message).show();
                             $("#forgotPasswordMessage").text(response.message).hide();
@@ -479,6 +483,7 @@
                         }
                     },
                     error: function () {
+                        $("#loading-spinner").hide();
                         $("#forgotPasswordMessage").text("Có lỗi xảy ra, vui lòng thử lại!").show();
                     }
                 });
