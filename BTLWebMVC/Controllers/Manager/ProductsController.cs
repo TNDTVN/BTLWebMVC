@@ -226,8 +226,8 @@ namespace BTLWebMVC.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        TempData["SuccessMessage"] = "Cập nhật sản phẩm thành công!";
-                        Debug.WriteLine($"Product Updated: ID={product.ProductID}, Name={product.ProductName}");
+                        //TempData["SuccessMessage"] = "Cập nhật sản phẩm thành công!";
+                        //Debug.WriteLine($"Product Updated: ID={product.ProductID}, Name={product.ProductName}");
                         return RedirectToAction("Index");
                     }
                 }
