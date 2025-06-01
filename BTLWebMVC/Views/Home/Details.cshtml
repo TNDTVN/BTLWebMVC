@@ -174,7 +174,7 @@
             if (response.success) {
                 alert("Sản phẩm đã được thêm vào giỏ hàng!");
                 modalInstance.hide();
-                location.reload();
+                window.location.href = "@Url.Action("Index", "UserCartItems")";
             } else {
                 alert(response.message);
             }
