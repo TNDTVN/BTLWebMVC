@@ -288,29 +288,45 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" />
     <script>
         $(document).ready(function () {
-            // Khởi tạo DataTables
             var table = $('#supplierTable').DataTable({
-                "paging": false, // Tắt phân trang client-side
+                "paging": false,
                 "lengthChange": false,
                 "searching": true,
-                "ordering": false, // Bỏ sắp xếp cột
-                "info": false, // Bỏ thông tin phân trang
+                "ordering": false,
+                "info": false,
                 "autoWidth": false,
                 "language": {
                     "emptyTable": "Không có nhà cung cấp nào.",
                     "search": "Tìm kiếm:"
                 },
                 "rowCallback": function (row, data, index) {
-                    // Thêm STT
                     $('td:eq(0)', row).html(index + 1);
                 }
             });
 
-            // Vô hiệu hóa autofill và xóa giá trị trường tìm kiếm
+            // Ngăn tự động điền và xóa giá trị ô tìm kiếm
             var searchInput = $('#supplierTable_filter input');
-            searchInput.attr('autocomplete', 'off'); // Ngăn trình duyệt tự động điền
-            searchInput.val(''); // Xóa giá trị tự điền
-            table.search('').draw(); // Đặt lại bộ lọc để hiển thị toàn bộ dữ liệu
+            searchInput
+                .attr({
+                    'autocomplete': 'new-search', // Giá trị này hiệu quả hơn với các trình duyệt hiện đại
+                    'autocorrect': 'off',
+                    'autocapitalize': 'off',
+                    'spellcheck': 'false',
+                    'name': 'search_' + new Date().getTime() // Tên động để tránh trình duyệt lưu
+                })
+                .val('') // Xóa giá trị ban đầu
+                .on('focus input', function () {
+                    if ($(this).val() === 'admin') {
+                        $(this).val(''); // Xóa nếu trình duyệt tự điền "admin"
+                        table.search('').draw();
+                    }
+                });
+
+            // Đặt lại bộ lọc sau khi DataTables khởi tạo hoàn toàn
+            setTimeout(function () {
+                searchInput.val('');
+                table.search('').draw();
+            }, 100); // Đợi 100ms để đảm bảo DataTables tải xong
 
             // Kiểm tra sessionStorage để hiển thị toast
             var action = sessionStorage.getItem('supplierAction');
